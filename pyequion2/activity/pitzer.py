@@ -200,14 +200,13 @@ def temperature_vector(T):
     return res
 
 
-def make_parameter_matrix(species_classes,parameter,property_dict):
-    species_ = species_classes
+def make_parameter_matrix(species,parameter,property_dict):
     indexes = []
     values = []
     
-    for i,specie1 in enumerate(species_):
-        for j,specie2 in enumerate(species_):
-            key = tuple(sorted([specie1.name,specie2.name]))
+    for i,specie1 in enumerate(species):
+        for j,specie2 in enumerate(species):
+            key = tuple(sorted([specie1,specie2]))
             if key in property_dict[parameter]:
                 res_ij = np.array(property_dict[parameter][key])
                 if (i == j):
@@ -217,15 +216,14 @@ def make_parameter_matrix(species_classes,parameter,property_dict):
     return np.array(values,dtype=np.double),np.array(indexes,dtype=np.intc)
 
 
-def make_parameter_3_tensor(species_classes,parameter,property_dict):
-    species_ = species_classes
+def make_parameter_3_tensor(species,parameter,property_dict):
     indexes = []
     values = []
     
-    for i,specie1 in enumerate(species_):
-        for j,specie2 in enumerate(species_):
-            for k,specie3 in enumerate(species_):
-                key = tuple(sorted([specie1.name,specie2.name,specie3.name]))
+    for i,specie1 in enumerate(species):
+        for j,specie2 in enumerate(species):
+            for k,specie3 in enumerate(species):
+                key = tuple(sorted([specie1,specie2,specie3]))
                 if key in property_dict[parameter]:
                     res_ij = np.array(property_dict[parameter][key])
                     if (i==j) and (i==k):

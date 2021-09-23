@@ -54,14 +54,20 @@ def species_to_elements(species_set):
 
 
 def get_species_reaction_from_initial_species(initial_species,
-                                              possible_reactions=None):
+                                              possible_reactions=None,
+                                              possible_solid_reactions=None):
     if not possible_reactions:
         possible_reactions = get_all_possible_reactions()
+    if not possible_solid_reactions:
+        possible_solid_reactions = get_all_possible_solid_reactions()
     species, reactions = _get_species_reactions_from_compounds(
             initial_species, possible_reactions)
     species = list(species)
     species = set_h2o_as_first_specie(species)
-    return species, reactions
+    _, solid_reactions = _get_species_reactions_from_compounds(
+        set(species), possible_solid_reactions
+    )
+    return species, reactions, solid_reactions
 
 
 def get_all_possible_reactions(database_files=DEFAULT_DB_FILES):
@@ -69,6 +75,12 @@ def get_all_possible_reactions(database_files=DEFAULT_DB_FILES):
     irreversible_reactions = utils.load_from_db(database_files["irreversible"])
     possible_reactions = aqueous_reactions + irreversible_reactions
     return possible_reactions
+
+
+def get_all_possible_solid_reactions(database_files=DEFAULT_DB_FILES):
+    possible_solid_reactions = utils.load_from_db(database_files["phases"])
+    return possible_solid_reactions
+
 
 def get_log_equilibrium_constants(reactions, TK):
     return np.array([_get_logk(reaction, TK) for reaction in reactions])

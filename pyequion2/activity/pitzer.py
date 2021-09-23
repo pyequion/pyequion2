@@ -4,7 +4,6 @@ import pathlib
 import re
 import functools
 
-import pyximport; pyximport.install()
 import numpy as np
 from scipy.constants import gas_constant as R
 

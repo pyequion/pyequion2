@@ -5,6 +5,8 @@ from . import builder
 from . import activity
 from . import constants
 from . import eqsolver
+from . import solution
+
 
 ACTIVITY_MODEL_MAP = {
         "IDEAL":activity.setup_ideal,
@@ -17,11 +19,14 @@ class EquilibriumSystem():
     def __init__(self, components, from_elements=False):
         self.base_species, self.base_elements = \
             self.prepare_base(components, from_elements)
-        self.species, self.reactions = self.initialize_species_reactions()
+        self.species, self.reactions, self.solid_reactions = \
+            self.initialize_species_reactions()
         self.formula_matrix, self.stoich_matrix = \
             self.make_formula_and_stoich_matrices()
         self.activity_model = None
-        self.equilibrium_molals = None
+        self.TK = None
+        self._x_molal = None
+        self._x_act = None
         
     def prepare_base(self, components, from_elements):
         #Implicity assumes that O and H will always in elements,
@@ -67,14 +72,19 @@ class EquilibriumSystem():
     def get_log_equilibrium_constants(self, TK):
         return builder.get_log_equilibrium_constants(self.reactions, TK)
     
+    def get_solid_log_equilibrium_constants(self, TK):
+        return builder.get_log_equilibrium_constants(self.solid_reactions, TK)
+        
     def solve_equilibrium(self, molal_balances, TK,
-                          tol=1e-6, initial_guess='default'):
-        formula_vector_ = np.array([molal_balances[el] for el in self.elements])
-        formula_vector = np.insert(formula_vector_,0,0.0)
+                          tol=1e-6, initial_guess='default',
+                          return_solution=True):
+        formula_vector_ = np.array([molal_balances[el] for 
+                                    el in self.solute_elements])
+        formula_vector = np.append(formula_vector_,0.0)
         log_equilibrium_constants = \
             self.get_log_equilibrium_constants(TK)
         if initial_guess == 'default':
-            x_guess = np.ones(self.nsolutes)*0.001
+            x_guess = np.ones(self.nsolutes)*0.1
         else:
             x_guess = np.array(initial_guess)
         x, res = eqsolver.solve_equilibrium_solutes(
@@ -84,10 +94,13 @@ class EquilibriumSystem():
                               formula_vector,
                               self.reduced_formula_matrix,
                               self.stoich_matrix,
-                              log_equilibrium_constants)
-        self.equilibrium_molals = x
-        return x, res
-    
+                              log_equilibrium_constants,
+                              tol=tol)
+        if return_solution:
+            return solution.SolutionResult(self, x, TK), res
+        else:
+            return x, res
+                
     @property
     def elements(self):
         return self.base_elements
@@ -123,3 +136,7 @@ class EquilibriumSystem():
     @property
     def reduced_formula_matrix(self):
         return self.formula_matrix[2:, :]
+
+    @property
+    def charge_vector(self):
+        return self.formula_matrix[-1,:]

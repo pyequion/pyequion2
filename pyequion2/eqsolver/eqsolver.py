@@ -18,12 +18,12 @@ def solve_equilibrium_solutes(x_guess,
                               tol=1e-6):
     if not solver_function:
         solver_function = solvers.solver_constrained_newton
-    f = functools.partial(residual_functions.residual_and_jacobian,
-                          TK,
-                          activity_function,
-                          formula_vector,
-                          formula_matrix,
-                          stoich_matrix,
-                          log_equilibrium_constants)
+    f = functools.partial(residual_functions.residual_and_jacobian_solutes,
+                          TK=TK,
+                          activity_function=activity_function,
+                          formula_vector=formula_vector,
+                          formula_matrix=formula_matrix,
+                          stoich_matrix=stoich_matrix,
+                          log_equilibrium_constants=log_equilibrium_constants)
     x, res = solver_function(f, x_guess, tol=tol)
     return x, res

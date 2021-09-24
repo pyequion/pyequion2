@@ -79,85 +79,64 @@ class EquilibriumSystem():
                                            tol=1e-6, initial_guess='default',
                                            return_solution=True):
         assert(len(element_balance) == self.nsolelements)
-        balance_vector_ = np.array([element_balance[el] for 
+        balance_vector_molal = np.array([element_balance[el] for 
                                     el in self.solute_elements])
-        balance_vector = np.append(balance_vector_,0.0)
-        balance_matrix = self.reduced_formula_matrix
-        return self.solve_equilibrium_balance(balance_matrix,
-                                              balance_vector,
+        balance_vector_molal = np.append(balance_vector_molal,0.0)
+        balance_matrix_molal = self.reduced_formula_matrix
+        balance_vector_logact = np.zeros(0)
+        balance_matrix_logact = np.zeros((0, self.nspecies))
+        return self.solve_equilibrium_balance(balance_matrix_molal,
+                                              balance_vector_molal,
+                                              balance_matrix_logact,
+                                              balance_vector_logact,
                                               TK,
                                               tol=tol,
                                               initial_guess=initial_guess,
                                               return_solution=return_solution)
 
-    def solve_equilibrium_species_balance(self, species_balance, TK,
-                                          tol=1e-6, initial_guess='default',
-                                          return_solution=True):
-        assert(len(species_balance) == self.nsolelements)
-        balance_matrix_1 = np.zeros((self.nsolelements, self.nspecies))
-        balance_vector_ = np.zeros(self.nsolelements)
-        for i,(key,value) in enumerate(species_balance.items()):
-            balance_vector_[i] = value
-            balance_matrix_1[i, self.species.index(key)] = 1.0
-        balance_vector = np.append(balance_vector_,0.0)
-        balance_matrix = np.vstack([balance_matrix_1, self.charge_vector])
-        return self.solve_equilibrium_balance(balance_matrix,
-                                              balance_vector,
+    def solve_equilibrium_mixed_balance(self, element_balance, activities_balance,
+                                        TK, tol=1e-6, initial_guess='default',
+                                        return_solution=True):
+        assert(len(element_balance) + len(activities_balance) == self.nsolelements)
+        nelbalance = len(element_balance)
+        nelact = len(activities_balance)
+        balance_matrix_molal = np.zeros((nelbalance, self.nspecies))
+        balance_vector_molal = np.zeros(nelbalance)
+        for i, (key, value) in enumerate(element_balance.items()):
+            balance_vector_molal[i] = value
+            balance_matrix_molal[i, :] = self.formula_matrix[self.elements.index(key), :]
+        balance_vector_molal = np.append(balance_vector_molal, 0.0)
+        balance_matrix_molal = np.vstack([balance_matrix_molal, self.charge_vector])
+        balance_matrix_logact = np.zeros((nelact, self.nspecies))
+        balance_vector_logact = np.zeros(nelact)
+        for i, (key, value) in enumerate(activities_balance.items()):
+            balance_vector_logact[i] = np.log10(value)
+            balance_matrix_logact[i, self.species.index(key)] = 1.0        
+        return self.solve_equilibrium_balance(balance_matrix_molal,
+                                              balance_vector_molal,
+                                              balance_matrix_logact,
+                                              balance_vector_logact,
                                               TK,
                                               tol=tol,
                                               initial_guess=initial_guess,
                                               return_solution=return_solution)
 
-    def solve_equilibrium_mixed_balance(self, mixed_balance, TK,
-                                          tol=1e-6, initial_guess='default',
-                                          return_solution=True):
-        assert(len(mixed_balance) == self.nsolelements)
-        balance_matrix_1 = np.zeros((self.nsolelements, self.nspecies))
-        balance_vector_ = np.zeros(self.nsolelements)
-        for i,(key,value) in enumerate(mixed_balance.items()):
-            balance_vector_[i] = value
-            if key in self.elements:
-                balance_matrix_1[i, :] = \
-                    self.formula_matrix[self.elements.index(key), :]
-            elif key in self.species:
-                balance_matrix_1[i, self.species.index(key)] = 1.0
-            else:
-                raise ValueError("Key of mixed_balance neither element nor specie in model")
-        balance_vector = np.append(balance_vector_,0.0)
-        balance_matrix = np.vstack([balance_matrix_1, self.charge_vector])
-        return self.solve_equilibrium_balance(balance_matrix,
-                                              balance_vector,
-                                              TK,
-                                              tol=tol,
-                                              initial_guess=initial_guess,
-                                              return_solution=return_solution)
-
-    def solve_equilibrium_balance_alkalinity(self, mixed_balance, TK, alkalinity,
-                                             tol=1e-6, initial_guess='default',
+    def solve_equilibrium_activities_balance(self, activities_balance, 
+                                             TK, tol=1e-6, initial_guess='default',
                                              return_solution=True):
-        assert(len(mixed_balance) == self.nsolelements)
-        balance_matrix_1 = np.zeros((self.nsolelements, self.nspecies))
-        balance_vector_ = np.zeros(self.nsolelements)
-        for i,(key,value) in enumerate(mixed_balance.items()):
-            balance_vector_[i] = value
-            if key in self.elements:
-                balance_matrix_1[i, :] = \
-                    self.formula_matrix[self.elements.index(key), :]
-            elif key in self.species:
-                balance_matrix_1[i, self.species.index(key)] = 1.0
-            else:
-                raise ValueError("Key of mixed_balance neither element nor specie in model")
-        balance_vector = np.append(balance_vector_, alkalinity)
-        balance_matrix = np.vstack([balance_matrix_1, self.alkalinity_vector])
-        return self.solve_equilibrium_balance(balance_matrix,
-                                              balance_vector,
-                                              TK,
-                                              tol=tol,
-                                              initial_guess=initial_guess,
-                                              return_solution=return_solution)
+        element_balance = dict()
+        return self.solve_equilibrium_mixed_balance(element_balance, activities_balance,
+                                                    TK, tol=1e-6, initial_guess='default',
+                                                    return_solution=True)
 
-    def solve_equilibrium_balance(self, balance_matrix, balance_vector, TK,
-                                  tol=1e-6, initial_guess='default',
+    def solve_equilibrium_balance(self,
+                                  balance_matrix_molal,
+                                  balance_vector_molal,
+                                  balance_matrix_logact,
+                                  balance_vector_logact,
+                                  TK,
+                                  tol=1e-6,
+                                  initial_guess='default',
                                   return_solution=True):
         log_equilibrium_constants = \
             self.get_log_equilibrium_constants(TK)
@@ -169,10 +148,12 @@ class EquilibriumSystem():
                               x_guess,
                               TK,
                               self.activity_function,
-                              balance_vector,
-                              balance_matrix,
-                              self.stoich_matrix,
+                              balance_vector_molal,
+                              balance_vector_logact,
                               log_equilibrium_constants,
+                              balance_matrix_molal,
+                              balance_matrix_logact,
+                              self.stoich_matrix,
                               tol=tol)
         if return_solution:
             return solution.SolutionResult(self, x, TK), res

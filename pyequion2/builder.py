@@ -85,6 +85,7 @@ def get_all_possible_solid_reactions(database_files=DEFAULT_DB_FILES):
 def get_log_equilibrium_constants(reactions, TK):
     return np.array([_get_logk(reaction, TK) for reaction in reactions])
 
+
 def make_formula_matrix(species, elements):
     elements = elements + ['e']
     formula_matrix = np.array([[utils.stoich_number(specie, element) 
@@ -92,9 +93,21 @@ def make_formula_matrix(species, elements):
                                for element in elements])
     return formula_matrix
 
+
+def make_solid_formula_matrix(solid_reactions, elements):
+    solid_formulas = [_get_solid_formula(solid_reaction)
+                      for solid_reaction in solid_reactions]
+    elements = elements + ['e']
+    solid_formula_matrix = np.array([[utils.stoich_number(solid_formula, element) 
+                                for solid_formula in solid_formulas]
+                               for element in elements])
+    return solid_formula_matrix
+
+
 def make_stoich_matrix(species, reactions):
     return np.array([[reaction.get(specie,0.0) for specie in species] 
                       for reaction in reactions])
+
 
 def set_h2o_as_first_specie(species):
     try:
@@ -116,6 +129,22 @@ def set_h_and_o_as_first_elements(elements):
         pass
     elements = ['H','O'] + elements
     return elements
+
+
+def get_most_stable_phases(solid_reactions, TK):
+    stable_phases_group = dict()
+    stable_lowest_ksp = dict()
+    log_ksps = get_log_equilibrium_constants(solid_reactions, TK)
+    for i, solid_reaction in enumerate(solid_reactions):
+        phase_name = solid_reaction['phase_name']
+        solid_formula = _get_solid_formula(solid_reaction, drop_phase_name=False)
+        lowest_ksp = stable_lowest_ksp.get(solid_formula, np.inf)
+        current_ksp = log_ksps[i]
+        if current_ksp < lowest_ksp:
+            stable_phases_group[solid_formula] = phase_name
+            stable_lowest_ksp[solid_formula] = current_ksp
+    stable_phases = list(stable_phases_group.values())
+    return stable_phases
 
 
 def _get_logk(reaction, TK):
@@ -293,3 +322,15 @@ def _walk_in_species_reactions(c, species, reactions, reactionsList):
 def _are_others_in_side_of_reaction_known(elements, species):
     tester = [e for e in elements if e in species]
     return len(tester) == len(elements)
+
+
+def _get_solid_formula(solid_reaction, drop_phase_name=True):
+    phase_name = solid_reaction['phase_name']
+    solid_formula = None
+    for key in solid_reaction.keys():
+        if key[-len(phase_name):] == phase_name:
+            solid_formula = key[:key.index('_')]
+            if '(' in solid_formula and drop_phase_name: #Will remove (g) or (s)
+                solid_formula = solid_formula[:solid_formula.index('(')]
+            break
+    return solid_formula

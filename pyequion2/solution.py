@@ -6,10 +6,12 @@ from . import converters
 
 
 class SolutionResult():
-    def __init__(self,equilibrium_system,x,TK):
+    def __init__(self,equilibrium_system, x, TK, molals_p=None, solid_phases_p=None):
         self.TK = TK
         self._x_molal = x
         self._x_act = 10**equilibrium_system.activity_function(x, TK)
+        self._molals_p = molals_p
+        self._solid_phases_p = solid_phases_p
         self.base_species = equilibrium_system.base_species
         self.species = equilibrium_system.species
         self.reactions = equilibrium_system.reactions
@@ -17,9 +19,11 @@ class SolutionResult():
         self.elements = equilibrium_system.elements
         self.formula_matrix = equilibrium_system.formula_matrix
         self.stoich_matrix = equilibrium_system.stoich_matrix
+        self.solid_molals = \
+            self.build_solid_molals()
         self._logsatur = \
             self.build_saturation_indexes()
-        
+    
     def build_saturation_indexes(self):
         logacts = np.log10(self._x_act)
         species = self.species
@@ -30,7 +34,12 @@ class SolutionResult():
         logks = builder.get_log_equilibrium_constants(solid_reactions, TK)
         logsatur = logiap - logks
         return logsatur
-        
+    
+    def build_solid_molals(self):
+        solid_molals_ = dict(zip(self._solid_phases_p, self._molals_p))
+        solid_molals = {k: solid_molals_.get(k, 0.0) for k in self.phase_names}
+        return solid_molals
+    
     @property
     def equilibrium_molals(self):
         return {self.solutes[i]:self._x_molal[i] 

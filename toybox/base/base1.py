@@ -17,15 +17,4 @@ y = eqsys.activity_function(x,298.15)
 elements_balance = {'Ca':0.028, 'Cl':0.056, 'Na':0.075, 'C':0.065}
 species_balance = {'Ca++':0.028, 'Cl-':0.056, 'Na+':0.075, 'HCO3-':0.065}
 TK = 298.15
-solution,res = eqsys.solve_equilibrium_elements_balance(elements_balance, TK, tol=1e-12)
-print(solution.equilibrium_molals)
-print(solution.equilibrium_activities)
-print(solution.equilibrium_concentrations)
-print(solution.saturation_indexes)
-print('--')
-solution,res = eqsys.solve_equilibrium_activities_balance(species_balance, TK, tol=1e-12)
-print(solution.equilibrium_molals)
-print(solution.equilibrium_activities)
-print(solution.equilibrium_concentrations)
-print(solution.saturation_indexes)
-print('--')
+solution,res = eqsys.solve_equilibrium_elements_balance_solids(TK, elements_balance, tol=1e-12)

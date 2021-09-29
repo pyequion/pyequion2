@@ -307,6 +307,7 @@ class EquilibriumSystem():
                     indexes[i] = j
         return indexes
 
+
 #Helpers
 def _none_to_dict(d):
     return d if d is not None else dict()

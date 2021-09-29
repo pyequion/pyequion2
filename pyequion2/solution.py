@@ -36,7 +36,10 @@ class SolutionResult():
         return logsatur
     
     def build_solid_molals(self):
-        solid_molals_ = dict(zip(self._solid_phases_p, self._molals_p))
+        if self._solid_phases_p is None:
+            solid_molals_ = dict()
+        else:
+            solid_molals_ = dict(zip(self._solid_phases_p, self._molals_p))
         solid_molals = {k: solid_molals_.get(k, 0.0) for k in self.phase_names}
         return solid_molals
     

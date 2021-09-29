@@ -115,7 +115,37 @@ def loggamma_and_osmotic(carray,T,zarray,
                 LAMBDA,LAMBDA_inds,dim_matrices,carray)
     res4 = sum_41
     logg = res1 + res2 + res3 + res4 # res1 + res2 + res3 + res4
-    logg = np.insert(logg,0,constants.LOG10E) #FIXME: actually calculate osmotic coefficient
+    
+    #B + I*Bprime
+    #B = B0 + B1*g(alpha1*sqrtI) + B2*g(alpha*sqrtI)
+    #Bprime = (B1*gprime(alpha1*sqrtI) + B2*gprime(alpha2*sqrtI))/I
+    #B + I*Bprime = B0 + B1*(g(alpha1*sqrtI) + gprime(alpha1*sqrtI))
+    #                  + B2*(g(alpha2*sqrtI) + gprime(alpha2*sqrtI))
+    #Water activity
+    res1w = -A*sqrtI**3/(1 + constants.B_DEBYE*sqrtI)
+    
+    sum_11w = 0.5*coo_tensor_ops.coo_matrix_vector_vector(
+                B0,B0_inds,dim_matrices,carray)
+    sum_12w = 0.5*coo_tensor_ops.coo_matrix_vector_vector(
+                B1*(gb(alpha1*sqrtI) + gprime(alpha1*sqrtI)),B0_inds,dim_matrices,carray)
+    sum_13w = 0.5*coo_tensor_ops.coo_matrix_vector_vector(
+                B2*(gb(alpha2*sqrtI) + gprime(alpha2*sqrtI)),B0_inds,dim_matrices,carray)
+    sum_21w = 0.5*Z*coo_tensor_ops.coo_matrix_vector_vector(
+                C,C0_inds,dim_matrices,carray)
+    res2w = sum_11w + sum_12w + sum_13w + sum_21w
+    
+    sum_31w = 0.5*coo_tensor_ops.coo_matrix_vector_vector(
+                PHI + I*PHI_prime,THETA_inds,dim_matrices,carray,carray)
+    sum_32w = 1/6*coo_tensor_ops.coo_tensor_vector_vector_vector(
+                PSI,PSI_inds,dim_tensors,carray,carray,carray)
+    res3w = sum_31w + sum_32w
+    sum_41 = 0.5*coo_tensor_ops.coo_matrix_vector_vector(
+                LAMBDA,LAMBDA_inds,dim_matrices,carray,carray)
+    res4w = sum_41
+    
+    resw = res1w + res2w + res3w + res4w
+    osmotic_coefficient = constants.LOG10E*(2/np.sum(carray)*resw + 1)
+    logg = np.insert(logg,0,osmotic_coefficient) #FIXME: actually calculate osmotic coefficient
     return logg
 
 

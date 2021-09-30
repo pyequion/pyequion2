@@ -16,57 +16,73 @@ ACTIVITY_MODEL_MAP = {
 
 
 class EquilibriumSystem():
+    """
+    Attributes
+    ----------
+    base_species: List[str]
+        Base aqueous species in system
+    base_elements: List[str]
+        Base elements in system
+    species: List[str]
+        Species in system
+    reactions: List[dict]
+        Reactions in system
+    solid_reactions: List[dict]
+        Solid Reactions in system
+    formula_matrix: ndarray
+        Formula matrix of system
+    stoich_matrix: ndarray
+        Stoichiometric matrix of system
+    solid_formula_matrix: ndarray
+        Solid formula matrix of system
+    solid_stoich_matrix: ndarray
+        Solid stoichiometric matrix of system
+    activity_model: Callable[[ndarray, float], ndarray]
+        Activity model for equilibrium.
+    """
     def __init__(self, components, from_elements=False, activity_model="DEBYE"):
+        """
+        Parameters
+        ----------
+        components: List[str]
+        from_elements: bool
+        activity_model: str
+        """
         self.base_species, self.base_elements = \
-            self.prepare_base(components, from_elements)
+            self._prepare_base(components, from_elements)
         self.species, self.reactions, self.solid_reactions = \
-            self.initialize_species_reactions()
+            self._initialize_species_reactions()
         self.formula_matrix, self.stoich_matrix = \
-            self.make_formula_and_stoich_matrices()
+            self._make_formula_and_stoich_matrices()
         self.solid_formula_matrix, self.solid_stoich_matrix = \
-            self.make_solid_formula_and_stoich_matrices()
+            self._make_solid_formula_and_stoich_matrices()
         self.activity_model = ACTIVITY_MODEL_MAP[activity_model](self.solutes)
-        self.TK = None
         self._x_molal = None
         self._x_act = None
         
-    def prepare_base(self, components, from_elements):
-        #Implicity assumes that O and H will always in elements,
-        #and H2O will always be a species (were talking about aqueous
-        #equilibrium, after all).
-        if from_elements:
-            base_elements = set(components)
-            base_elements.add('O')
-            base_elements.add('H')
-            base_species = builder.elements_to_species(base_elements)
-        else:
-            base_species = set(components)
-            base_species.add('H2O')
-            base_elements = builder.species_to_elements(base_species)
-        #Work back to list
-        base_elements = builder.set_h_and_o_as_first_elements(list(base_elements))
-        base_species = builder.set_h2o_as_first_specie(list(base_species))
-        return base_species, base_elements
-
-    def initialize_species_reactions(self):
-        return builder.get_species_reaction_from_initial_species(
-                self.base_species)
-
-    def make_formula_and_stoich_matrices(self):
-        formula_matrix = builder.make_formula_matrix(self.species, self.elements)
-        stoich_matrix = builder.make_stoich_matrix(self.species, self.reactions)
-        return formula_matrix, stoich_matrix
-    
-    def make_solid_formula_and_stoich_matrices(self):
-        solid_formula_matrix = builder.make_solid_formula_matrix(self.solid_reactions, self.elements)
-        solid_stoich_matrix = builder.make_stoich_matrix(self.species, self.solid_reactions)
-        return solid_formula_matrix, solid_stoich_matrix
-
     def set_activity_function(self, activity_model="DEBYE"):
+        """
+        Parameters
+        ----------
+        activity_model: str
+            One of ['IDEAL', 'DEBYE', 'PITZER']
+        """
         activity_setup = ACTIVITY_MODEL_MAP[activity_model]
         self.activity_model = activity_setup(self.solutes)
 
     def activity_function(self,molals,TK):
+        """
+        Parameters
+        ----------
+        molals: ndarray
+            Molals of solutes
+        TK: float
+            Temperature in Kelvin
+        
+        Returns
+        -------
+        ndarray of activities (water is the first one, other solutes in molals order)
+        """
         #molal to activities (including water)
         activity_model_res = self.activity_model(molals,TK)
         osmotic_pressure, loggamma = \
@@ -77,14 +93,49 @@ class EquilibriumSystem():
         return logact
 
     def get_log_equilibrium_constants(self, TK):
+        """
+        Parameters
+        ----------
+        TK: float
+            Temperature in kelvins
+        
+        Returns
+        -------
+        List[float] of log equilibria constants of aqueous reactions
+        """
         return builder.get_log_equilibrium_constants(self.reactions, TK)
     
     def get_solid_log_equilibrium_constants(self, TK):
+        """
+        Parameters
+        ----------
+        TK: float
+            Temperature in kelvins
+        
+        Returns
+        -------
+        List[float] of log equilibria constants of solid reactions
+        """
         return builder.get_log_equilibrium_constants(self.solid_reactions, TK)
         
     def solve_equilibrium_elements_balance(self, TK, element_balance,
-                                           tol=1e-6, initial_guess='default',
-                                           return_solution=True):
+                                           tol=1e-6, initial_guess='default'):
+        """
+        Parameters
+        ----------
+        TK: float
+            Temperature in Kelvins
+        element_balance: dict[str, float]
+            Dictionary of element balances
+        tol: float
+            Tolerance for solver
+        initial_guess: ndarray or str
+            Initial guess for solver. If 'default', is chosen as 0.1 for each specie
+        
+        Returns
+        -------
+        SolutionResult object of equilibrium solution and residual
+        """
         assert(len(element_balance) == self.nsolelements)
         balance_vector = np.array([element_balance[el] for 
                                     el in self.solute_elements])
@@ -102,14 +153,32 @@ class EquilibriumSystem():
                                               mask_log,
                                               TK,
                                               tol=tol,
-                                              initial_guess=initial_guess,
-                                              return_solution=return_solution)
+                                              initial_guess=initial_guess)
     
     def solve_equilibrium_elements_balance_solids(self, TK, element_balance, 
                                                   solid_phases=None,
                                                   tol=1e-6,
-                                                  initial_guesses='default',
-                                                  return_solution=True):
+                                                  initial_guesses='default'):
+        """
+        Parameters
+        ----------
+        TK: float
+            Temperature in Kelvins
+        element_balance: dict[str, float]
+            Dictionary of element balances
+        solid_phases: None or List[str]
+            Phases of solid equilibria that precipitates. If None, 
+            we assume all stable-at-temperature TK phases precipitates
+        tol: float
+            Tolerance for solver
+        initial_guess: ndarray or str
+            Initial guess for solver. If 'default', is chosen as 0.1 for each specie
+        
+        Returns
+        -------
+        SolutionResult object of equilibrium solution and residual
+
+        """
         balance_vector = np.array([element_balance[el] for 
                                     el in self.solute_elements])
         balance_vector = np.append(balance_vector,0.0)
@@ -147,12 +216,9 @@ class EquilibriumSystem():
                            mask, mask_log,
                            solver_function=None,
                            tol=1e-6)
-        if return_solution:
-            sol = solution.SolutionResult(self, molals, TK,
-                                          molals_p, solid_phases)
-            return sol, res
-        else:
-            return molals, res
+        sol = solution.SolutionResult(self, molals, TK,
+                                      molals_p, solid_phases)
+        return sol, res
     
     def solve_equilibrium_mixed_balance(self, TK, molal_balance=None,
                                         activities_balance=None,
@@ -160,8 +226,37 @@ class EquilibriumSystem():
                                         activities_balance_log=None,
                                         closing_equation='electroneutrality',
                                         closing_equation_value=0.0,
-                                        tol=1e-6, initial_guess='default',
-                                        return_solution=True):
+                                        tol=1e-6, initial_guess='default'):
+        """
+        Parameters
+        ----------
+        TK: float
+            Temperature in Kelvins
+        molal_balance: dict[str, float] or None
+            Dictionary of molal balances
+        activities_balance: dict[str, float] or None
+            Dictionary of activities balances
+        molal_balance_log: dict[str, float] or None
+            Dictionary of log-molal balances
+        activities_balance_log: dict[str, float] or None
+            Dictionary of log-activities balances
+        closing_equation: str or None
+            Which closing equation to be used.
+            If 'electroneutrality', closes assuming electroneutrality of elements
+            If 'alkalinity', closes by alkaline balance defined by closing_equation_value
+            If None, closure must come from dictionaries
+        closing_equation_value: float
+            Value of closing equation
+        tol: float
+            Tolerance for solver
+        initial_guess: ndarray or str
+            Initial guess for solver. If 'default', is chosen as 0.1 for each specie
+
+        Returns
+        -------
+        SolutionResult object of equilibrium solution and residual
+
+        """
         molal_balance = _none_to_dict(molal_balance)
         activities_balance = _none_to_dict(activities_balance)
         molal_balance_log = _none_to_dict(molal_balance_log)
@@ -187,8 +282,7 @@ class EquilibriumSystem():
                                               mask, 
                                               mask_log,
                                               TK,
-                                              initial_guess=initial_guess,
-                                              return_solution=return_solution)
+                                              initial_guess=initial_guess)
     
     def solve_equilibrium_balance(self,
                                   balance_vector,
@@ -201,6 +295,32 @@ class EquilibriumSystem():
                                   tol=1e-6,
                                   initial_guess='default',
                                   return_solution=True):
+        """
+        Parameters
+        ----------
+        balance_vector: ndarray
+            Vector of balances
+        balance_vector_log: ndarray
+            Vector of log-balances
+        balance_matrix: ndarray
+            Matrix of balances
+        balance_matrix_log: ndarray
+            Matrix of log-balances
+        mask: ndarray
+            Activity mask
+        mask_log: ndarray
+            Log-activity mask
+        TK: float
+            Temperature in Kelvin
+        tol: float
+            Tolerance of solver
+        initial_guess: ndarray or str
+            Initial guess for solver. If 'default', is chosen as 0.1 for each specie
+        Returns
+        -------
+        SolutionResult object of equilibrium solution and residual
+
+        """
         log_equilibrium_constants = \
             self.get_log_equilibrium_constants(TK)
         stoich_matrix = self.stoich_matrix
@@ -222,61 +342,71 @@ class EquilibriumSystem():
                               mask, 
                               mask_log,
                               tol=tol)
-        if return_solution:
-            return solution.SolutionResult(self, x, TK), res
-        else:
-            return x, res
+        return solution.SolutionResult(self, x, TK), res
     
     @property
     def elements(self):
+        """Alias for base elements"""
         return self.base_elements
 
     @property
     def solute_elements(self): #Ignore H and O
+        """Elements excluding H and O"""
         return self.elements[2:]
 
     @property
     def solutes(self):
+        """Solutes"""
         return self.species[1:] #Ignore water
 
     @property
     def nspecies(self):
+        """Number of aqueous species (includes H2O)"""
         return len(self.species)
 
     @property
     def nreactions(self):
+        """Number of aqueous reactions"""
         return len(self.reactions)
 
     @property
     def nelements(self):
+        """Number of elements"""
         return len(self.elements)
 
     @property
     def nsolelements(self):
+        """Number of solute elements"""
         return len(self.solute_elements)
 
     @property
     def nsolutes(self):
+        """Number of solutes"""
         return len(self.solutes)
 
     @property
     def reduced_formula_matrix(self):
+        """Formula matrix excluding H and O elements"""
         return self.formula_matrix[2:, :]
 
     @property
     def reduced_solid_formula_matrix(self):
+        """Solid formula matrix excluding H and O elements"""
         return self.solid_formula_matrix[2:, :]
 
     @property
     def charge_vector(self):
+        """Vector of charge number for aqueous species"""
         return self.formula_matrix[-1,:]
 
     @property
     def solutes_charge_vector(self):
+        """Vector of charge numbers for solutes"""
         return self.charge_vector[1:]
 
     @property
     def alkalinity_vector(self):
+        """Vector of alkalinity coefficients"""
         return np.array([constants.ALKALINE_COEFFICIENTS.get(specie,0.0)
                          for specie in self.species])
     
@@ -284,7 +414,38 @@ class EquilibriumSystem():
     def solutes_alkalinity_vector(self):
         return self.alkalinity_vector[1:]
     
+    def _prepare_base(self, components, from_elements):
+        #Implicity assumes that O and H will always in elements,
+        #and H2O will always be a species (were talking about aqueous
+        #equilibrium, after all).
+        if from_elements:
+            base_elements = set(components)
+            base_elements.add('O')
+            base_elements.add('H')
+            base_species = builder.elements_to_species(base_elements)
+        else:
+            base_species = set(components)
+            base_species.add('H2O')
+            base_elements = builder.species_to_elements(base_species)
+        #Work back to list
+        base_elements = builder.set_h_and_o_as_first_elements(list(base_elements))
+        base_species = builder.set_h2o_as_first_specie(list(base_species))
+        return base_species, base_elements
+
+    def _initialize_species_reactions(self):
+        return builder.get_species_reaction_from_initial_species(
+                self.base_species)
+
+    def _make_formula_and_stoich_matrices(self):
+        formula_matrix = builder.make_formula_matrix(self.species, self.elements)
+        stoich_matrix = builder.make_stoich_matrix(self.species, self.reactions)
+        return formula_matrix, stoich_matrix
     
+    def _make_solid_formula_and_stoich_matrices(self):
+        solid_formula_matrix = builder.make_solid_formula_matrix(self.solid_reactions, self.elements)
+        solid_stoich_matrix = builder.make_stoich_matrix(self.species, self.solid_reactions)
+        return solid_formula_matrix, solid_stoich_matrix
+
     def _prepare_balance_arrays(self, balances):
         nbalances = len(balances)
         balance_vector = np.zeros(nbalances)

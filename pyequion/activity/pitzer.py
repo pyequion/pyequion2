@@ -6,7 +6,7 @@ import functools
 
 import numpy as np
 
-from . import coo_tensor_ops
+from .coo_tensor_ops import coo_tensor_ops
 from .. import utils
 from .. import constants
 

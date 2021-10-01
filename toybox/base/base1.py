@@ -5,9 +5,9 @@ sys.path.insert(0,'../..')
 
 import numpy as np
 
-from pyequion2 import EquilibriumSystem
-from pyequion2 import builder
-from pyequion2 import converters
+from pyequion import EquilibriumSystem
+from pyequion import builder
+from pyequion import converters
 
 
 eqsys = EquilibriumSystem(['C','Ca','Na','Cl'], from_elements=True, activity_model="PITZER")

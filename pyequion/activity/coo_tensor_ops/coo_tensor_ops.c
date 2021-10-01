@@ -3,12 +3,12 @@
 /* BEGIN: Cython Metadata
 {
     "distutils": {
-        "name": "coo_tensor_ops",
+        "name": "pyequion.activity.coo_tensor_ops.coo_tensor_ops",
         "sources": [
-            "/home/danilo/Danilo/NIDF/Incrustacao/PyEquion2/pyequion2/pyequion2/activity/coo_tensor_ops.pyx"
+            "/home/danilo/Danilo/NIDF/Incrustacao/PyEquion2/pyequion2/pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx"
         ]
     },
-    "module_name": "coo_tensor_ops"
+    "module_name": "pyequion.activity.coo_tensor_ops.coo_tensor_ops"
 }
 END: Cython Metadata */
 
@@ -610,8 +610,8 @@ static CYTHON_INLINE float __PYX_NAN() {
   #endif
 #endif
 
-#define __PYX_HAVE__coo_tensor_ops
-#define __PYX_HAVE_API__coo_tensor_ops
+#define __PYX_HAVE__pyequion__activity__coo_tensor_ops__coo_tensor_ops
+#define __PYX_HAVE_API__pyequion__activity__coo_tensor_ops__coo_tensor_ops
 /* Early includes */
 #include "pythread.h"
 #include <string.h>
@@ -826,7 +826,7 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "coo_tensor_ops.pyx",
+  "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx",
   "stringsource",
 };
 /* MemviewSliceStruct.proto */
@@ -1694,7 +1694,7 @@ static PyObject *__pyx_memoryview_assign_item_from_object(struct __pyx_memoryvie
 static PyObject *__pyx_memoryviewslice_convert_item_to_object(struct __pyx_memoryviewslice_obj *__pyx_v_self, char *__pyx_v_itemp); /* proto*/
 static PyObject *__pyx_memoryviewslice_assign_item_from_object(struct __pyx_memoryviewslice_obj *__pyx_v_self, char *__pyx_v_itemp, PyObject *__pyx_v_value); /* proto*/
 
-/* Module declarations from 'coo_tensor_ops' */
+/* Module declarations from 'pyequion.activity.coo_tensor_ops.coo_tensor_ops' */
 static PyTypeObject *__pyx_array_type = 0;
 static PyTypeObject *__pyx_MemviewEnum_type = 0;
 static PyTypeObject *__pyx_memoryview_type = 0;
@@ -1741,11 +1741,11 @@ static void __pyx_memoryview__slice_assign_scalar(char *, Py_ssize_t *, Py_ssize
 static PyObject *__pyx_unpickle_Enum__set_state(struct __pyx_MemviewEnum_obj *, PyObject *); /*proto*/
 static __Pyx_TypeInfo __Pyx_TypeInfo_double = { "double", NULL, sizeof(double), { 0 }, 0, 'R', 0, 0 };
 static __Pyx_TypeInfo __Pyx_TypeInfo_int = { "int", NULL, sizeof(int), { 0 }, 0, IS_UNSIGNED(int) ? 'U' : 'I', IS_UNSIGNED(int), 0 };
-#define __Pyx_MODULE_NAME "coo_tensor_ops"
-extern int __pyx_module_is_main_coo_tensor_ops;
-int __pyx_module_is_main_coo_tensor_ops = 0;
+#define __Pyx_MODULE_NAME "pyequion.activity.coo_tensor_ops.coo_tensor_ops"
+extern int __pyx_module_is_main_pyequion__activity__coo_tensor_ops__coo_tensor_ops;
+int __pyx_module_is_main_pyequion__activity__coo_tensor_ops__coo_tensor_ops = 0;
 
-/* Implementation of 'coo_tensor_ops' */
+/* Implementation of 'pyequion.activity.coo_tensor_ops.coo_tensor_ops' */
 static PyObject *__pyx_builtin_range;
 static PyObject *__pyx_builtin_ValueError;
 static PyObject *__pyx_builtin_MemoryError;
@@ -1826,7 +1826,6 @@ static const char __pyx_k_pyx_checksum[] = "__pyx_checksum";
 static const char __pyx_k_stringsource[] = "stringsource";
 static const char __pyx_k_pyx_getbuffer[] = "__pyx_getbuffer";
 static const char __pyx_k_reduce_cython[] = "__reduce_cython__";
-static const char __pyx_k_coo_tensor_ops[] = "coo_tensor_ops";
 static const char __pyx_k_View_MemoryView[] = "View.MemoryView";
 static const char __pyx_k_allocate_buffer[] = "allocate_buffer";
 static const char __pyx_k_dtype_is_object[] = "dtype_is_object";
@@ -1835,7 +1834,6 @@ static const char __pyx_k_setstate_cython[] = "__setstate_cython__";
 static const char __pyx_k_coo_matrix_vector[] = "coo_matrix_vector";
 static const char __pyx_k_pyx_unpickle_Enum[] = "__pyx_unpickle_Enum";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
-static const char __pyx_k_coo_tensor_ops_pyx[] = "coo_tensor_ops.pyx";
 static const char __pyx_k_strided_and_direct[] = "<strided and direct>";
 static const char __pyx_k_strided_and_indirect[] = "<strided and indirect>";
 static const char __pyx_k_contiguous_and_direct[] = "<contiguous and direct>";
@@ -1862,7 +1860,9 @@ static const char __pyx_k_Out_of_bounds_on_buffer_access_a[] = "Out of bounds on
 static const char __pyx_k_Unable_to_convert_item_to_object[] = "Unable to convert item to object";
 static const char __pyx_k_got_differing_extents_in_dimensi[] = "got differing extents in dimension %d (got %d and %d)";
 static const char __pyx_k_no_default___reduce___due_to_non[] = "no default __reduce__ due to non-trivial __cinit__";
+static const char __pyx_k_pyequion_activity_coo_tensor_ops[] = "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx";
 static const char __pyx_k_unable_to_allocate_shape_and_str[] = "unable to allocate shape and strides.";
+static const char __pyx_k_pyequion_activity_coo_tensor_ops_2[] = "pyequion.activity.coo_tensor_ops.coo_tensor_ops";
 static PyObject *__pyx_n_s_ASCII;
 static PyObject *__pyx_n_s_A_data;
 static PyObject *__pyx_n_s_A_inds;
@@ -1903,8 +1903,6 @@ static PyObject *__pyx_kp_s_contiguous_and_direct;
 static PyObject *__pyx_kp_s_contiguous_and_indirect;
 static PyObject *__pyx_n_s_coo_matrix_vector;
 static PyObject *__pyx_n_s_coo_matrix_vector_vector;
-static PyObject *__pyx_n_s_coo_tensor_ops;
-static PyObject *__pyx_kp_s_coo_tensor_ops_pyx;
 static PyObject *__pyx_n_s_coo_tensor_vector_vector;
 static PyObject *__pyx_n_s_coo_tensor_vector_vector_vector;
 static PyObject *__pyx_n_s_dict;
@@ -1942,6 +1940,8 @@ static PyObject *__pyx_n_s_numpy;
 static PyObject *__pyx_n_s_obj;
 static PyObject *__pyx_n_s_pack;
 static PyObject *__pyx_n_s_pickle;
+static PyObject *__pyx_kp_s_pyequion_activity_coo_tensor_ops;
+static PyObject *__pyx_n_s_pyequion_activity_coo_tensor_ops_2;
 static PyObject *__pyx_n_s_pyx_PickleError;
 static PyObject *__pyx_n_s_pyx_checksum;
 static PyObject *__pyx_n_s_pyx_getbuffer;
@@ -1974,10 +1974,10 @@ static PyObject *__pyx_kp_s_unable_to_allocate_shape_and_str;
 static PyObject *__pyx_n_s_unpack;
 static PyObject *__pyx_n_s_update;
 static PyObject *__pyx_n_s_zeros;
-static PyObject *__pyx_pf_14coo_tensor_ops_coo_matrix_vector(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_A_data, __Pyx_memviewslice __pyx_v_A_inds, __Pyx_memviewslice __pyx_v_A_shape, __Pyx_memviewslice __pyx_v_b); /* proto */
-static PyObject *__pyx_pf_14coo_tensor_ops_2coo_matrix_vector_vector(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_A_data, __Pyx_memviewslice __pyx_v_A_inds, __Pyx_memviewslice __pyx_v_A_shape, __Pyx_memviewslice __pyx_v_b1, __Pyx_memviewslice __pyx_v_b2); /* proto */
-static PyObject *__pyx_pf_14coo_tensor_ops_4coo_tensor_vector_vector(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_A_data, __Pyx_memviewslice __pyx_v_A_inds, __Pyx_memviewslice __pyx_v_A_shape, __Pyx_memviewslice __pyx_v_b1, __Pyx_memviewslice __pyx_v_b2); /* proto */
-static PyObject *__pyx_pf_14coo_tensor_ops_6coo_tensor_vector_vector_vector(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_A_data, __Pyx_memviewslice __pyx_v_A_inds, __Pyx_memviewslice __pyx_v_A_shape, __Pyx_memviewslice __pyx_v_b1, __Pyx_memviewslice __pyx_v_b2, __Pyx_memviewslice __pyx_v_b3); /* proto */
+static PyObject *__pyx_pf_8pyequion_8activity_14coo_tensor_ops_14coo_tensor_ops_coo_matrix_vector(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_A_data, __Pyx_memviewslice __pyx_v_A_inds, __Pyx_memviewslice __pyx_v_A_shape, __Pyx_memviewslice __pyx_v_b); /* proto */
+static PyObject *__pyx_pf_8pyequion_8activity_14coo_tensor_ops_14coo_tensor_ops_2coo_matrix_vector_vector(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_A_data, __Pyx_memviewslice __pyx_v_A_inds, __Pyx_memviewslice __pyx_v_A_shape, __Pyx_memviewslice __pyx_v_b1, __Pyx_memviewslice __pyx_v_b2); /* proto */
+static PyObject *__pyx_pf_8pyequion_8activity_14coo_tensor_ops_14coo_tensor_ops_4coo_tensor_vector_vector(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_A_data, __Pyx_memviewslice __pyx_v_A_inds, __Pyx_memviewslice __pyx_v_A_shape, __Pyx_memviewslice __pyx_v_b1, __Pyx_memviewslice __pyx_v_b2); /* proto */
+static PyObject *__pyx_pf_8pyequion_8activity_14coo_tensor_ops_14coo_tensor_ops_6coo_tensor_vector_vector_vector(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_A_data, __Pyx_memviewslice __pyx_v_A_inds, __Pyx_memviewslice __pyx_v_A_shape, __Pyx_memviewslice __pyx_v_b1, __Pyx_memviewslice __pyx_v_b2, __Pyx_memviewslice __pyx_v_b3); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __pyx_array_obj *__pyx_v_self, PyObject *__pyx_v_shape, Py_ssize_t __pyx_v_itemsize, PyObject *__pyx_v_format, PyObject *__pyx_v_mode, int __pyx_v_allocate_buffer); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array_2__getbuffer__(struct __pyx_array_obj *__pyx_v_self, Py_buffer *__pyx_v_info, int __pyx_v_flags); /* proto */
 static void __pyx_array___pyx_pf_15View_dot_MemoryView_5array_4__dealloc__(struct __pyx_array_obj *__pyx_v_self); /* proto */
@@ -2063,7 +2063,7 @@ static PyObject *__pyx_codeobj__26;
 static PyObject *__pyx_codeobj__33;
 /* Late includes */
 
-/* "coo_tensor_ops.pyx":7
+/* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":7
  * # @cython.boundscheck(False)  # Deactivate bounds checking
  * # @cython.wraparound(False)   # Deactivate negative indexing.
  * def coo_matrix_vector(double[:] A_data, int[:,:] A_inds, int[:] A_shape, double[:] b):             # <<<<<<<<<<<<<<
@@ -2072,9 +2072,9 @@ static PyObject *__pyx_codeobj__33;
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_14coo_tensor_ops_1coo_matrix_vector(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_14coo_tensor_ops_1coo_matrix_vector = {"coo_matrix_vector", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_14coo_tensor_ops_1coo_matrix_vector, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_14coo_tensor_ops_1coo_matrix_vector(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8pyequion_8activity_14coo_tensor_ops_14coo_tensor_ops_1coo_matrix_vector(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8pyequion_8activity_14coo_tensor_ops_14coo_tensor_ops_1coo_matrix_vector = {"coo_matrix_vector", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8pyequion_8activity_14coo_tensor_ops_14coo_tensor_ops_1coo_matrix_vector, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8pyequion_8activity_14coo_tensor_ops_14coo_tensor_ops_1coo_matrix_vector(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   __Pyx_memviewslice __pyx_v_A_data = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_v_A_inds = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_v_A_shape = { 0, 0, { 0 }, { 0 }, { 0 } };
@@ -2147,18 +2147,18 @@ static PyObject *__pyx_pw_14coo_tensor_ops_1coo_matrix_vector(PyObject *__pyx_se
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("coo_matrix_vector", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 7, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("coo_tensor_ops.coo_matrix_vector", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("pyequion.activity.coo_tensor_ops.coo_tensor_ops.coo_matrix_vector", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_14coo_tensor_ops_coo_matrix_vector(__pyx_self, __pyx_v_A_data, __pyx_v_A_inds, __pyx_v_A_shape, __pyx_v_b);
+  __pyx_r = __pyx_pf_8pyequion_8activity_14coo_tensor_ops_14coo_tensor_ops_coo_matrix_vector(__pyx_self, __pyx_v_A_data, __pyx_v_A_inds, __pyx_v_A_shape, __pyx_v_b);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_14coo_tensor_ops_coo_matrix_vector(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_A_data, __Pyx_memviewslice __pyx_v_A_inds, __Pyx_memviewslice __pyx_v_A_shape, __Pyx_memviewslice __pyx_v_b) {
+static PyObject *__pyx_pf_8pyequion_8activity_14coo_tensor_ops_14coo_tensor_ops_coo_matrix_vector(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_A_data, __Pyx_memviewslice __pyx_v_A_inds, __Pyx_memviewslice __pyx_v_A_shape, __Pyx_memviewslice __pyx_v_b) {
   PyObject *__pyx_v_result = NULL;
   __Pyx_memviewslice __pyx_v_result_view = { 0, 0, { 0 }, { 0 }, { 0 } };
   Py_ssize_t __pyx_v_i;
@@ -2185,7 +2185,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_coo_matrix_vector(CYTHON_UNUSED PyObj
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("coo_matrix_vector", 0);
 
-  /* "coo_tensor_ops.pyx":8
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":8
  * # @cython.wraparound(False)   # Deactivate negative indexing.
  * def coo_matrix_vector(double[:] A_data, int[:,:] A_inds, int[:] A_shape, double[:] b):
  *     assert A_shape[1] == b.shape[0]             # <<<<<<<<<<<<<<
@@ -2211,7 +2211,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_coo_matrix_vector(CYTHON_UNUSED PyObj
   }
   #endif
 
-  /* "coo_tensor_ops.pyx":9
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":9
  * def coo_matrix_vector(double[:] A_data, int[:,:] A_inds, int[:] A_shape, double[:] b):
  *     assert A_shape[1] == b.shape[0]
  *     result = np.zeros(A_shape[0],dtype=np.double)             # <<<<<<<<<<<<<<
@@ -2257,7 +2257,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_coo_matrix_vector(CYTHON_UNUSED PyObj
   __pyx_v_result = __pyx_t_7;
   __pyx_t_7 = 0;
 
-  /* "coo_tensor_ops.pyx":10
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":10
  *     assert A_shape[1] == b.shape[0]
  *     result = np.zeros(A_shape[0],dtype=np.double)
  *     cdef double[:] result_view = result             # <<<<<<<<<<<<<<
@@ -2269,7 +2269,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_coo_matrix_vector(CYTHON_UNUSED PyObj
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "coo_tensor_ops.pyx":12
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":12
  *     cdef double[:] result_view = result
  *     cdef Py_ssize_t i
  *     cdef Py_ssize_t imax = A_data.shape[0]             # <<<<<<<<<<<<<<
@@ -2278,7 +2278,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_coo_matrix_vector(CYTHON_UNUSED PyObj
  */
   __pyx_v_imax = (__pyx_v_A_data.shape[0]);
 
-  /* "coo_tensor_ops.pyx":15
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":15
  * 
  *     cdef int ind0,ind1
  *     for i in range(imax):             # <<<<<<<<<<<<<<
@@ -2290,7 +2290,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_coo_matrix_vector(CYTHON_UNUSED PyObj
   for (__pyx_t_11 = 0; __pyx_t_11 < __pyx_t_10; __pyx_t_11+=1) {
     __pyx_v_i = __pyx_t_11;
 
-    /* "coo_tensor_ops.pyx":16
+    /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":16
  *     cdef int ind0,ind1
  *     for i in range(imax):
  *         ind0 = A_inds[i,0]             # <<<<<<<<<<<<<<
@@ -2314,7 +2314,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_coo_matrix_vector(CYTHON_UNUSED PyObj
     }
     __pyx_v_ind0 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A_inds.data + __pyx_t_1 * __pyx_v_A_inds.strides[0]) ) + __pyx_t_12 * __pyx_v_A_inds.strides[1]) )));
 
-    /* "coo_tensor_ops.pyx":17
+    /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":17
  *     for i in range(imax):
  *         ind0 = A_inds[i,0]
  *         ind1 = A_inds[i,1]             # <<<<<<<<<<<<<<
@@ -2338,7 +2338,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_coo_matrix_vector(CYTHON_UNUSED PyObj
     }
     __pyx_v_ind1 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A_inds.data + __pyx_t_12 * __pyx_v_A_inds.strides[0]) ) + __pyx_t_1 * __pyx_v_A_inds.strides[1]) )));
 
-    /* "coo_tensor_ops.pyx":18
+    /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":18
  *         ind0 = A_inds[i,0]
  *         ind1 = A_inds[i,1]
  *         result_view[ind0] += A_data[i]*b[ind1]             # <<<<<<<<<<<<<<
@@ -2378,7 +2378,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_coo_matrix_vector(CYTHON_UNUSED PyObj
     *((double *) ( /* dim=0 */ (__pyx_v_result_view.data + __pyx_t_13 * __pyx_v_result_view.strides[0]) )) += ((*((double *) ( /* dim=0 */ (__pyx_v_A_data.data + __pyx_t_1 * __pyx_v_A_data.strides[0]) ))) * (*((double *) ( /* dim=0 */ (__pyx_v_b.data + __pyx_t_12 * __pyx_v_b.strides[0]) ))));
   }
 
-  /* "coo_tensor_ops.pyx":19
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":19
  *         ind1 = A_inds[i,1]
  *         result_view[ind0] += A_data[i]*b[ind1]
  *     return result             # <<<<<<<<<<<<<<
@@ -2390,7 +2390,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_coo_matrix_vector(CYTHON_UNUSED PyObj
   __pyx_r = __pyx_v_result;
   goto __pyx_L0;
 
-  /* "coo_tensor_ops.pyx":7
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":7
  * # @cython.boundscheck(False)  # Deactivate bounds checking
  * # @cython.wraparound(False)   # Deactivate negative indexing.
  * def coo_matrix_vector(double[:] A_data, int[:,:] A_inds, int[:] A_shape, double[:] b):             # <<<<<<<<<<<<<<
@@ -2406,7 +2406,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_coo_matrix_vector(CYTHON_UNUSED PyObj
   __Pyx_XDECREF(__pyx_t_6);
   __Pyx_XDECREF(__pyx_t_7);
   __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
-  __Pyx_AddTraceback("coo_tensor_ops.coo_matrix_vector", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("pyequion.activity.coo_tensor_ops.coo_tensor_ops.coo_matrix_vector", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_result);
@@ -2420,7 +2420,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_coo_matrix_vector(CYTHON_UNUSED PyObj
   return __pyx_r;
 }
 
-/* "coo_tensor_ops.pyx":24
+/* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":24
  * # @cython.boundscheck(False)  # Deactivate bounds checking
  * # @cython.wraparound(False)   # Deactivate negative indexing.
  * def coo_matrix_vector_vector(double[:] A_data, int[:,:] A_inds, int[:] A_shape,             # <<<<<<<<<<<<<<
@@ -2429,9 +2429,9 @@ static PyObject *__pyx_pf_14coo_tensor_ops_coo_matrix_vector(CYTHON_UNUSED PyObj
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_14coo_tensor_ops_3coo_matrix_vector_vector(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_14coo_tensor_ops_3coo_matrix_vector_vector = {"coo_matrix_vector_vector", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_14coo_tensor_ops_3coo_matrix_vector_vector, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_14coo_tensor_ops_3coo_matrix_vector_vector(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8pyequion_8activity_14coo_tensor_ops_14coo_tensor_ops_3coo_matrix_vector_vector(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8pyequion_8activity_14coo_tensor_ops_14coo_tensor_ops_3coo_matrix_vector_vector = {"coo_matrix_vector_vector", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8pyequion_8activity_14coo_tensor_ops_14coo_tensor_ops_3coo_matrix_vector_vector, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8pyequion_8activity_14coo_tensor_ops_14coo_tensor_ops_3coo_matrix_vector_vector(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   __Pyx_memviewslice __pyx_v_A_data = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_v_A_inds = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_v_A_shape = { 0, 0, { 0 }, { 0 }, { 0 } };
@@ -2515,18 +2515,18 @@ static PyObject *__pyx_pw_14coo_tensor_ops_3coo_matrix_vector_vector(PyObject *_
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("coo_matrix_vector_vector", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 24, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("coo_tensor_ops.coo_matrix_vector_vector", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("pyequion.activity.coo_tensor_ops.coo_tensor_ops.coo_matrix_vector_vector", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_14coo_tensor_ops_2coo_matrix_vector_vector(__pyx_self, __pyx_v_A_data, __pyx_v_A_inds, __pyx_v_A_shape, __pyx_v_b1, __pyx_v_b2);
+  __pyx_r = __pyx_pf_8pyequion_8activity_14coo_tensor_ops_14coo_tensor_ops_2coo_matrix_vector_vector(__pyx_self, __pyx_v_A_data, __pyx_v_A_inds, __pyx_v_A_shape, __pyx_v_b1, __pyx_v_b2);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_14coo_tensor_ops_2coo_matrix_vector_vector(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_A_data, __Pyx_memviewslice __pyx_v_A_inds, __Pyx_memviewslice __pyx_v_A_shape, __Pyx_memviewslice __pyx_v_b1, __Pyx_memviewslice __pyx_v_b2) {
+static PyObject *__pyx_pf_8pyequion_8activity_14coo_tensor_ops_14coo_tensor_ops_2coo_matrix_vector_vector(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_A_data, __Pyx_memviewslice __pyx_v_A_inds, __Pyx_memviewslice __pyx_v_A_shape, __Pyx_memviewslice __pyx_v_b1, __Pyx_memviewslice __pyx_v_b2) {
   double __pyx_v_result;
   Py_ssize_t __pyx_v_i;
   Py_ssize_t __pyx_v_imax;
@@ -2547,7 +2547,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_2coo_matrix_vector_vector(CYTHON_UNUS
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("coo_matrix_vector_vector", 0);
 
-  /* "coo_tensor_ops.pyx":26
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":26
  * def coo_matrix_vector_vector(double[:] A_data, int[:,:] A_inds, int[:] A_shape,
  *                              double[:] b1, double[:] b2):
  *     assert A_shape[0] == b1.shape[0]             # <<<<<<<<<<<<<<
@@ -2573,7 +2573,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_2coo_matrix_vector_vector(CYTHON_UNUS
   }
   #endif
 
-  /* "coo_tensor_ops.pyx":27
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":27
  *                              double[:] b1, double[:] b2):
  *     assert A_shape[0] == b1.shape[0]
  *     assert A_shape[1] == b2.shape[0]             # <<<<<<<<<<<<<<
@@ -2599,7 +2599,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_2coo_matrix_vector_vector(CYTHON_UNUS
   }
   #endif
 
-  /* "coo_tensor_ops.pyx":31
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":31
  *     cdef double result
  *     cdef Py_ssize_t i
  *     cdef Py_ssize_t imax = A_data.shape[0]             # <<<<<<<<<<<<<<
@@ -2608,7 +2608,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_2coo_matrix_vector_vector(CYTHON_UNUS
  */
   __pyx_v_imax = (__pyx_v_A_data.shape[0]);
 
-  /* "coo_tensor_ops.pyx":34
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":34
  * 
  *     cdef int ind0,ind1
  *     for i in range(imax):             # <<<<<<<<<<<<<<
@@ -2620,7 +2620,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_2coo_matrix_vector_vector(CYTHON_UNUS
   for (__pyx_t_5 = 0; __pyx_t_5 < __pyx_t_4; __pyx_t_5+=1) {
     __pyx_v_i = __pyx_t_5;
 
-    /* "coo_tensor_ops.pyx":35
+    /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":35
  *     cdef int ind0,ind1
  *     for i in range(imax):
  *         ind0 = A_inds[i,0]             # <<<<<<<<<<<<<<
@@ -2644,7 +2644,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_2coo_matrix_vector_vector(CYTHON_UNUS
     }
     __pyx_v_ind0 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A_inds.data + __pyx_t_1 * __pyx_v_A_inds.strides[0]) ) + __pyx_t_6 * __pyx_v_A_inds.strides[1]) )));
 
-    /* "coo_tensor_ops.pyx":36
+    /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":36
  *     for i in range(imax):
  *         ind0 = A_inds[i,0]
  *         ind1 = A_inds[i,1]             # <<<<<<<<<<<<<<
@@ -2668,7 +2668,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_2coo_matrix_vector_vector(CYTHON_UNUS
     }
     __pyx_v_ind1 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A_inds.data + __pyx_t_6 * __pyx_v_A_inds.strides[0]) ) + __pyx_t_1 * __pyx_v_A_inds.strides[1]) )));
 
-    /* "coo_tensor_ops.pyx":37
+    /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":37
  *         ind0 = A_inds[i,0]
  *         ind1 = A_inds[i,1]
  *         result += A_data[i]*b1[ind0]*b2[ind1]             # <<<<<<<<<<<<<<
@@ -2708,7 +2708,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_2coo_matrix_vector_vector(CYTHON_UNUS
     __pyx_v_result = (__pyx_v_result + (((*((double *) ( /* dim=0 */ (__pyx_v_A_data.data + __pyx_t_1 * __pyx_v_A_data.strides[0]) ))) * (*((double *) ( /* dim=0 */ (__pyx_v_b1.data + __pyx_t_6 * __pyx_v_b1.strides[0]) )))) * (*((double *) ( /* dim=0 */ (__pyx_v_b2.data + __pyx_t_7 * __pyx_v_b2.strides[0]) )))));
   }
 
-  /* "coo_tensor_ops.pyx":38
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":38
  *         ind1 = A_inds[i,1]
  *         result += A_data[i]*b1[ind0]*b2[ind1]
  *     return result             # <<<<<<<<<<<<<<
@@ -2722,7 +2722,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_2coo_matrix_vector_vector(CYTHON_UNUS
   __pyx_t_8 = 0;
   goto __pyx_L0;
 
-  /* "coo_tensor_ops.pyx":24
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":24
  * # @cython.boundscheck(False)  # Deactivate bounds checking
  * # @cython.wraparound(False)   # Deactivate negative indexing.
  * def coo_matrix_vector_vector(double[:] A_data, int[:,:] A_inds, int[:] A_shape,             # <<<<<<<<<<<<<<
@@ -2733,7 +2733,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_2coo_matrix_vector_vector(CYTHON_UNUS
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_AddTraceback("coo_tensor_ops.coo_matrix_vector_vector", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("pyequion.activity.coo_tensor_ops.coo_tensor_ops.coo_matrix_vector_vector", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __PYX_XDEC_MEMVIEW(&__pyx_v_A_data, 1);
@@ -2746,7 +2746,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_2coo_matrix_vector_vector(CYTHON_UNUS
   return __pyx_r;
 }
 
-/* "coo_tensor_ops.pyx":43
+/* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":43
  * # @cython.boundscheck(False)  # Deactivate bounds checking
  * # @cython.wraparound(False)   # Deactivate negative indexing.
  * def coo_tensor_vector_vector(double[:] A_data, int[:,:] A_inds, int[:] A_shape,             # <<<<<<<<<<<<<<
@@ -2755,9 +2755,9 @@ static PyObject *__pyx_pf_14coo_tensor_ops_2coo_matrix_vector_vector(CYTHON_UNUS
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_14coo_tensor_ops_5coo_tensor_vector_vector(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_14coo_tensor_ops_5coo_tensor_vector_vector = {"coo_tensor_vector_vector", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_14coo_tensor_ops_5coo_tensor_vector_vector, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_14coo_tensor_ops_5coo_tensor_vector_vector(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8pyequion_8activity_14coo_tensor_ops_14coo_tensor_ops_5coo_tensor_vector_vector(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8pyequion_8activity_14coo_tensor_ops_14coo_tensor_ops_5coo_tensor_vector_vector = {"coo_tensor_vector_vector", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8pyequion_8activity_14coo_tensor_ops_14coo_tensor_ops_5coo_tensor_vector_vector, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8pyequion_8activity_14coo_tensor_ops_14coo_tensor_ops_5coo_tensor_vector_vector(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   __Pyx_memviewslice __pyx_v_A_data = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_v_A_inds = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_v_A_shape = { 0, 0, { 0 }, { 0 }, { 0 } };
@@ -2841,18 +2841,18 @@ static PyObject *__pyx_pw_14coo_tensor_ops_5coo_tensor_vector_vector(PyObject *_
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("coo_tensor_vector_vector", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 43, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("coo_tensor_ops.coo_tensor_vector_vector", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("pyequion.activity.coo_tensor_ops.coo_tensor_ops.coo_tensor_vector_vector", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_14coo_tensor_ops_4coo_tensor_vector_vector(__pyx_self, __pyx_v_A_data, __pyx_v_A_inds, __pyx_v_A_shape, __pyx_v_b1, __pyx_v_b2);
+  __pyx_r = __pyx_pf_8pyequion_8activity_14coo_tensor_ops_14coo_tensor_ops_4coo_tensor_vector_vector(__pyx_self, __pyx_v_A_data, __pyx_v_A_inds, __pyx_v_A_shape, __pyx_v_b1, __pyx_v_b2);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_14coo_tensor_ops_4coo_tensor_vector_vector(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_A_data, __Pyx_memviewslice __pyx_v_A_inds, __Pyx_memviewslice __pyx_v_A_shape, __Pyx_memviewslice __pyx_v_b1, __Pyx_memviewslice __pyx_v_b2) {
+static PyObject *__pyx_pf_8pyequion_8activity_14coo_tensor_ops_14coo_tensor_ops_4coo_tensor_vector_vector(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_A_data, __Pyx_memviewslice __pyx_v_A_inds, __Pyx_memviewslice __pyx_v_A_shape, __Pyx_memviewslice __pyx_v_b1, __Pyx_memviewslice __pyx_v_b2) {
   PyObject *__pyx_v_result = NULL;
   __Pyx_memviewslice __pyx_v_result_view = { 0, 0, { 0 }, { 0 }, { 0 } };
   Py_ssize_t __pyx_v_i;
@@ -2881,7 +2881,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_4coo_tensor_vector_vector(CYTHON_UNUS
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("coo_tensor_vector_vector", 0);
 
-  /* "coo_tensor_ops.pyx":45
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":45
  * def coo_tensor_vector_vector(double[:] A_data, int[:,:] A_inds, int[:] A_shape,
  *                              double[:] b1, double[:] b2):
  *     assert A_shape[1] == b1.shape[0]             # <<<<<<<<<<<<<<
@@ -2907,7 +2907,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_4coo_tensor_vector_vector(CYTHON_UNUS
   }
   #endif
 
-  /* "coo_tensor_ops.pyx":46
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":46
  *                              double[:] b1, double[:] b2):
  *     assert A_shape[1] == b1.shape[0]
  *     assert A_shape[2] == b2.shape[0]             # <<<<<<<<<<<<<<
@@ -2933,7 +2933,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_4coo_tensor_vector_vector(CYTHON_UNUS
   }
   #endif
 
-  /* "coo_tensor_ops.pyx":48
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":48
  *     assert A_shape[2] == b2.shape[0]
  * 
  *     result = np.zeros(A_shape[0],dtype=np.double)             # <<<<<<<<<<<<<<
@@ -2979,7 +2979,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_4coo_tensor_vector_vector(CYTHON_UNUS
   __pyx_v_result = __pyx_t_7;
   __pyx_t_7 = 0;
 
-  /* "coo_tensor_ops.pyx":50
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":50
  *     result = np.zeros(A_shape[0],dtype=np.double)
  * 
  *     cdef double[:] result_view = result             # <<<<<<<<<<<<<<
@@ -2991,7 +2991,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_4coo_tensor_vector_vector(CYTHON_UNUS
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "coo_tensor_ops.pyx":52
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":52
  *     cdef double[:] result_view = result
  *     cdef Py_ssize_t i
  *     cdef Py_ssize_t imax = A_data.shape[0]             # <<<<<<<<<<<<<<
@@ -3000,7 +3000,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_4coo_tensor_vector_vector(CYTHON_UNUS
  */
   __pyx_v_imax = (__pyx_v_A_data.shape[0]);
 
-  /* "coo_tensor_ops.pyx":55
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":55
  * 
  *     cdef int ind0,ind1,ind2
  *     for i in range(imax):             # <<<<<<<<<<<<<<
@@ -3012,7 +3012,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_4coo_tensor_vector_vector(CYTHON_UNUS
   for (__pyx_t_11 = 0; __pyx_t_11 < __pyx_t_10; __pyx_t_11+=1) {
     __pyx_v_i = __pyx_t_11;
 
-    /* "coo_tensor_ops.pyx":56
+    /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":56
  *     cdef int ind0,ind1,ind2
  *     for i in range(imax):
  *         ind0 = A_inds[i,0]             # <<<<<<<<<<<<<<
@@ -3036,7 +3036,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_4coo_tensor_vector_vector(CYTHON_UNUS
     }
     __pyx_v_ind0 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A_inds.data + __pyx_t_1 * __pyx_v_A_inds.strides[0]) ) + __pyx_t_12 * __pyx_v_A_inds.strides[1]) )));
 
-    /* "coo_tensor_ops.pyx":57
+    /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":57
  *     for i in range(imax):
  *         ind0 = A_inds[i,0]
  *         ind1 = A_inds[i,1]             # <<<<<<<<<<<<<<
@@ -3060,7 +3060,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_4coo_tensor_vector_vector(CYTHON_UNUS
     }
     __pyx_v_ind1 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A_inds.data + __pyx_t_12 * __pyx_v_A_inds.strides[0]) ) + __pyx_t_1 * __pyx_v_A_inds.strides[1]) )));
 
-    /* "coo_tensor_ops.pyx":58
+    /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":58
  *         ind0 = A_inds[i,0]
  *         ind1 = A_inds[i,1]
  *         ind2 = A_inds[i,2]             # <<<<<<<<<<<<<<
@@ -3084,7 +3084,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_4coo_tensor_vector_vector(CYTHON_UNUS
     }
     __pyx_v_ind2 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A_inds.data + __pyx_t_1 * __pyx_v_A_inds.strides[0]) ) + __pyx_t_12 * __pyx_v_A_inds.strides[1]) )));
 
-    /* "coo_tensor_ops.pyx":59
+    /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":59
  *         ind1 = A_inds[i,1]
  *         ind2 = A_inds[i,2]
  *         result_view[ind0] += A_data[i]*b1[ind1]*b2[ind2]             # <<<<<<<<<<<<<<
@@ -3134,7 +3134,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_4coo_tensor_vector_vector(CYTHON_UNUS
     *((double *) ( /* dim=0 */ (__pyx_v_result_view.data + __pyx_t_14 * __pyx_v_result_view.strides[0]) )) += (((*((double *) ( /* dim=0 */ (__pyx_v_A_data.data + __pyx_t_12 * __pyx_v_A_data.strides[0]) ))) * (*((double *) ( /* dim=0 */ (__pyx_v_b1.data + __pyx_t_1 * __pyx_v_b1.strides[0]) )))) * (*((double *) ( /* dim=0 */ (__pyx_v_b2.data + __pyx_t_13 * __pyx_v_b2.strides[0]) ))));
   }
 
-  /* "coo_tensor_ops.pyx":60
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":60
  *         ind2 = A_inds[i,2]
  *         result_view[ind0] += A_data[i]*b1[ind1]*b2[ind2]
  *     return result             # <<<<<<<<<<<<<<
@@ -3146,7 +3146,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_4coo_tensor_vector_vector(CYTHON_UNUS
   __pyx_r = __pyx_v_result;
   goto __pyx_L0;
 
-  /* "coo_tensor_ops.pyx":43
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":43
  * # @cython.boundscheck(False)  # Deactivate bounds checking
  * # @cython.wraparound(False)   # Deactivate negative indexing.
  * def coo_tensor_vector_vector(double[:] A_data, int[:,:] A_inds, int[:] A_shape,             # <<<<<<<<<<<<<<
@@ -3162,7 +3162,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_4coo_tensor_vector_vector(CYTHON_UNUS
   __Pyx_XDECREF(__pyx_t_6);
   __Pyx_XDECREF(__pyx_t_7);
   __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
-  __Pyx_AddTraceback("coo_tensor_ops.coo_tensor_vector_vector", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("pyequion.activity.coo_tensor_ops.coo_tensor_ops.coo_tensor_vector_vector", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_result);
@@ -3177,7 +3177,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_4coo_tensor_vector_vector(CYTHON_UNUS
   return __pyx_r;
 }
 
-/* "coo_tensor_ops.pyx":64
+/* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":64
  * # @cython.boundscheck(False)  # Deactivate bounds checking
  * # @cython.wraparound(False)   # Deactivate negative indexing.
  * def coo_tensor_vector_vector_vector(double[:] A_data, int[:,:] A_inds, int[:] A_shape,             # <<<<<<<<<<<<<<
@@ -3186,9 +3186,9 @@ static PyObject *__pyx_pf_14coo_tensor_ops_4coo_tensor_vector_vector(CYTHON_UNUS
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_14coo_tensor_ops_7coo_tensor_vector_vector_vector(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_14coo_tensor_ops_7coo_tensor_vector_vector_vector = {"coo_tensor_vector_vector_vector", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_14coo_tensor_ops_7coo_tensor_vector_vector_vector, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_14coo_tensor_ops_7coo_tensor_vector_vector_vector(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8pyequion_8activity_14coo_tensor_ops_14coo_tensor_ops_7coo_tensor_vector_vector_vector(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8pyequion_8activity_14coo_tensor_ops_14coo_tensor_ops_7coo_tensor_vector_vector_vector = {"coo_tensor_vector_vector_vector", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8pyequion_8activity_14coo_tensor_ops_14coo_tensor_ops_7coo_tensor_vector_vector_vector, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8pyequion_8activity_14coo_tensor_ops_14coo_tensor_ops_7coo_tensor_vector_vector_vector(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   __Pyx_memviewslice __pyx_v_A_data = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_v_A_inds = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_v_A_shape = { 0, 0, { 0 }, { 0 }, { 0 } };
@@ -3283,18 +3283,18 @@ static PyObject *__pyx_pw_14coo_tensor_ops_7coo_tensor_vector_vector_vector(PyOb
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("coo_tensor_vector_vector_vector", 1, 6, 6, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 64, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("coo_tensor_ops.coo_tensor_vector_vector_vector", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("pyequion.activity.coo_tensor_ops.coo_tensor_ops.coo_tensor_vector_vector_vector", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_14coo_tensor_ops_6coo_tensor_vector_vector_vector(__pyx_self, __pyx_v_A_data, __pyx_v_A_inds, __pyx_v_A_shape, __pyx_v_b1, __pyx_v_b2, __pyx_v_b3);
+  __pyx_r = __pyx_pf_8pyequion_8activity_14coo_tensor_ops_14coo_tensor_ops_6coo_tensor_vector_vector_vector(__pyx_self, __pyx_v_A_data, __pyx_v_A_inds, __pyx_v_A_shape, __pyx_v_b1, __pyx_v_b2, __pyx_v_b3);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_14coo_tensor_ops_6coo_tensor_vector_vector_vector(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_A_data, __Pyx_memviewslice __pyx_v_A_inds, __Pyx_memviewslice __pyx_v_A_shape, __Pyx_memviewslice __pyx_v_b1, __Pyx_memviewslice __pyx_v_b2, __Pyx_memviewslice __pyx_v_b3) {
+static PyObject *__pyx_pf_8pyequion_8activity_14coo_tensor_ops_14coo_tensor_ops_6coo_tensor_vector_vector_vector(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_A_data, __Pyx_memviewslice __pyx_v_A_inds, __Pyx_memviewslice __pyx_v_A_shape, __Pyx_memviewslice __pyx_v_b1, __Pyx_memviewslice __pyx_v_b2, __Pyx_memviewslice __pyx_v_b3) {
   double __pyx_v_result;
   Py_ssize_t __pyx_v_i;
   Py_ssize_t __pyx_v_imax;
@@ -3317,7 +3317,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_6coo_tensor_vector_vector_vector(CYTH
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("coo_tensor_vector_vector_vector", 0);
 
-  /* "coo_tensor_ops.pyx":66
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":66
  * def coo_tensor_vector_vector_vector(double[:] A_data, int[:,:] A_inds, int[:] A_shape,
  *                                     double[:] b1, double[:] b2, double[:] b3):
  *     assert A_shape[0] == b1.shape[0]             # <<<<<<<<<<<<<<
@@ -3343,7 +3343,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_6coo_tensor_vector_vector_vector(CYTH
   }
   #endif
 
-  /* "coo_tensor_ops.pyx":67
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":67
  *                                     double[:] b1, double[:] b2, double[:] b3):
  *     assert A_shape[0] == b1.shape[0]
  *     assert A_shape[1] == b2.shape[0]             # <<<<<<<<<<<<<<
@@ -3369,7 +3369,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_6coo_tensor_vector_vector_vector(CYTH
   }
   #endif
 
-  /* "coo_tensor_ops.pyx":68
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":68
  *     assert A_shape[0] == b1.shape[0]
  *     assert A_shape[1] == b2.shape[0]
  *     assert A_shape[2] == b3.shape[0]             # <<<<<<<<<<<<<<
@@ -3395,7 +3395,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_6coo_tensor_vector_vector_vector(CYTH
   }
   #endif
 
-  /* "coo_tensor_ops.pyx":72
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":72
  *     cdef double result
  *     cdef Py_ssize_t i
  *     cdef Py_ssize_t imax = A_data.shape[0]             # <<<<<<<<<<<<<<
@@ -3404,7 +3404,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_6coo_tensor_vector_vector_vector(CYTH
  */
   __pyx_v_imax = (__pyx_v_A_data.shape[0]);
 
-  /* "coo_tensor_ops.pyx":75
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":75
  * 
  *     cdef int ind0, ind1, ind2
  *     for i in range(imax):             # <<<<<<<<<<<<<<
@@ -3416,7 +3416,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_6coo_tensor_vector_vector_vector(CYTH
   for (__pyx_t_5 = 0; __pyx_t_5 < __pyx_t_4; __pyx_t_5+=1) {
     __pyx_v_i = __pyx_t_5;
 
-    /* "coo_tensor_ops.pyx":76
+    /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":76
  *     cdef int ind0, ind1, ind2
  *     for i in range(imax):
  *         ind0 = A_inds[i,0]             # <<<<<<<<<<<<<<
@@ -3440,7 +3440,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_6coo_tensor_vector_vector_vector(CYTH
     }
     __pyx_v_ind0 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A_inds.data + __pyx_t_1 * __pyx_v_A_inds.strides[0]) ) + __pyx_t_6 * __pyx_v_A_inds.strides[1]) )));
 
-    /* "coo_tensor_ops.pyx":77
+    /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":77
  *     for i in range(imax):
  *         ind0 = A_inds[i,0]
  *         ind1 = A_inds[i,1]             # <<<<<<<<<<<<<<
@@ -3464,7 +3464,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_6coo_tensor_vector_vector_vector(CYTH
     }
     __pyx_v_ind1 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A_inds.data + __pyx_t_6 * __pyx_v_A_inds.strides[0]) ) + __pyx_t_1 * __pyx_v_A_inds.strides[1]) )));
 
-    /* "coo_tensor_ops.pyx":78
+    /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":78
  *         ind0 = A_inds[i,0]
  *         ind1 = A_inds[i,1]
  *         ind2 = A_inds[i,2]             # <<<<<<<<<<<<<<
@@ -3488,7 +3488,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_6coo_tensor_vector_vector_vector(CYTH
     }
     __pyx_v_ind2 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A_inds.data + __pyx_t_1 * __pyx_v_A_inds.strides[0]) ) + __pyx_t_6 * __pyx_v_A_inds.strides[1]) )));
 
-    /* "coo_tensor_ops.pyx":79
+    /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":79
  *         ind1 = A_inds[i,1]
  *         ind2 = A_inds[i,2]
  *         result += A_data[i]*b1[ind0]*b2[ind1]*b3[ind2]             # <<<<<<<<<<<<<<
@@ -3537,7 +3537,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_6coo_tensor_vector_vector_vector(CYTH
     __pyx_v_result = (__pyx_v_result + ((((*((double *) ( /* dim=0 */ (__pyx_v_A_data.data + __pyx_t_6 * __pyx_v_A_data.strides[0]) ))) * (*((double *) ( /* dim=0 */ (__pyx_v_b1.data + __pyx_t_1 * __pyx_v_b1.strides[0]) )))) * (*((double *) ( /* dim=0 */ (__pyx_v_b2.data + __pyx_t_7 * __pyx_v_b2.strides[0]) )))) * (*((double *) ( /* dim=0 */ (__pyx_v_b3.data + __pyx_t_8 * __pyx_v_b3.strides[0]) )))));
   }
 
-  /* "coo_tensor_ops.pyx":80
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":80
  *         ind2 = A_inds[i,2]
  *         result += A_data[i]*b1[ind0]*b2[ind1]*b3[ind2]
  *     return result             # <<<<<<<<<<<<<<
@@ -3549,7 +3549,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_6coo_tensor_vector_vector_vector(CYTH
   __pyx_t_9 = 0;
   goto __pyx_L0;
 
-  /* "coo_tensor_ops.pyx":64
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":64
  * # @cython.boundscheck(False)  # Deactivate bounds checking
  * # @cython.wraparound(False)   # Deactivate negative indexing.
  * def coo_tensor_vector_vector_vector(double[:] A_data, int[:,:] A_inds, int[:] A_shape,             # <<<<<<<<<<<<<<
@@ -3560,7 +3560,7 @@ static PyObject *__pyx_pf_14coo_tensor_ops_6coo_tensor_vector_vector_vector(CYTH
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_9);
-  __Pyx_AddTraceback("coo_tensor_ops.coo_tensor_vector_vector_vector", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("pyequion.activity.coo_tensor_ops.coo_tensor_ops.coo_tensor_vector_vector_vector", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __PYX_XDEC_MEMVIEW(&__pyx_v_A_data, 1);
@@ -16714,7 +16714,7 @@ static PyBufferProcs __pyx_tp_as_buffer_array = {
 
 static PyTypeObject __pyx_type___pyx_array = {
   PyVarObject_HEAD_INIT(0, 0)
-  "coo_tensor_ops.array", /*tp_name*/
+  "pyequion.activity.coo_tensor_ops.coo_tensor_ops.array", /*tp_name*/
   sizeof(struct __pyx_array_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc_array, /*tp_dealloc*/
@@ -16833,7 +16833,7 @@ static PyMethodDef __pyx_methods_Enum[] = {
 
 static PyTypeObject __pyx_type___pyx_MemviewEnum = {
   PyVarObject_HEAD_INIT(0, 0)
-  "coo_tensor_ops.Enum", /*tp_name*/
+  "pyequion.activity.coo_tensor_ops.coo_tensor_ops.Enum", /*tp_name*/
   sizeof(struct __pyx_MemviewEnum_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc_Enum, /*tp_dealloc*/
@@ -17094,7 +17094,7 @@ static PyBufferProcs __pyx_tp_as_buffer_memoryview = {
 
 static PyTypeObject __pyx_type___pyx_memoryview = {
   PyVarObject_HEAD_INIT(0, 0)
-  "coo_tensor_ops.memoryview", /*tp_name*/
+  "pyequion.activity.coo_tensor_ops.coo_tensor_ops.memoryview", /*tp_name*/
   sizeof(struct __pyx_memoryview_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc_memoryview, /*tp_dealloc*/
@@ -17232,7 +17232,7 @@ static struct PyGetSetDef __pyx_getsets__memoryviewslice[] = {
 
 static PyTypeObject __pyx_type___pyx_memoryviewslice = {
   PyVarObject_HEAD_INIT(0, 0)
-  "coo_tensor_ops._memoryviewslice", /*tp_name*/
+  "pyequion.activity.coo_tensor_ops.coo_tensor_ops._memoryviewslice", /*tp_name*/
   sizeof(struct __pyx_memoryviewslice_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc__memoryviewslice, /*tp_dealloc*/
@@ -17393,8 +17393,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_contiguous_and_indirect, __pyx_k_contiguous_and_indirect, sizeof(__pyx_k_contiguous_and_indirect), 0, 0, 1, 0},
   {&__pyx_n_s_coo_matrix_vector, __pyx_k_coo_matrix_vector, sizeof(__pyx_k_coo_matrix_vector), 0, 0, 1, 1},
   {&__pyx_n_s_coo_matrix_vector_vector, __pyx_k_coo_matrix_vector_vector, sizeof(__pyx_k_coo_matrix_vector_vector), 0, 0, 1, 1},
-  {&__pyx_n_s_coo_tensor_ops, __pyx_k_coo_tensor_ops, sizeof(__pyx_k_coo_tensor_ops), 0, 0, 1, 1},
-  {&__pyx_kp_s_coo_tensor_ops_pyx, __pyx_k_coo_tensor_ops_pyx, sizeof(__pyx_k_coo_tensor_ops_pyx), 0, 0, 1, 0},
   {&__pyx_n_s_coo_tensor_vector_vector, __pyx_k_coo_tensor_vector_vector, sizeof(__pyx_k_coo_tensor_vector_vector), 0, 0, 1, 1},
   {&__pyx_n_s_coo_tensor_vector_vector_vector, __pyx_k_coo_tensor_vector_vector_vector, sizeof(__pyx_k_coo_tensor_vector_vector_vector), 0, 0, 1, 1},
   {&__pyx_n_s_dict, __pyx_k_dict, sizeof(__pyx_k_dict), 0, 0, 1, 1},
@@ -17432,6 +17430,8 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_obj, __pyx_k_obj, sizeof(__pyx_k_obj), 0, 0, 1, 1},
   {&__pyx_n_s_pack, __pyx_k_pack, sizeof(__pyx_k_pack), 0, 0, 1, 1},
   {&__pyx_n_s_pickle, __pyx_k_pickle, sizeof(__pyx_k_pickle), 0, 0, 1, 1},
+  {&__pyx_kp_s_pyequion_activity_coo_tensor_ops, __pyx_k_pyequion_activity_coo_tensor_ops, sizeof(__pyx_k_pyequion_activity_coo_tensor_ops), 0, 0, 1, 0},
+  {&__pyx_n_s_pyequion_activity_coo_tensor_ops_2, __pyx_k_pyequion_activity_coo_tensor_ops_2, sizeof(__pyx_k_pyequion_activity_coo_tensor_ops_2), 0, 0, 1, 1},
   {&__pyx_n_s_pyx_PickleError, __pyx_k_pyx_PickleError, sizeof(__pyx_k_pyx_PickleError), 0, 0, 1, 1},
   {&__pyx_n_s_pyx_checksum, __pyx_k_pyx_checksum, sizeof(__pyx_k_pyx_checksum), 0, 0, 1, 1},
   {&__pyx_n_s_pyx_getbuffer, __pyx_k_pyx_getbuffer, sizeof(__pyx_k_pyx_getbuffer), 0, 0, 1, 1},
@@ -17676,7 +17676,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__18);
   __Pyx_GIVEREF(__pyx_tuple__18);
 
-  /* "coo_tensor_ops.pyx":7
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":7
  * # @cython.boundscheck(False)  # Deactivate bounds checking
  * # @cython.wraparound(False)   # Deactivate negative indexing.
  * def coo_matrix_vector(double[:] A_data, int[:,:] A_inds, int[:] A_shape, double[:] b):             # <<<<<<<<<<<<<<
@@ -17686,9 +17686,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__19 = PyTuple_Pack(10, __pyx_n_s_A_data, __pyx_n_s_A_inds, __pyx_n_s_A_shape, __pyx_n_s_b, __pyx_n_s_result, __pyx_n_s_result_view, __pyx_n_s_i, __pyx_n_s_imax, __pyx_n_s_ind0, __pyx_n_s_ind1); if (unlikely(!__pyx_tuple__19)) __PYX_ERR(0, 7, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__19);
   __Pyx_GIVEREF(__pyx_tuple__19);
-  __pyx_codeobj__20 = (PyObject*)__Pyx_PyCode_New(4, 0, 10, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__19, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_coo_tensor_ops_pyx, __pyx_n_s_coo_matrix_vector, 7, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__20)) __PYX_ERR(0, 7, __pyx_L1_error)
+  __pyx_codeobj__20 = (PyObject*)__Pyx_PyCode_New(4, 0, 10, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__19, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_pyequion_activity_coo_tensor_ops, __pyx_n_s_coo_matrix_vector, 7, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__20)) __PYX_ERR(0, 7, __pyx_L1_error)
 
-  /* "coo_tensor_ops.pyx":24
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":24
  * # @cython.boundscheck(False)  # Deactivate bounds checking
  * # @cython.wraparound(False)   # Deactivate negative indexing.
  * def coo_matrix_vector_vector(double[:] A_data, int[:,:] A_inds, int[:] A_shape,             # <<<<<<<<<<<<<<
@@ -17698,9 +17698,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__21 = PyTuple_Pack(10, __pyx_n_s_A_data, __pyx_n_s_A_inds, __pyx_n_s_A_shape, __pyx_n_s_b1, __pyx_n_s_b2, __pyx_n_s_result, __pyx_n_s_i, __pyx_n_s_imax, __pyx_n_s_ind0, __pyx_n_s_ind1); if (unlikely(!__pyx_tuple__21)) __PYX_ERR(0, 24, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__21);
   __Pyx_GIVEREF(__pyx_tuple__21);
-  __pyx_codeobj__22 = (PyObject*)__Pyx_PyCode_New(5, 0, 10, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__21, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_coo_tensor_ops_pyx, __pyx_n_s_coo_matrix_vector_vector, 24, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__22)) __PYX_ERR(0, 24, __pyx_L1_error)
+  __pyx_codeobj__22 = (PyObject*)__Pyx_PyCode_New(5, 0, 10, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__21, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_pyequion_activity_coo_tensor_ops, __pyx_n_s_coo_matrix_vector_vector, 24, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__22)) __PYX_ERR(0, 24, __pyx_L1_error)
 
-  /* "coo_tensor_ops.pyx":43
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":43
  * # @cython.boundscheck(False)  # Deactivate bounds checking
  * # @cython.wraparound(False)   # Deactivate negative indexing.
  * def coo_tensor_vector_vector(double[:] A_data, int[:,:] A_inds, int[:] A_shape,             # <<<<<<<<<<<<<<
@@ -17710,9 +17710,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__23 = PyTuple_Pack(12, __pyx_n_s_A_data, __pyx_n_s_A_inds, __pyx_n_s_A_shape, __pyx_n_s_b1, __pyx_n_s_b2, __pyx_n_s_result, __pyx_n_s_result_view, __pyx_n_s_i, __pyx_n_s_imax, __pyx_n_s_ind0, __pyx_n_s_ind1, __pyx_n_s_ind2); if (unlikely(!__pyx_tuple__23)) __PYX_ERR(0, 43, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__23);
   __Pyx_GIVEREF(__pyx_tuple__23);
-  __pyx_codeobj__24 = (PyObject*)__Pyx_PyCode_New(5, 0, 12, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__23, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_coo_tensor_ops_pyx, __pyx_n_s_coo_tensor_vector_vector, 43, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__24)) __PYX_ERR(0, 43, __pyx_L1_error)
+  __pyx_codeobj__24 = (PyObject*)__Pyx_PyCode_New(5, 0, 12, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__23, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_pyequion_activity_coo_tensor_ops, __pyx_n_s_coo_tensor_vector_vector, 43, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__24)) __PYX_ERR(0, 43, __pyx_L1_error)
 
-  /* "coo_tensor_ops.pyx":64
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":64
  * # @cython.boundscheck(False)  # Deactivate bounds checking
  * # @cython.wraparound(False)   # Deactivate negative indexing.
  * def coo_tensor_vector_vector_vector(double[:] A_data, int[:,:] A_inds, int[:] A_shape,             # <<<<<<<<<<<<<<
@@ -17722,7 +17722,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__25 = PyTuple_Pack(12, __pyx_n_s_A_data, __pyx_n_s_A_inds, __pyx_n_s_A_shape, __pyx_n_s_b1, __pyx_n_s_b2, __pyx_n_s_b3, __pyx_n_s_result, __pyx_n_s_i, __pyx_n_s_imax, __pyx_n_s_ind0, __pyx_n_s_ind1, __pyx_n_s_ind2); if (unlikely(!__pyx_tuple__25)) __PYX_ERR(0, 64, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__25);
   __Pyx_GIVEREF(__pyx_tuple__25);
-  __pyx_codeobj__26 = (PyObject*)__Pyx_PyCode_New(6, 0, 12, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__25, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_coo_tensor_ops_pyx, __pyx_n_s_coo_tensor_vector_vector_vector, 64, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__26)) __PYX_ERR(0, 64, __pyx_L1_error)
+  __pyx_codeobj__26 = (PyObject*)__Pyx_PyCode_New(6, 0, 12, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__25, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_pyequion_activity_coo_tensor_ops, __pyx_n_s_coo_tensor_vector_vector_vector, 64, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__26)) __PYX_ERR(0, 64, __pyx_L1_error)
 
   /* "View.MemoryView":286
  *         return self.name
@@ -18107,14 +18107,14 @@ if (!__Pyx_RefNanny) {
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
-  if (__pyx_module_is_main_coo_tensor_ops) {
+  if (__pyx_module_is_main_pyequion__activity__coo_tensor_ops__coo_tensor_ops) {
     if (PyObject_SetAttr(__pyx_m, __pyx_n_s_name_2, __pyx_n_s_main) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(0, 1, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "coo_tensor_ops")) {
-      if (unlikely(PyDict_SetItemString(modules, "coo_tensor_ops", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "pyequion.activity.coo_tensor_ops.coo_tensor_ops")) {
+      if (unlikely(PyDict_SetItemString(modules, "pyequion.activity.coo_tensor_ops.coo_tensor_ops", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   #endif
@@ -18135,7 +18135,7 @@ if (!__Pyx_RefNanny) {
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "coo_tensor_ops.pyx":1
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":1
  * import numpy as np             # <<<<<<<<<<<<<<
  * # import cython
  * 
@@ -18145,55 +18145,55 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_1) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "coo_tensor_ops.pyx":7
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":7
  * # @cython.boundscheck(False)  # Deactivate bounds checking
  * # @cython.wraparound(False)   # Deactivate negative indexing.
  * def coo_matrix_vector(double[:] A_data, int[:,:] A_inds, int[:] A_shape, double[:] b):             # <<<<<<<<<<<<<<
  *     assert A_shape[1] == b.shape[0]
  *     result = np.zeros(A_shape[0],dtype=np.double)
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_14coo_tensor_ops_1coo_matrix_vector, NULL, __pyx_n_s_coo_tensor_ops); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 7, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8pyequion_8activity_14coo_tensor_ops_14coo_tensor_ops_1coo_matrix_vector, NULL, __pyx_n_s_pyequion_activity_coo_tensor_ops_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 7, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_coo_matrix_vector, __pyx_t_1) < 0) __PYX_ERR(0, 7, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "coo_tensor_ops.pyx":24
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":24
  * # @cython.boundscheck(False)  # Deactivate bounds checking
  * # @cython.wraparound(False)   # Deactivate negative indexing.
  * def coo_matrix_vector_vector(double[:] A_data, int[:,:] A_inds, int[:] A_shape,             # <<<<<<<<<<<<<<
  *                              double[:] b1, double[:] b2):
  *     assert A_shape[0] == b1.shape[0]
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_14coo_tensor_ops_3coo_matrix_vector_vector, NULL, __pyx_n_s_coo_tensor_ops); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 24, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8pyequion_8activity_14coo_tensor_ops_14coo_tensor_ops_3coo_matrix_vector_vector, NULL, __pyx_n_s_pyequion_activity_coo_tensor_ops_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 24, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_coo_matrix_vector_vector, __pyx_t_1) < 0) __PYX_ERR(0, 24, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "coo_tensor_ops.pyx":43
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":43
  * # @cython.boundscheck(False)  # Deactivate bounds checking
  * # @cython.wraparound(False)   # Deactivate negative indexing.
  * def coo_tensor_vector_vector(double[:] A_data, int[:,:] A_inds, int[:] A_shape,             # <<<<<<<<<<<<<<
  *                              double[:] b1, double[:] b2):
  *     assert A_shape[1] == b1.shape[0]
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_14coo_tensor_ops_5coo_tensor_vector_vector, NULL, __pyx_n_s_coo_tensor_ops); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 43, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8pyequion_8activity_14coo_tensor_ops_14coo_tensor_ops_5coo_tensor_vector_vector, NULL, __pyx_n_s_pyequion_activity_coo_tensor_ops_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 43, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_coo_tensor_vector_vector, __pyx_t_1) < 0) __PYX_ERR(0, 43, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "coo_tensor_ops.pyx":64
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":64
  * # @cython.boundscheck(False)  # Deactivate bounds checking
  * # @cython.wraparound(False)   # Deactivate negative indexing.
  * def coo_tensor_vector_vector_vector(double[:] A_data, int[:,:] A_inds, int[:] A_shape,             # <<<<<<<<<<<<<<
  *                                     double[:] b1, double[:] b2, double[:] b3):
  *     assert A_shape[0] == b1.shape[0]
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_14coo_tensor_ops_7coo_tensor_vector_vector_vector, NULL, __pyx_n_s_coo_tensor_ops); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 64, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8pyequion_8activity_14coo_tensor_ops_14coo_tensor_ops_7coo_tensor_vector_vector_vector, NULL, __pyx_n_s_pyequion_activity_coo_tensor_ops_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 64, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_coo_tensor_vector_vector_vector, __pyx_t_1) < 0) __PYX_ERR(0, 64, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "coo_tensor_ops.pyx":1
+  /* "pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx":1
  * import numpy as np             # <<<<<<<<<<<<<<
  * # import cython
  * 
@@ -18363,11 +18363,11 @@ if (!__Pyx_RefNanny) {
   __Pyx_XDECREF(__pyx_t_1);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init coo_tensor_ops", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init pyequion.activity.coo_tensor_ops.coo_tensor_ops", __pyx_clineno, __pyx_lineno, __pyx_filename);
     }
     Py_CLEAR(__pyx_m);
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init coo_tensor_ops");
+    PyErr_SetString(PyExc_ImportError, "init pyequion.activity.coo_tensor_ops.coo_tensor_ops");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();

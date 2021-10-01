@@ -44,11 +44,19 @@ def residual_and_jacobian_solutes(molals, TK, activity_function,
     #With x_{extended} = hstack[1,x]
     
     logacts = activity_function(molals,TK)
-    molal_star = np.append(1.0, molals)*(1-mask) + np.exp(logacts)*mask
+    acts = np.nan_to_num(10**logacts) #
+    molal_star = np.append(1.0, molals)
     logmolal_star = np.log(molal_star)
-    res1 = log_equilibrium_constants - stoich_matrix@logacts
-    res2 = balance_vector_log - balance_matrix_log@logmolal_star
-    res3 = balance_vector - balance_matrix@molal_star
+    res1mm = stoich_matrix@logacts
+    res1 = log_equilibrium_constants - res1mm
+    mask_log_ = mask_log if type(mask_log) is not np.ndarray else mask_log[..., None]
+    mask_ = mask if type(mask) is not np.ndarray else mask[..., None]
+    res2mm = balance_matrix_log*(1-mask_log_)@logmolal_star + \
+             balance_matrix_log*(mask_log_)@logacts
+    res2 = balance_vector_log - res2mm
+    res3mm = balance_matrix*(1-mask_)@molal_star + \
+             balance_matrix*(mask_)@acts
+    res3 = balance_vector - res3mm
     res = np.hstack([res1, res2, res3])
     
     #Jacobian approximation
@@ -66,11 +74,10 @@ def residual_and_jacobian_solutes(molals, TK, activity_function,
 
 def residual_and_jacobian_xlma(molals, molals_p, stability_indexes_p,
                                TK, activity_function,
-                               balance_vector, balance_vector_log,
+                               balance_vector,
                                log_equilibrium_constants, log_solubility_constants,
-                               balance_matrix, balance_matrix_log, balance_matrix_p,
-                               stoich_matrix, stoich_matrix_p,
-                               mask, mask_log):
+                               balance_matrix, balance_matrix_p,
+                               stoich_matrix, stoich_matrix_p):
     #S@loga - logKs = 0
     #A_1@x_* - b_1 = 0
     #A_2@logx_* - b_2 = 0
@@ -79,41 +86,34 @@ def residual_and_jacobian_xlma(molals, molals_p, stability_indexes_p,
     #Here, solid reactions is : reagents positives, solid negatives
     #stability_index_p = -log(saturation)
     logacts = activity_function(molals,TK)
-    molal_star = np.append(1.0, molals)*(1-mask) + np.exp(logacts)*mask
-    logmolal_star = np.log(molal_star)
+    molal_star = np.append(1.0, molals)
     res1 = log_equilibrium_constants - stoich_matrix@logacts
     res2 = balance_vector - balance_matrix@molal_star - balance_matrix_p@molals_p
-    res3 = balance_vector_log - balance_matrix_log@logmolal_star
     res4 = log_solubility_constants - stability_indexes_p - \
             stoich_matrix_p@logacts
     res5 = molals_p*stability_indexes_p
-    res = np.hstack([res1, res2, res3, res4, res5])
+    res = np.hstack([res1, res2, res4, res5])
     
     #Jacobian approximation
     reduced_balance_matrix = balance_matrix[:, 1:]
-    reduced_balance_matrix_log = balance_matrix_log[:, 1:]
     reduced_stoich_matrix = stoich_matrix[:, 1:]
     reduced_stoich_matrix_p = stoich_matrix_p[:, 1:]
     mole_fractions = molals/(np.sum(molals))
     activity_hessian_diag = (1-mole_fractions)/molals
     jacobian11 = -reduced_stoich_matrix*activity_hessian_diag
     jacobian21 = -reduced_balance_matrix
-    jacobian31 = -reduced_balance_matrix_log*activity_hessian_diag
     jacobian41 = -reduced_stoich_matrix_p*activity_hessian_diag
     jacobian51 = np.zeros((molals_p.size, molals.size))
     jacobian12 = np.zeros((jacobian11.shape[0], molals_p.size))
     jacobian22 = -balance_matrix_p
-    jacobian32 = np.zeros((jacobian31.shape[0], molals_p.size))
     jacobian42 = np.zeros((jacobian41.shape[0], molals_p.size))
     jacobian52 = np.diag(stability_indexes_p)
     jacobian13 = np.zeros_like(jacobian12)
     jacobian23 = np.zeros_like(jacobian22)
-    jacobian33 = np.zeros_like(jacobian32)
     jacobian43 = -np.identity(stability_indexes_p.size)
     jacobian53 = np.diag(molals_p)
     jacobian = np.block([[jacobian11, jacobian12, jacobian13],
                          [jacobian21, jacobian22, jacobian23],
-                         [jacobian31, jacobian32, jacobian33],
                          [jacobian41, jacobian42, jacobian43],
                          [jacobian51, jacobian52, jacobian53]])
     return res, jacobian

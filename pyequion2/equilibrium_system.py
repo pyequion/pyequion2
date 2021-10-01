@@ -10,13 +10,16 @@ from . import solution
 
 ACTIVITY_MODEL_MAP = {
         "IDEAL":activity.setup_ideal,
-        "DEBYE":activity.setup_debyehuckel,
+        "DEBYE":activity.setup_debye,
+        "EXTENDED_DEBYE":activity.setup_extended_debye,
         "PITZER":activity.setup_pitzer,
         }
 
 
 class EquilibriumSystem():
     """
+    Class for setting and calculate equilibria
+    
     Attributes
     ----------
     base_species: List[str]
@@ -37,16 +40,29 @@ class EquilibriumSystem():
         Solid formula matrix of system
     solid_stoich_matrix: ndarray
         Solid stoichiometric matrix of system
-    activity_model: Callable[[ndarray, float], ndarray]
-        Activity model for equilibrium.
+    activity_model: str
+        Activity model for equilibrium
+    calculate_water_activity: bool
+        Whether to calculate water activity
     """
-    def __init__(self, components, from_elements=False, activity_model="DEBYE"):
+    def __init__(self, components, from_elements=False, activity_model="EXTENDED_DEBYE", 
+                 calculate_water_activity=False):
         """
         Parameters
         ----------
         components: List[str]
+            Base components for defining reaction system.
         from_elements: bool
+            If False, base components are species
+            If True, base components are elements, and representative species 
+            are chosen for these elements (see builder.ELEMENT_SPECIES_MAP).
+            Current elements implemented are
+            'C', 'Ca', 'Cl', 'Na', 'S', 'Ba', 'Mg', 'Fe', 'K', 'Sr'
         activity_model: str
+            Model for activity coefficients. One of 
+            'IDEAL', 'DEBYE', 'EXTENDED_DEBYE', 'PITZER'
+        calculate_water_activity: bool
+            Whether to calculate water activity or assume it to be unit
         """
         self.base_species, self.base_elements = \
             self._prepare_base(components, from_elements)
@@ -56,22 +72,33 @@ class EquilibriumSystem():
             self._make_formula_and_stoich_matrices()
         self.solid_formula_matrix, self.solid_stoich_matrix = \
             self._make_solid_formula_and_stoich_matrices()
-        self.activity_model = ACTIVITY_MODEL_MAP[activity_model](self.solutes)
+        self.activity_model = activity_model
+        self.calculate_water_activity = calculate_water_activity
+        self._activity_model_func = ACTIVITY_MODEL_MAP[activity_model](
+                                self.solutes, calculate_water_activity)
         self._x_molal = None
         self._x_act = None
         
-    def set_activity_function(self, activity_model="DEBYE"):
+    def set_activity_function(self, activity_model="DEBYE",
+                              calculate_water_activity=False):
         """
+        Set activity model and function
+        
         Parameters
         ----------
         activity_model: str
-            One of ['IDEAL', 'DEBYE', 'PITZER']
+            One of ['IDEAL', 'DEBYE', 'EXTENDED_DEBYE', 'PITZER']
         """
+        self.activity_model = activity_model
+        self.calculate_water_activity = calculate_water_activity
         activity_setup = ACTIVITY_MODEL_MAP[activity_model]
-        self.activity_model = activity_setup(self.solutes)
+        self._activity_model_func = activity_setup(self.solutes,
+                                             calculate_water_activity)
 
     def activity_function(self,molals,TK):
         """
+        Activity function for aqueous species
+        
         Parameters
         ----------
         molals: ndarray
@@ -84,10 +111,13 @@ class EquilibriumSystem():
         ndarray of activities (water is the first one, other solutes in molals order)
         """
         #molal to activities (including water)
-        activity_model_res = self.activity_model(molals,TK)
-        osmotic_pressure, loggamma = \
+        activity_model_res = self._activity_model_func(molals,TK)
+        osmotic_coefficient, loggamma = \
             activity_model_res[0], activity_model_res[1:]
-        logact_water = osmotic_pressure*constants.MOLAR_WEIGHT_WATER*np.sum(molals)
+        if not self.calculate_water_activity:
+            logact_water = 0.0
+        else:
+            logact_water = osmotic_coefficient*constants.MOLAR_WEIGHT_WATER*np.sum(molals)
         logact_solutes = loggamma + np.log10(molals)
         logact = np.insert(logact_solutes, 0, logact_water)
         return logact
@@ -171,8 +201,9 @@ class EquilibriumSystem():
             we assume all stable-at-temperature TK phases precipitates
         tol: float
             Tolerance for solver
-        initial_guess: ndarray or str
-            Initial guess for solver. If 'default', is chosen as 0.1 for each specie
+        initial_guess: ndarray or str or float
+            Initial guess for solver. If 'default', is chosen as 0.1 for each specie.
+            If float, is chosen as initial_guess for each specie
         
         Returns
         -------
@@ -183,10 +214,6 @@ class EquilibriumSystem():
                                     el in self.solute_elements])
         balance_vector = np.append(balance_vector,0.0)
         balance_matrix = self.reduced_formula_matrix
-        mask = 0
-        balance_vector_log = np.zeros(0)
-        balance_matrix_log = np.zeros((0, self.nspecies))
-        mask_log = 0
         if solid_phases is None:
             solid_phases = builder.get_most_stable_phases(self.solid_reactions, TK)
         solid_indexes = self._get_solid_indexes(solid_phases)
@@ -203,17 +230,20 @@ class EquilibriumSystem():
             x_guess = np.ones(self.nsolutes)*0.1
             x_guess_p = np.ones(len(solid_indexes))*0.1
             stability_guess_p = np.zeros(len(solid_indexes))
+        elif type(initial_guesses) == float:
+            x_guess = np.ones(self.nsolutes)*initial_guesses
+            x_guess_p = np.ones(len(solid_indexes))*initial_guesses
+            stability_guess_p = np.zeros(len(solid_indexes))
         else:
-            x_guess, x_guess_p, stability_guess_p = np.array(initial_guesses)
+            x_guess, x_guess_p, stability_guess_p = initial_guesses
         molals, molals_p, stability_indexes_p, res = \
                     eqsolver.solve_equilibrium_xlma(
                            x_guess, x_guess_p, stability_guess_p,
                            TK, activity_function,
-                           balance_vector, balance_vector_log,
+                           balance_vector,
                            log_equilibrium_constants, log_solubility_constants,
-                           balance_matrix, balance_matrix_log, balance_matrix_p,
+                           balance_matrix, balance_matrix_p,
                            stoich_matrix, stoich_matrix_p,
-                           mask, mask_log,
                            solver_function=None,
                            tol=1e-6)
         sol = solution.SolutionResult(self, molals, TK,
@@ -272,9 +302,12 @@ class EquilibriumSystem():
             balance_vector = np.append(balance_vector, closing_equation_value)
             if closing_equation == 'electroneutrality':
                 closing_row = self.charge_vector
+                closing_mask = 0
             elif closing_equation == 'alkalinity':
                 closing_row = self.alkalinity_vector
+                closing_mask = 1
             balance_matrix = np.vstack([balance_matrix, closing_row])
+            mask = np.hstack([mask, closing_mask])
         return self.solve_equilibrium_balance(balance_vector,
                                               balance_vector_log,
                                               balance_matrix,
@@ -327,6 +360,8 @@ class EquilibriumSystem():
         activity_function = self.activity_function
         if initial_guess == 'default':
             x_guess = np.ones(self.nsolutes)*0.1
+        elif type(initial_guess) == float:
+            x_guess = np.ones(self.nsolutes)*initial_guess
         else:
             x_guess = np.array(initial_guess)
         x, res = eqsolver.solve_equilibrium_solutes(
@@ -412,6 +447,7 @@ class EquilibriumSystem():
     
     @property
     def solutes_alkalinity_vector(self):
+        """Vector of alkalinity coefficients for solutes"""
         return self.alkalinity_vector[1:]
     
     def _prepare_base(self, components, from_elements):
@@ -442,8 +478,12 @@ class EquilibriumSystem():
         return formula_matrix, stoich_matrix
     
     def _make_solid_formula_and_stoich_matrices(self):
-        solid_formula_matrix = builder.make_solid_formula_matrix(self.solid_reactions, self.elements)
-        solid_stoich_matrix = builder.make_stoich_matrix(self.species, self.solid_reactions)
+        if len(self.solid_reactions) == 0: #No precipitating solid phases
+            solid_formula_matrix = np.zeros((self.nelements+1, 0))
+            solid_stoich_matrix = np.zeros((0, self.nspecies))
+        else:
+            solid_formula_matrix = builder.make_solid_formula_matrix(self.solid_reactions, self.elements)
+            solid_stoich_matrix = builder.make_stoich_matrix(self.species, self.solid_reactions)
         return solid_formula_matrix, solid_stoich_matrix
 
     def _prepare_balance_arrays(self, balances):
@@ -458,7 +498,7 @@ class EquilibriumSystem():
                 balance_matrix[i, :] = self.formula_matrix[self.elements.index(key), :]
             elif key in self.species:
                 balance_matrix[i, self.species.index(key)] = 1.0
-        return balance_vector, balance_matrix
+        return balance_vector, balance_matrix, mask
     
     def _get_solid_indexes(self, solid_phases):
         indexes = [None for _ in range(len(solid_phases))]

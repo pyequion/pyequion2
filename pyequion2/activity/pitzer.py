@@ -12,7 +12,7 @@ from .. import utils
 from .. import constants
 
 
-def setup_pitzer(solutes):
+def setup_pitzer(solutes, calculate_osmotic_coefficient=False):
     property_dict = make_pitzer_dictionary()
     B0,B0_inds = make_parameter_matrix(solutes,'B0',property_dict)
     B1,B1_inds = make_parameter_matrix(solutes,'B1',property_dict)
@@ -24,6 +24,7 @@ def setup_pitzer(solutes):
     zarray = np.array([utils.charge_number(specie) for specie in solutes],\
                        dtype=np.double)
     f = functools.partial(loggamma_and_osmotic,zarray=zarray,
+                    calculate_osmotic_coefficient=calculate_osmotic_coefficient,
                     B0_=B0,B0_inds=B0_inds,
                     B1_=B1,B1_inds=B1_inds,
                     B2_=B2,B2_inds=B2_inds,
@@ -31,11 +32,12 @@ def setup_pitzer(solutes):
                     THETA_=THETA,THETA_inds=THETA_inds,
                     PSI_=PSI,PSI_inds=PSI_inds,
                     LAMBDA_=LAMBDA,LAMBDA_inds=LAMBDA_inds)
-    g = lambda xarray,TK: f(xarray,TK)/2.302585092994046 #ln(gamma) to log10(gamma)
+    g = lambda xarray,TK: constants.LOG10E*f(xarray,TK) #ln(gamma) to log10(gamma)
     return g
 
 
 def loggamma_and_osmotic(carray,T,zarray,
+         calculate_osmotic_coefficient,
          B0_,B0_inds,
          B1_,B1_inds,
          B2_,B2_inds,
@@ -122,30 +124,32 @@ def loggamma_and_osmotic(carray,T,zarray,
     #B + I*Bprime = B0 + B1*(g(alpha1*sqrtI) + gprime(alpha1*sqrtI))
     #                  + B2*(g(alpha2*sqrtI) + gprime(alpha2*sqrtI))
     #Water activity
-#    osmotic_coefficient = constants.LOG10E
-    res1w = -A*sqrtI**3/(1 + constants.B_DEBYE*sqrtI)
-    
-    sum_11w = 0.5*coo_tensor_ops.coo_matrix_vector_vector(
-                B0,B0_inds,dim_matrices,carray,carray)
-    sum_12w = 0.5*coo_tensor_ops.coo_matrix_vector_vector(
-                B1*(gb(alpha1*sqrtI) + gprime(alpha1*sqrtI)),B0_inds,dim_matrices,carray,carray)
-    sum_13w = 0.5*coo_tensor_ops.coo_matrix_vector_vector(
-                B2*(gb(alpha2*sqrtI) + gprime(alpha2*sqrtI)),B0_inds,dim_matrices,carray,carray)
-    sum_21w = 0.5*Z*coo_tensor_ops.coo_matrix_vector_vector(
-                C,C0_inds,dim_matrices,carray,carray)
-    res2w = sum_11w + sum_12w + sum_13w + sum_21w
-    
-    sum_31w = 0.5*coo_tensor_ops.coo_matrix_vector_vector(
-                PHI + I*PHI_prime,THETA_inds,dim_matrices,carray,carray)
-    sum_32w = 1/6*coo_tensor_ops.coo_tensor_vector_vector_vector(
-                PSI,PSI_inds,dim_tensors,carray,carray,carray)
-    res3w = sum_31w + sum_32w
-    sum_41 = 0.5*coo_tensor_ops.coo_matrix_vector_vector(
-                LAMBDA,LAMBDA_inds,dim_matrices,carray,carray)
-    res4w = sum_41
-    
-    resw = 2/np.sum(carray)*(res1w + res2w + res3w + res4w)
-    osmotic_coefficient = constants.LOG10E*(resw + 1)
+    if not calculate_osmotic_coefficient:
+        osmotic_coefficient = 1.0
+    else:
+        res1w = -A*sqrtI**3/(1 + constants.B_DEBYE*sqrtI)
+        
+        sum_11w = 0.5*coo_tensor_ops.coo_matrix_vector_vector(
+                    B0,B0_inds,dim_matrices,carray,carray)
+        sum_12w = 0.5*coo_tensor_ops.coo_matrix_vector_vector(
+                    B1*(gb(alpha1*sqrtI) + gprime(alpha1*sqrtI)),B0_inds,dim_matrices,carray,carray)
+        sum_13w = 0.5*coo_tensor_ops.coo_matrix_vector_vector(
+                    B2*(gb(alpha2*sqrtI) + gprime(alpha2*sqrtI)),B0_inds,dim_matrices,carray,carray)
+        sum_21w = 0.5*Z*coo_tensor_ops.coo_matrix_vector_vector(
+                    C,C0_inds,dim_matrices,carray,carray)
+        res2w = sum_11w + sum_12w + sum_13w + sum_21w
+        
+        sum_31w = 0.5*coo_tensor_ops.coo_matrix_vector_vector(
+                    PHI + I*PHI_prime,THETA_inds,dim_matrices,carray,carray)
+        sum_32w = 1/6*coo_tensor_ops.coo_tensor_vector_vector_vector(
+                    PSI,PSI_inds,dim_tensors,carray,carray,carray)
+        res3w = sum_31w + sum_32w
+        sum_41 = 0.5*coo_tensor_ops.coo_matrix_vector_vector(
+                    LAMBDA,LAMBDA_inds,dim_matrices,carray,carray)
+        res4w = sum_41
+        
+        resw = 2/np.sum(carray)*(res1w + res2w + res3w + res4w)
+        osmotic_coefficient = (resw + 1)
     logg = np.insert(logg,0,osmotic_coefficient) #FIXME: actually calculate osmotic coefficient
     return logg
 

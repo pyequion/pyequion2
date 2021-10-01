@@ -75,11 +75,10 @@ def solve_equilibrium_solutes(x_guess,
 
 def solve_equilibrium_xlma(x_guess, x_guess_p, stability_guess_p,
                            TK, activity_function,
-                           balance_vector, balance_vector_log,
+                           balance_vector,
                            log_equilibrium_constants, log_solubility_constants,
-                           balance_matrix, balance_matrix_log, balance_matrix_p,
+                           balance_matrix, balance_matrix_p,
                            stoich_matrix, stoich_matrix_p,
-                           mask, mask_log,
                            solver_function=None,
                            tol=1e-6):
     """
@@ -97,24 +96,16 @@ def solve_equilibrium_xlma(x_guess, x_guess_p, stability_guess_p,
         Function from molals to activities of solute and water, (n,) to (n+1,)
     balance_vector : numpy.ndarray
         Vector of unwarped equilibria
-    balance_vector_log : numpy.ndarray
-        Vector of warped equilibria
     log_equilibrium_constants : numpy.ndarray
         Vector of log-equilibrium constants
     balance_matrix : numpy.ndarray
         Matrix of unwarped balance equilibria
     balance_matrix_p : numpy.ndarray
         Matrix of unwarped balance equilibria for precipitates
-    balance_matrix_log : numpy.ndarray
-        Matrix of warped balance equilibria
     stoich_matrix : numpy.ndarray
         Stoichiometric matrix
     stoich_matrix_p : numpy.ndarray
         Stoichiometric matrix for solid reaction
-    mask : int or numpy.ndarray
-        Mask for unwarped equation
-    mask_log : int or numpy.ndarray
-        Mask for warped equation
     solver_function : None or callable
         If is not None, solver function of f(x) = 0, x_i > 0, 
         with access to residual and jacobian.
@@ -137,11 +128,10 @@ def solve_equilibrium_xlma(x_guess, x_guess_p, stability_guess_p,
         return residual_functions.residual_and_jacobian_xlma(
                     molals, molals_p, stability_indexes_p,
                     TK, activity_function,
-                    balance_vector, balance_vector_log,
+                    balance_vector,
                     log_equilibrium_constants, log_solubility_constants,
-                    balance_matrix, balance_matrix_log, balance_matrix_p,
-                    stoich_matrix, stoich_matrix_p,
-                    mask, mask_log)
+                    balance_matrix, balance_matrix_p,
+                    stoich_matrix, stoich_matrix_p)
     x, res = solver_function(f, x_guess_total, tol=tol)
     molals, molals_p, stability_indexes_p = np.split(x, [ns1, ns2, ns3])[:-1]
     return molals, molals_p, stability_indexes_p, res

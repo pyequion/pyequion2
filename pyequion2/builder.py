@@ -20,16 +20,26 @@ ELEMENT_SPECIES_MAP = {
     'K': 'K+',
     'Sr': 'Sr++',
 }
-
-
 DEFAULT_DB_FILES = {
     "solutions": data.reactions_solutions,
     "phases": data.reactions_solids,
     "irreversible": data.reactions_irreversible,
     "species": data.species,
 }
-
-
+ELEMENTS = ['H', 'He', 'Li', 'Be', 'B', 'C', 'N', 'O', 'F', 
+            'Ne', 'Na', 'Mg', 'Al', 'Si', 'P', 'S', 'Cl', 'Ar', 
+            'K', 'Ca', 'Sc', 'Ti', 'V', 'Cr', 'Mn', 'Fe', 'Co', 
+            'Ni', 'Cu', 'Zn', 'Ga', 'Ge', 'As', 'Se', 'Br', 'Kr', 
+            'Rb', 'Sr', 'Y', 'Zr', 'Nb', 'Mo', 'Tc', 'Ru', 'Rh', 
+            'Pd', 'Ag', 'Cd', 'In', 'Sn', 'Sb', 'Te', 'I', 'Xe', 
+            'Cs', 'Ba', 'La', 'Ce', 'Pr', 'Nd', 'Pm', 'Sm', 'Eu', 
+            'Gd', 'Tb', 'Dy', 'Ho', 'Er', 'Tm', 'Yb', 'Lu', 'Hf', 
+            'Ta', 'W', 'Re', 'Os', 'Ir', 'Pt', 'Au', 'Hg', 'Tl', 
+            'Pb', 'Bi', 'Po', 'At', 'Rn', 'Fr', 'Ra', 'Ac', 'Th', 
+            'Pa', 'U', 'Np', 'Pu', 'Am', 'Cm', 'Bk', 'Cf', 'Es', 
+            'Fm', 'Md', 'No', 'Lr', 'Rf', 'Db', 'Sg', 'Bh', 'Hs', 
+            'Mt', 'Ds', 'Rg', 'Cn', 'Nh', 'Fl', 'Mc', 'Lv', 'Ts', 
+            'Og']
 RX_CASE = r"[A-Z][^A-Z]*"
 RX_NO_SIGNAL = r"[+-]"
 RX_PRNTHS = r"(\(\w+\)\d?)"
@@ -147,6 +157,21 @@ def get_most_stable_phases(solid_reactions, TK):
     return stable_phases
 
 
+def get_elements_and_their_coefs(list_of_species):
+    # Removing signals
+    tags_no_signals = [
+        re.sub(RX_NO_SIGNAL, "", tag) for tag in list_of_species
+    ]
+    # Clean-up phase name if it has it
+    tags_no_signals = [tag.split("__")[0] for tag in tags_no_signals]
+
+    elements_with_coefs = [
+        _separate_elements_coefs(item) for item in tags_no_signals
+    ]
+
+    return elements_with_coefs
+
+
 def _get_logk(reaction, TK):
     log_K_coefs = reaction.get('log_K_coefs', '')
     if type(log_K_coefs) != str:
@@ -193,26 +218,11 @@ def _get_element_set_from_comp_list(comp_list):
     """
     Get elements that are in the set of species
     """
-    list_elements_in_tags = _get_elements_and_their_coefs(comp_list)
+    list_elements_in_tags = get_elements_and_their_coefs(comp_list)
     aux_ele_as_list = [[sub[0] for sub in item] for item in list_elements_in_tags]
     aux_ele_flat = [sub for item in aux_ele_as_list for sub in item]
     ele_set = set(aux_ele_flat)
     return ele_set
-
-
-def _get_elements_and_their_coefs(list_of_species):
-    # Removing signals
-    tags_no_signals = [
-        re.sub(RX_NO_SIGNAL, "", tag) for tag in list_of_species
-    ]
-    # Clean-up phase name if it has it
-    tags_no_signals = [tag.split("__")[0] for tag in tags_no_signals]
-
-    elements_with_coefs = [
-        _separate_elements_coefs(item) for item in tags_no_signals
-    ]
-
-    return elements_with_coefs
 
 
 def _separate_elements_coefs(tag):

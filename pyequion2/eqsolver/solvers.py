@@ -12,7 +12,13 @@ def solver_constrained_newton(f,x0,maxiter=10000,tol=1e-6,
     for i in range(maxiter):
 #        print(x)
         res,jac = f(x)
-        delta_x = np.linalg.solve(jac,-res)
+        if np.max(np.abs(res)) < tol:
+            break
+        try:
+            delta_x = np.linalg.solve(jac,-res)
+        except np.linalg.LinAlgError:
+            print("Solver jacobian is singular. Returning value and residual as it is")
+            return x, res
         control_index = np.abs(delta_x) > control_value
         x_step = x[control_index]
         delta_x_step = delta_x[control_index]
@@ -29,6 +35,4 @@ def solver_constrained_newton(f,x0,maxiter=10000,tol=1e-6,
                 print(i)
                 print('------')
         x = x_new
-        if np.max(np.abs(res)) < tol:
-            break
     return x,res

@@ -16,7 +16,7 @@ def solve_equilibrium_solutes(x_guess,
                               balance_matrix,
                               balance_matrix_log,
                               stoich_matrix,
-                              mask, 
+                              mask,
                               mask_log,
                               solver_function=None,
                               tol=1e-6):
@@ -46,13 +46,13 @@ def solve_equilibrium_solutes(x_guess,
     mask_log : int or numpy.ndarray
         Mask for warped equation
     solver_function : None or callable
-        If is not None, solver function of f(x) = 0, x_i > 0, 
+        If is not None, solver function of f(x) = 0, x_i > 0,
         with access to residual and jacobian.
-        If is None, uses constrained newton method for this with 
+        If is None, uses constrained newton method for this with
         default parameters
     tol : Solver tolerance
         Tolerance for solver
-        
+
     returns:
         molal values that solves equilibria, and residual
     """
@@ -107,13 +107,13 @@ def solve_equilibrium_xlma(x_guess, x_guess_p, stability_guess_p,
     stoich_matrix_p : numpy.ndarray
         Stoichiometric matrix for solid reaction
     solver_function : None or callable
-        If is not None, solver function of f(x) = 0, x_i > 0, 
+        If is not None, solver function of f(x) = 0, x_i > 0,
         with access to residual and jacobian.
-        If is None, uses constrained newton method for this with 
+        If is None, uses constrained newton method for this with
         default parameters
     tol : Solver tolerance
         Tolerance for solver
-        
+
     returns:
         molal values that solves equilibria, and residual
     """
@@ -123,15 +123,17 @@ def solve_equilibrium_xlma(x_guess, x_guess_p, stability_guess_p,
     ns2 = ns1 + x_guess_p.size
     ns3 = ns2 + stability_guess_p.size
     x_guess_total = np.hstack([x_guess, x_guess_p, stability_guess_p])
+
     def f(x):
-        molals, molals_p, stability_indexes_p = np.split(x, [ns1, ns2, ns3])[:-1]
+        molals, molals_p, stability_indexes_p = np.split(x, [ns1, ns2, ns3])[
+            :-1]
         return residual_functions.residual_and_jacobian_xlma(
-                    molals, molals_p, stability_indexes_p,
-                    TK, activity_function,
-                    balance_vector,
-                    log_equilibrium_constants, log_solubility_constants,
-                    balance_matrix, balance_matrix_p,
-                    stoich_matrix, stoich_matrix_p)
+            molals, molals_p, stability_indexes_p,
+            TK, activity_function,
+            balance_vector,
+            log_equilibrium_constants, log_solubility_constants,
+            balance_matrix, balance_matrix_p,
+            stoich_matrix, stoich_matrix_p)
     x, res = solver_function(f, x_guess_total, tol=tol)
     molals, molals_p, stability_indexes_p = np.split(x, [ns1, ns2, ns3])[:-1]
     return molals, molals_p, stability_indexes_p, res

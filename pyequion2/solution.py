@@ -8,7 +8,7 @@ from . import converters
 class SolutionResult():
     """
     Class for solution of equilibria
-    
+
     Parameters
     ----------
     TK: float
@@ -32,7 +32,8 @@ class SolutionResult():
     solid_stoich_matrix: ndarray
         Solid stoichiometric matrix of system
     """
-    def __init__(self,equilibrium_system, x, TK, molals_p=None, solid_phases_p=None):
+
+    def __init__(self, equilibrium_system, x, TK, molals_p=None, solid_phases_p=None):
         self.TK = TK
         self._x_molal = x
         self._x_logact = equilibrium_system.activity_function(x, TK)
@@ -50,47 +51,47 @@ class SolutionResult():
         self.solid_stoich_matrix = equilibrium_system.solid_stoich_matrix
         self._logsatur = \
             self._build_saturation_indexes()
-        
+
     @property
     def molals(self):
         """molals"""
-        return {self.solutes[i]:self._x_molal[i] 
+        return {self.solutes[i]: self._x_molal[i]
                 for i in range(len(self._x_molal))}
-    
+
     @property
-    def concentrations(self): #mM or mol/m^3
+    def concentrations(self):  # mM or mol/m^3
         """Equilibrium concentrations"""
-        return {self.solutes[i]:converters.molal_to_mmolar(self._x_molal[i]) 
+        return {self.solutes[i]: converters.molal_to_mmolar(self._x_molal[i])
                 for i in range(len(self._x_molal))}
 
     @property
     def activities(self):
         """Equilibrium activities"""
-        return {self.species[i]:self._x_act[i] 
+        return {self.species[i]: self._x_act[i]
                 for i in range(len(self._x_act))}
-    
+
     @property
     def saturation_indexes(self):
         """Saturation indexes for solids"""
-        return {self.phase_names[i]:self._logsatur[i]
+        return {self.phase_names[i]: self._logsatur[i]
                 for i in range(len(self._logsatur))}
 
     @property
     def ionic_strength(self):
         """Ionic strength of system"""
         return 0.5*np.sum(
-                self._charge_vector[1:]**2*self._x_molal)
+            self._charge_vector[1:]**2*self._x_molal)
 
     @property
-    def solute_elements(self): #Ignore H and O
+    def solute_elements(self):  # Ignore H and O
         """Elements ignoring H and O"""
         return self.elements[2:]
 
     @property
-    def solutes(self): #Ignore H2O
+    def solutes(self):  # Ignore H2O
         """Solutes"""
         return self.species[1:]
-    
+
     @property
     def phase_names(self):
         """Names of solid phases"""
@@ -108,15 +109,18 @@ class SolutionResult():
 
     @property
     def elements_molals(self):
+        """Molals for elements"""
         balance_vector = self._balance_vector
         return {k: balance_vector[i] for i, k in enumerate(self.solute_elements)}
 
     @property
     def charge_density(self):
+        """Charge density (e/kg)"""
         return np.sum(self.formula_matrix[-1, 1:]*self._x_molal)
 
     @property
     def ph(self):
+        """pH"""
         return -np.log10(self.activities['H+'])
 
     def _build_saturation_indexes(self):
@@ -128,11 +132,11 @@ class SolutionResult():
         logks = builder.get_log_equilibrium_constants(solid_reactions, TK)
         logsatur = logiap - logks
         return logsatur
-    
+
     @property
     def _charge_vector(self):
-        return self.formula_matrix[-1,:]
-    
+        return self.formula_matrix[-1, :]
+
     @property
     def _balance_vector(self):
         return self.formula_matrix[2:-1, 1:]@self._x_molal

@@ -28,27 +28,29 @@ def setup_extended_debye(solutes, calculate_osmotic_coefficient=False):
     g = functools.partial(_loggamma_and_osmotic,
                           zarray=zarray,
                           calculate_osmotic_coefficient=calculate_osmotic_coefficient,
-                          dh_a=dh_a,dh_b=dh_b,
+                          dh_a=dh_a, dh_b=dh_b,
                           I_factor=I_factor)
     return g
 
 
-def _loggamma_and_osmotic(xarray,TK,zarray,calculate_osmotic_coefficient,
-                          dh_a,dh_b,I_factor):
+def _loggamma_and_osmotic(xarray, TK, zarray, calculate_osmotic_coefficient,
+                          dh_a, dh_b, I_factor):
     A, B = _debye_huckel_constant(TK)
     I = 0.5*np.sum(zarray**2*xarray)
-    logg1 = -A * zarray ** 2 * np.sqrt(I) / (1 + B * dh_a * np.sqrt(I)) + dh_b * I
+    logg1 = -A * zarray ** 2 * \
+        np.sqrt(I) / (1 + B * dh_a * np.sqrt(I)) + dh_b * I
     logg2 = I_factor*I
     logg3 = -A * zarray ** 2 * (np.sqrt(I) / (1.0 + np.sqrt(I)) - 0.3 * I)
     logg = np.nan_to_num(logg1)*(~np.isnan(dh_a)) + \
-           np.nan_to_num(logg2)*(np.isnan(dh_a) & (~np.isnan(I_factor))) + \
-           np.nan_to_num(logg3)*(np.isnan(dh_a) & (np.isnan(I_factor)))
+        np.nan_to_num(logg2)*(np.isnan(dh_a) & (~np.isnan(I_factor))) + \
+        np.nan_to_num(logg3)*(np.isnan(dh_a) & (np.isnan(I_factor)))
     resw = -A*I**(3/2)/(1 + constants.B_DEBYE*I**(1/2))
     if calculate_osmotic_coefficient:
         osmotic_coefficient = constants.LOG10E*(2*resw/np.sum(xarray)+1)
     else:
         osmotic_coefficient = constants.LOG10E
-    logg = np.insert(logg,0,osmotic_coefficient) #Insertion of osmotic coefficient
+    # Insertion of osmotic coefficient
+    logg = np.insert(logg, 0, osmotic_coefficient)
     return logg
 
 

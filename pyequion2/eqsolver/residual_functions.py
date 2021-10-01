@@ -6,8 +6,8 @@ def residual_and_jacobian_solutes(molals, TK, activity_function,
                                   balance_vector, balance_vector_log,
                                   log_equilibrium_constants,
                                   balance_matrix, balance_matrix_log,
-                                  stoich_matrix, mask, 
-                                  mask_log):    
+                                  stoich_matrix, mask,
+                                  mask_log):
     """
     Parameters
     ----------
@@ -33,36 +33,37 @@ def residual_and_jacobian_solutes(molals, TK, activity_function,
         Mask for unwarped equation
     mask_log : numpy.ndarray
         Mask for warped equation
-        
+
     Returns:
         residual and jacobian of equilibrium equation
     """
-    #S@loga - logKs = 0
-    #A_1@x_* - b_1 = 0
-    #A_2@logx_* - b_2 = 0
-    #x_{*,i} = x_{extended,i} if not m_{1,i} else a
-    #With x_{extended} = hstack[1,x]
-    
-    logacts = activity_function(molals,TK)
-    acts = np.nan_to_num(10**logacts) #
+    # S@loga - logKs = 0
+    # A_1@x_* - b_1 = 0
+    # A_2@logx_* - b_2 = 0
+    # x_{*,i} = x_{extended,i} if not m_{1,i} else a
+    # With x_{extended} = hstack[1,x]
+
+    logacts = activity_function(molals, TK)
+    acts = np.nan_to_num(10**logacts)
     molal_star = np.append(1.0, molals)
     logmolal_star = np.log(molal_star)
     res1mm = stoich_matrix@logacts
     res1 = log_equilibrium_constants - res1mm
-    mask_log_ = mask_log if type(mask_log) is not np.ndarray else mask_log[..., None]
+    mask_log_ = mask_log if type(
+        mask_log) is not np.ndarray else mask_log[..., None]
     mask_ = mask if type(mask) is not np.ndarray else mask[..., None]
     res2mm = balance_matrix_log*(1-mask_log_)@logmolal_star + \
-             balance_matrix_log*(mask_log_)@logacts
+        balance_matrix_log*(mask_log_)@logacts
     res2 = balance_vector_log - res2mm
     res3mm = balance_matrix*(1-mask_)@molal_star + \
-             balance_matrix*(mask_)@acts
+        balance_matrix*(mask_)@acts
     res3 = balance_vector - res3mm
     res = np.hstack([res1, res2, res3])
-    
-    #Jacobian approximation
+
+    # Jacobian approximation
     reduced_balance_matrix = balance_matrix[:, 1:]
     reduced_balance_matrix_log = balance_matrix_log[:, 1:]
-    reduced_stoich_matrix = stoich_matrix[:,1:]
+    reduced_stoich_matrix = stoich_matrix[:, 1:]
     mole_fractions = molals/(np.sum(molals))
     activity_hessian_diag = (1-mole_fractions)/molals
     jacobian1 = -reduced_stoich_matrix*activity_hessian_diag
@@ -78,23 +79,23 @@ def residual_and_jacobian_xlma(molals, molals_p, stability_indexes_p,
                                log_equilibrium_constants, log_solubility_constants,
                                balance_matrix, balance_matrix_p,
                                stoich_matrix, stoich_matrix_p):
-    #S@loga - logKs = 0
-    #A_1@x_* - b_1 = 0
-    #A_2@logx_* - b_2 = 0
-    #x_{*,i} = x_{extended,i} if not m_{1,i} else a
-    #With x_{extended} = hstack[1,x]
-    #Here, solid reactions is : reagents positives, solid negatives
+    # S@loga - logKs = 0
+    # A_1@x_* - b_1 = 0
+    # A_2@logx_* - b_2 = 0
+    # x_{*,i} = x_{extended,i} if not m_{1,i} else a
+    # With x_{extended} = hstack[1,x]
+    # Here, solid reactions is : reagents positives, solid negatives
     #stability_index_p = -log(saturation)
-    logacts = activity_function(molals,TK)
+    logacts = activity_function(molals, TK)
     molal_star = np.append(1.0, molals)
     res1 = log_equilibrium_constants - stoich_matrix@logacts
     res2 = balance_vector - balance_matrix@molal_star - balance_matrix_p@molals_p
     res4 = log_solubility_constants - stability_indexes_p - \
-            stoich_matrix_p@logacts
+        stoich_matrix_p@logacts
     res5 = molals_p*stability_indexes_p
     res = np.hstack([res1, res2, res4, res5])
-    
-    #Jacobian approximation
+
+    # Jacobian approximation
     reduced_balance_matrix = balance_matrix[:, 1:]
     reduced_stoich_matrix = stoich_matrix[:, 1:]
     reduced_stoich_matrix_p = stoich_matrix_p[:, 1:]

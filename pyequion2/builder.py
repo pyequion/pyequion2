@@ -26,19 +26,19 @@ DEFAULT_DB_FILES = {
     "irreversible": data.reactions_irreversible,
     "species": data.species,
 }
-ELEMENTS = ['H', 'He', 'Li', 'Be', 'B', 'C', 'N', 'O', 'F', 
-            'Ne', 'Na', 'Mg', 'Al', 'Si', 'P', 'S', 'Cl', 'Ar', 
-            'K', 'Ca', 'Sc', 'Ti', 'V', 'Cr', 'Mn', 'Fe', 'Co', 
-            'Ni', 'Cu', 'Zn', 'Ga', 'Ge', 'As', 'Se', 'Br', 'Kr', 
-            'Rb', 'Sr', 'Y', 'Zr', 'Nb', 'Mo', 'Tc', 'Ru', 'Rh', 
-            'Pd', 'Ag', 'Cd', 'In', 'Sn', 'Sb', 'Te', 'I', 'Xe', 
-            'Cs', 'Ba', 'La', 'Ce', 'Pr', 'Nd', 'Pm', 'Sm', 'Eu', 
-            'Gd', 'Tb', 'Dy', 'Ho', 'Er', 'Tm', 'Yb', 'Lu', 'Hf', 
-            'Ta', 'W', 'Re', 'Os', 'Ir', 'Pt', 'Au', 'Hg', 'Tl', 
-            'Pb', 'Bi', 'Po', 'At', 'Rn', 'Fr', 'Ra', 'Ac', 'Th', 
-            'Pa', 'U', 'Np', 'Pu', 'Am', 'Cm', 'Bk', 'Cf', 'Es', 
-            'Fm', 'Md', 'No', 'Lr', 'Rf', 'Db', 'Sg', 'Bh', 'Hs', 
-            'Mt', 'Ds', 'Rg', 'Cn', 'Nh', 'Fl', 'Mc', 'Lv', 'Ts', 
+ELEMENTS = ['H', 'He', 'Li', 'Be', 'B', 'C', 'N', 'O', 'F',
+            'Ne', 'Na', 'Mg', 'Al', 'Si', 'P', 'S', 'Cl', 'Ar',
+            'K', 'Ca', 'Sc', 'Ti', 'V', 'Cr', 'Mn', 'Fe', 'Co',
+            'Ni', 'Cu', 'Zn', 'Ga', 'Ge', 'As', 'Se', 'Br', 'Kr',
+            'Rb', 'Sr', 'Y', 'Zr', 'Nb', 'Mo', 'Tc', 'Ru', 'Rh',
+            'Pd', 'Ag', 'Cd', 'In', 'Sn', 'Sb', 'Te', 'I', 'Xe',
+            'Cs', 'Ba', 'La', 'Ce', 'Pr', 'Nd', 'Pm', 'Sm', 'Eu',
+            'Gd', 'Tb', 'Dy', 'Ho', 'Er', 'Tm', 'Yb', 'Lu', 'Hf',
+            'Ta', 'W', 'Re', 'Os', 'Ir', 'Pt', 'Au', 'Hg', 'Tl',
+            'Pb', 'Bi', 'Po', 'At', 'Rn', 'Fr', 'Ra', 'Ac', 'Th',
+            'Pa', 'U', 'Np', 'Pu', 'Am', 'Cm', 'Bk', 'Cf', 'Es',
+            'Fm', 'Md', 'No', 'Lr', 'Rf', 'Db', 'Sg', 'Bh', 'Hs',
+            'Mt', 'Ds', 'Rg', 'Cn', 'Nh', 'Fl', 'Mc', 'Lv', 'Ts',
             'Og']
 RX_CASE = r"[A-Z][^A-Z]*"
 RX_NO_SIGNAL = r"[+-]"
@@ -71,7 +71,7 @@ def get_species_reaction_from_initial_species(initial_species,
     if not possible_solid_reactions:
         possible_solid_reactions = get_all_possible_solid_reactions()
     species, reactions = _get_species_reactions_from_compounds(
-            initial_species, possible_reactions)
+        initial_species, possible_reactions)
     species = list(species)
     species = set_h2o_as_first_specie(species)
     _, solid_reactions = _get_species_reactions_from_compounds(
@@ -98,7 +98,7 @@ def get_log_equilibrium_constants(reactions, TK):
 
 def make_formula_matrix(species, elements):
     elements = elements + ['e']
-    formula_matrix = np.array([[utils.stoich_number(specie, element) 
+    formula_matrix = np.array([[utils.stoich_number(specie, element)
                                 for specie in species]
                                for element in elements])
     return formula_matrix
@@ -108,15 +108,15 @@ def make_solid_formula_matrix(solid_reactions, elements):
     solid_formulas = [_get_solid_formula(solid_reaction)
                       for solid_reaction in solid_reactions]
     elements = elements + ['e']
-    solid_formula_matrix = np.array([[utils.stoich_number(solid_formula, element) 
-                                for solid_formula in solid_formulas]
-                               for element in elements])
+    solid_formula_matrix = np.array([[utils.stoich_number(solid_formula, element)
+                                      for solid_formula in solid_formulas]
+                                     for element in elements])
     return solid_formula_matrix
 
 
 def make_stoich_matrix(species, reactions):
-    return np.array([[reaction.get(specie,0.0) for specie in species] 
-                      for reaction in reactions])
+    return np.array([[reaction.get(specie, 0.0) for specie in species]
+                     for reaction in reactions])
 
 
 def set_h2o_as_first_specie(species):
@@ -137,7 +137,7 @@ def set_h_and_o_as_first_elements(elements):
         elements.pop(elements.index('O'))
     except:
         pass
-    elements = ['H','O'] + elements
+    elements = ['H', 'O'] + elements
     return elements
 
 
@@ -147,7 +147,8 @@ def get_most_stable_phases(solid_reactions, TK):
     log_ksps = get_log_equilibrium_constants(solid_reactions, TK)
     for i, solid_reaction in enumerate(solid_reactions):
         phase_name = solid_reaction['phase_name']
-        solid_formula = _get_solid_formula(solid_reaction, drop_phase_name=False)
+        solid_formula = _get_solid_formula(
+            solid_reaction, drop_phase_name=False)
         lowest_ksp = stable_lowest_ksp.get(solid_formula, np.inf)
         current_ksp = log_ksps[i]
         if current_ksp < lowest_ksp:
@@ -184,11 +185,11 @@ def _get_logk(reaction, TK):
                 deltah = 0.0
             return _calculate_logk_2(log_K25, deltah, TK)
         else:
-            return 0.0 #Can't do nothing beyond this
-    
+            return 0.0  # Can't do nothing beyond this
+
 
 def _calculate_logk_1(log_K_coefs, TK):
-    log_K_coefs = np.hstack([log_K_coefs,np.zeros(6-len(log_K_coefs))])
+    log_K_coefs = np.hstack([log_K_coefs, np.zeros(6-len(log_K_coefs))])
     temperature_array = np.array([1, TK, 1/TK, np.log10(TK), 1/(TK**2), TK**2])
     logK = np.sum(log_K_coefs*temperature_array)
     return logK
@@ -197,13 +198,14 @@ def _calculate_logk_1(log_K_coefs, TK):
 def _calculate_logk_2(log_K25, deltah, TK):
     T0 = 298.15
     R = 8.314
-    logK = log_K25 - deltah/(2.303 *R)*(1/TK - 1/T0)
+    logK = log_K25 - deltah/(2.303 * R)*(1/TK - 1/T0)
     return logK
-    
-    
+
+
 def _get_reactions_species(reac):
-    return [k for k in reac.keys() 
+    return [k for k in reac.keys()
             if _check_validity_specie_tag_in_reaction_dict(k)]
+
 
 def _get_species_reactions_from_compounds(compounds, possible_reactions):
     species = ordered_set.OrderedSet([c for c in compounds])
@@ -219,7 +221,8 @@ def _get_element_set_from_comp_list(comp_list):
     Get elements that are in the set of species
     """
     list_elements_in_tags = get_elements_and_their_coefs(comp_list)
-    aux_ele_as_list = [[sub[0] for sub in item] for item in list_elements_in_tags]
+    aux_ele_as_list = [[sub[0] for sub in item]
+                       for item in list_elements_in_tags]
     aux_ele_flat = [sub for item in aux_ele_as_list for sub in item]
     ele_set = set(aux_ele_flat)
     return ele_set
@@ -340,7 +343,7 @@ def _get_solid_formula(solid_reaction, drop_phase_name=True):
     for key in solid_reaction.keys():
         if key[-len(phase_name):] == phase_name:
             solid_formula = key[:key.index('_')]
-            if '(' in solid_formula and drop_phase_name: #Will remove (g) or (s)
+            if '(' in solid_formula and drop_phase_name:  # Will remove (g) or (s)
                 solid_formula = solid_formula[:solid_formula.index('(')]
             break
     return solid_formula

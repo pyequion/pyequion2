@@ -123,6 +123,13 @@ class SolutionResult():
         """pH"""
         return -np.log10(self.activities['H+'])
 
+    @property
+    def electrical_conductivity(self):
+        """Electrical conductivity in S/m"""
+        #https://www.aqion.de/site/electrical-conductivity
+        ec = 6.2*self.ionic_strength #muS/cm to S/m
+        return ec
+    
     def _build_saturation_indexes(self):
         logacts = np.log10(self._x_act)
         solid_reactions = self.solid_reactions

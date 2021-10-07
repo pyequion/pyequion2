@@ -73,7 +73,7 @@ class SolutionResult():
     @property
     def saturation_indexes(self):
         """Saturation indexes for solids"""
-        return {self.phase_names[i]: self._logsatur[i]
+        return {self.solid_phase_names[i]: self._logsatur[i]
                 for i in range(len(self._logsatur))}
 
     @property
@@ -93,7 +93,7 @@ class SolutionResult():
         return self.species[1:]
 
     @property
-    def phase_names(self):
+    def solid_phase_names(self):
         """Names of solid phases"""
         return [sol_reac['phase_name'] for sol_reac in self.solid_reactions]
 
@@ -104,7 +104,7 @@ class SolutionResult():
             solid_molals_ = dict()
         else:
             solid_molals_ = dict(zip(self._solid_phases_p, self._molals_p))
-        solid_molals = {k: solid_molals_.get(k, 0.0) for k in self.phase_names}
+        solid_molals = {k: solid_molals_.get(k, 0.0) for k in self.solid_phase_names}
         return solid_molals
 
     @property

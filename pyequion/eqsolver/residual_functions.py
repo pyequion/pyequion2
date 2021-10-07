@@ -186,43 +186,43 @@ def residual_and_jacobian_interface_d(molals, TK, molals_bulk,
 def residual_and_jacobian_interface_mixed(molals, TK, molals_bulk,
                                           activity_function,
                                           log_equilibrium_constants,
-                                          log_solubility_constants_1,
-                                          log_solubility_constants_2,
+                                          log_solubility_constants_exp,
+                                          log_solubility_constants_imp,
                                           balance_matrix,
                                           stoich_matrix,
-                                          stoich_matrix_sol_1,
-                                          stoich_matrix_sol_2,
-                                          kernel_matrix_sol_2,
+                                          stoich_matrix_sol_exp,
+                                          stoich_matrix_sol_imp,
+                                          kernel_matrix_sol_imp,
                                           transport_constants,
-                                          reaction_function_1,
-                                          reaction_function_derivative_1):
+                                          reaction_function_exp,
+                                          reaction_function_derivative_exp):
     
     #Here, solid reactions is : reagents positives, solid negatives
     reduced_balance_matrix = balance_matrix[:, 1:]
-    kernel_reduced_balance_matrix = kernel_matrix_sol_2@reduced_balance_matrix
+    kernel_reduced_balance_matrix = kernel_matrix_sol_imp@reduced_balance_matrix
     reduced_stoich_matrix = stoich_matrix[:, 1:]
-    reduced_stoich_matrix_sol_1 = stoich_matrix_sol_1[:, 1:]
-    reduced_stoich_matrix_sol_2 = stoich_matrix_sol_2[:, 1:]
+    reduced_stoich_matrix_sol_exp = stoich_matrix_sol_exp[:, 1:]
+    reduced_stoich_matrix_sol_imp = stoich_matrix_sol_imp[:, 1:]
     logacts = activity_function(molals, TK)
-    logsatur1 = stoich_matrix_sol_1@logacts - log_solubility_constants_1
-    reaction_vector_1 = reaction_function_1(logsatur1, log_solubility_constants_1)
+    logsatur_exp = stoich_matrix_sol_exp@logacts - log_solubility_constants_exp
+    reaction_vector_exp = reaction_function_exp(logsatur_exp, log_solubility_constants_exp)
     transport_vector = transport_constants*(molals_bulk - molals)
     res1 = log_equilibrium_constants - stoich_matrix@logacts
     res2 = kernel_reduced_balance_matrix@(transport_vector - \
-                            kernel_reduced_balance_matrix.transpose()@reaction_vector_1)
-    res3 = log_solubility_constants_2 - stoich_matrix_sol_2@logacts
+                            reduced_stoich_matrix_sol_exp.transpose()@reaction_vector_exp)
+    res3 = log_solubility_constants_imp - stoich_matrix_sol_imp@logacts
     res = np.hstack([res1, res2, res3])
     
     mole_fractions = molals/(np.sum(molals))
     activity_hessian_diag = (1-mole_fractions)/molals
-    reaction_vector_prime_1 = reaction_function_derivative_1(logsatur1,
-                                                           log_solubility_constants_1)
+    reaction_vector_prime_exp = reaction_function_derivative_exp(logsatur_exp,
+                                                           log_solubility_constants_exp)
     jacobian1 = -reduced_stoich_matrix*activity_hessian_diag
     jacobian2a = -kernel_reduced_balance_matrix*transport_constants
-    jacobian2b_ = (reduced_stoich_matrix_sol_1.transpose()*reaction_vector_prime_1)@\
-                  (reduced_stoich_matrix_sol_1*activity_hessian_diag)
+    jacobian2b_ = (reduced_stoich_matrix_sol_exp.transpose()*reaction_vector_prime_exp)@\
+                  (reduced_stoich_matrix_sol_exp*activity_hessian_diag)
     jacobian2b = -kernel_reduced_balance_matrix@jacobian2b_
     jacobian2 = jacobian2a + jacobian2b
-    jacobian3 = -reduced_stoich_matrix_sol_2*activity_hessian_diag
+    jacobian3 = -reduced_stoich_matrix_sol_imp*activity_hessian_diag
     jacobian = np.vstack([jacobian1, jacobian2, jacobian3])
     return res, jacobian

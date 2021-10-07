@@ -205,3 +205,86 @@ def solve_equilibrium_interface_dr(x_guess,
                           reaction_function_derivative=reaction_function_derivative)
     x, res = solver_function(f, x_guess, tol=tol)
     return x, res
+
+
+def solve_equilibrium_interface_mixed(x_guess,
+                                      TK, molals_bulk,
+                                      activity_function,
+                                      log_equilibrium_constants,
+                                      log_solubility_constants_exp,
+                                      log_solubility_constants_imp,
+                                      balance_matrix,
+                                      stoich_matrix,
+                                      stoich_matrix_sol_exp,
+                                      stoich_matrix_sol_imp,
+                                      kernel_matrix_sol_imp,
+                                      transport_constants,
+                                      reaction_function_exp,
+                                      reaction_function_derivative_exp,
+                                      solver_function=None,
+                                      tol=1e-6):
+    """
+    Parameters
+    ----------
+    x_guess : numpy.ndarray
+        Initial molals guess
+    TK : float
+        Temperature of system in Kelvins
+    molals_bulk : numpy.ndarray
+        Values of molals in the bulk
+    activity_function : Callable[numpy.ndarray, numpy.ndarray]
+        Function from molals to activities of solute and water, (n,) to (n+1,)
+    log_equilibrium_constants : numpy.ndarray
+        Vector of log-equilibrium constants
+    log_solubility_constants_exp : numpy.ndarray
+        Vector of log-solubility constants for explicit interface reactions
+    log_solubility_constants_imp : numpy.ndarray
+        Vector of log-solubility constants for implicit interface reactions
+    balance_matrix : numpy.ndarray
+        Matrix of balance equilibria
+    stoich_matrix : numpy.ndarray
+        Stoichiometric matrix
+    stoich_matrix_sol_exp : numpy.ndarray
+        Stoichiometric matrix of explicit interface reactions
+    stoich_matrix_sol_imp : numpy.ndarray
+        Stoichiometric matrix of implicit interface reactions
+    kernel_matrix_sol_imp : numpy.ndarray
+        Matrix whose transpose has columns composed of a base of 
+        ker(stoich_matrix_sol_imp@balance_matrix.T)
+    transport_constants : numpy.ndarray
+        Transport constants for transport to interface
+    reaction_function_exp : Callable[[numpy.ndarray, numpy.ndarray], numpy.ndarray]
+        Reaction function for explicit interface reactions,
+        taking log_saturation and log_solubility_constants
+    reaction_function_derivative_exp : Callable[[numpy.ndarray, numpy.ndarray], numpy.ndarray]
+        Derivative for reaction_function_exp in log-solubility argument
+    solver_function : None or callable
+        If is not None, solver function of f(x) = 0, x_i > 0,
+        with access to residual and jacobian.
+        If is None, uses constrained newton method for this with
+        default parameters
+    tol : Solver tolerance
+        Tolerance for solver
+
+    returns:
+        molal values that solves equilibria, and residual
+    """
+    if not solver_function:
+        solver_function = solvers.solver_constrained_newton
+    f = functools.partial(residual_functions.residual_and_jacobian_interface_mixed,
+                          TK=TK,
+                          molals_bulk=molals_bulk,
+                          activity_function=activity_function,
+                          log_equilibrium_constants=log_equilibrium_constants,
+                          log_solubility_constants_exp=log_solubility_constants_exp,
+                          log_solubility_constants_imp=log_solubility_constants_imp,
+                          balance_matrix=balance_matrix,
+                          stoich_matrix=stoich_matrix,
+                          stoich_matrix_sol_exp=stoich_matrix_sol_exp,
+                          stoich_matrix_sol_imp=stoich_matrix_sol_imp,
+                          kernel_matrix_sol_imp=kernel_matrix_sol_imp,
+                          transport_constants=transport_constants,
+                          reaction_function_exp=reaction_function_exp,
+                          reaction_function_derivative_exp=reaction_function_derivative_exp)
+    x, res = solver_function(f, x_guess, tol=tol)
+    return x, res

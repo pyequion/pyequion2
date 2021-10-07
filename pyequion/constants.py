@@ -18,3 +18,4 @@ ALKALINE_COEFFICIENTS = {
         'H3PO4': -1.0,
         'HNO2': -1.0
         }
+TURBULENT_VISCOSITY_CONSTANT = 9.5*1e-4

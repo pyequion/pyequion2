@@ -41,3 +41,7 @@ def water_thermal_conductivity(T):  # T in Kelvin
 
 def water_specific_heat_capacity(T):  # T in Kelvin
     return _water_specific_heat_capacity_celsius(T-273.15)[()]
+
+
+def water_kinematic_viscosity(T): #T in Kelvin, returns m^2/s
+    return water_dynamic_viscosity(T)/water_density(T)

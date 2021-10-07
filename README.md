@@ -12,6 +12,7 @@ Repository: https://github.com/nidf-scaling/pyequion
 - Provides information as: Ionic Strength, pH, Electric Conductivity and the concentrations of each species as well their activity coefficient
 - A modular approach for the activity coefficient calculation allows the usage of new thermodynamic models
 - Calculation of equilibrium and reaction fluxes at reacting solid interfaces
+
 ## Installation
 
 The package can be installed with `pip install pyequion` or `pip install <folder>`

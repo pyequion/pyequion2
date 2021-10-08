@@ -119,6 +119,7 @@ class InterfaceSystem(equilibrium_system.EquilibriumSystem):
         else:
             x_guess, reaction_imp_guess, stability_imp_guess = initial_guesses
 
+#        raise KeyError
         x, reaction_imp, _, res = \
             eqsolver.solve_equilibrium_interface_slack(x_guess,
                                                        reaction_imp_guess,
@@ -265,6 +266,16 @@ class InterfaceSystem(equilibrium_system.EquilibriumSystem):
     def interface_indexes_dict(self):
         return {k: v for k, v
                 in zip(self.interface_phases, self.interface_indexes)}
+
+    @property
+    def _explicit_interface_indexes_dict(self):
+        return {k: v for k, v
+                in zip(self.explicit_interface_phases, self._explicit_interface_indexes)}
+        
+    @property
+    def _implicit_interface_indexes_dict(self):
+        return {k: v for k, v
+                in zip(self.implicit_interface_phases, self._implicit_interface_indexes)}
 
 
 #Auxiliary functions

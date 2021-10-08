@@ -27,4 +27,3 @@ transport_params = {'type': 'pipe',
 solution_int, res_int = intsys.solve_interface_equilibrium(TK,
                                                            molals_bulk,
                                                            transport_params)
-#print(solution_int.concentrations

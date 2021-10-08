@@ -120,69 +120,6 @@ def residual_and_jacobian_xlma(molals, molals_p, stability_indexes_p,
     return res, jacobian
 
 
-def residual_and_jacobian_interface_dr(molals, TK, molals_bulk,
-                                       activity_function,
-                                       log_equilibrium_constants, log_solubility_constants,
-                                       balance_matrix, stoich_matrix, stoich_matrix_sol,
-                                       transport_constants,
-                                       reaction_function, reaction_function_derivative):
-    
-    #Here, solid reactions is : reagents positives, solid negatives
-    reduced_balance_matrix = balance_matrix[:, 1:]
-    reduced_stoich_matrix = stoich_matrix[:, 1:]
-    reduced_stoich_matrix_sol = stoich_matrix_sol[:, 1:]
-    logacts = activity_function(molals, TK)
-    logsatur = stoich_matrix_sol@logacts - log_solubility_constants
-    reaction_vector = reaction_function(logsatur, log_solubility_constants)
-    transport_vector = transport_constants*(molals_bulk - molals)
-    res1 = log_equilibrium_constants - stoich_matrix@logacts
-    res2 = reduced_balance_matrix@(transport_vector - \
-                                   reduced_stoich_matrix_sol.transpose()@reaction_vector)
-    res = np.hstack([res1, res2])
-    mole_fractions = molals/(np.sum(molals))
-    activity_hessian_diag = (1-mole_fractions)/molals
-    reaction_vector_prime = reaction_function_derivative(logsatur, log_solubility_constants)
-    jacobian1 = -reduced_stoich_matrix*activity_hessian_diag
-    jacobian2a = -reduced_balance_matrix*transport_constants
-    jacobian2b_ = (reduced_stoich_matrix_sol.transpose()*reaction_vector_prime)@\
-                  (reduced_stoich_matrix_sol*activity_hessian_diag)
-    jacobian2b = -reduced_balance_matrix@jacobian2b_
-    jacobian2 = jacobian2a + jacobian2b
-    jacobian = np.vstack([jacobian1, jacobian2])
-    return res, jacobian
-
-
-def residual_and_jacobian_interface_d(molals, TK, molals_bulk,
-                                      activity_function,
-                                      log_equilibrium_constants,
-                                      log_solubility_constants,
-                                      balance_matrix,
-                                      stoich_matrix,
-                                      stoich_matrix_sol,
-                                      kernel_matrix_sol,
-                                      transport_constants):
-    
-    #Here, solid reactions is : reagents positives, solid negatives
-    reduced_balance_matrix = balance_matrix[:, 1:]
-    kernel_reduced_balance_matrix = kernel_matrix_sol@reduced_balance_matrix
-    reduced_stoich_matrix = stoich_matrix[:, 1:]
-    reduced_stoich_matrix_sol = stoich_matrix_sol[:, 1:]
-    logacts = activity_function(molals, TK)
-    transport_vector = transport_constants*(molals_bulk - molals)
-    res1 = log_equilibrium_constants - stoich_matrix@logacts
-    res2 = kernel_reduced_balance_matrix@transport_vector
-    res3 = log_solubility_constants - stoich_matrix_sol@logacts
-    res = np.hstack([res1, res2, res3])
-    
-    mole_fractions = molals/(np.sum(molals))
-    activity_hessian_diag = (1-mole_fractions)/molals
-    jacobian1 = -reduced_stoich_matrix*activity_hessian_diag
-    jacobian2 = -kernel_reduced_balance_matrix*transport_constants
-    jacobian3 = -reduced_stoich_matrix_sol*activity_hessian_diag
-    jacobian = np.vstack([jacobian1, jacobian2, jacobian3])
-    return res, jacobian
-
-
 def residual_and_jacobian_interface_mixed(molals, TK, molals_bulk,
                                           activity_function,
                                           log_equilibrium_constants,
@@ -225,4 +162,65 @@ def residual_and_jacobian_interface_mixed(molals, TK, molals_bulk,
     jacobian2 = jacobian2a + jacobian2b
     jacobian3 = -reduced_stoich_matrix_sol_imp*activity_hessian_diag
     jacobian = np.vstack([jacobian1, jacobian2, jacobian3])
+    return res, jacobian
+
+
+def residual_and_jacobian_interface_slack(molals, reaction_vector_imp,
+                                          stability_indexes_imp,
+                                          TK, molals_bulk,
+                                          activity_function,
+                                          log_equilibrium_constants,
+                                          log_solubility_constants_exp,
+                                          log_solubility_constants_imp,
+                                          balance_matrix,
+                                          stoich_matrix,
+                                          stoich_matrix_sol_exp,
+                                          stoich_matrix_sol_imp,
+                                          transport_constants,
+                                          reaction_function_exp,
+                                          reaction_function_derivative_exp):
+    
+    #Here, solid reactions is : reagents positives, solid negatives
+    nn = molals.size
+    nri = reaction_vector_imp.size
+    reduced_balance_matrix = balance_matrix[:, 1:]
+    reduced_stoich_matrix = stoich_matrix[:, 1:]
+    reduced_stoich_matrix_sol_exp = stoich_matrix_sol_exp[:, 1:]
+    reduced_stoich_matrix_sol_imp = stoich_matrix_sol_imp[:, 1:]
+    logacts = activity_function(molals, TK)
+    logsatur_exp = stoich_matrix_sol_exp@logacts - log_solubility_constants_exp
+    reaction_vector_exp = reaction_function_exp(logsatur_exp, log_solubility_constants_exp)
+    transport_vector = transport_constants*(molals_bulk - molals)
+    res1 = log_equilibrium_constants - stoich_matrix@logacts
+    res2 = reduced_balance_matrix@(transport_vector - \
+                            reduced_stoich_matrix_sol_exp.transpose()@reaction_vector_exp - \
+                            reduced_stoich_matrix_sol_imp.transpose()@reaction_vector_imp)
+    res3 = log_solubility_constants_imp - stoich_matrix_sol_imp@logacts - stability_indexes_imp
+    res4 = reaction_vector_imp*stability_indexes_imp
+    res = np.hstack([res1, res2, res3, res4])
+    
+    mole_fractions = molals/(np.sum(molals))
+    activity_hessian_diag = (1-mole_fractions)/molals
+    reaction_vector_prime_exp = reaction_function_derivative_exp(logsatur_exp,
+                                                           log_solubility_constants_exp)
+    jacobian11 = -reduced_stoich_matrix*activity_hessian_diag
+    jacobian12 = np.zeros((jacobian11.shape[0], nri))
+    jacobian13 = np.zeros((jacobian11.shape[0], nri))
+    jacobian21a = -reduced_balance_matrix*transport_constants
+    jacobian21b_ = (reduced_stoich_matrix_sol_exp.transpose()*reaction_vector_prime_exp)@\
+                  (reduced_stoich_matrix_sol_exp*activity_hessian_diag)
+    jacobian21b = -reduced_balance_matrix@jacobian21b_
+    jacobian21 = jacobian21a + jacobian21b
+    jacobian22 = -reduced_balance_matrix@reduced_stoich_matrix_sol_imp.transpose()
+    jacobian23 = np.zeros((jacobian21.shape[0], nri))
+    jacobian31 = -reduced_stoich_matrix_sol_imp*activity_hessian_diag
+    jacobian32 = np.zeros((nri, nri))
+    jacobian33 = -np.eye(nri)
+    jacobian41 = np.zeros((nri, nn))
+    jacobian42 = np.diag(stability_indexes_imp)
+    jacobian43 = np.diag(reaction_vector_imp)
+    jacobian = np.block([[jacobian11, jacobian12, jacobian13],
+                         [jacobian21, jacobian22, jacobian23],
+                         [jacobian31, jacobian32, jacobian33],
+                         [jacobian41, jacobian42, jacobian43]])
     return res, jacobian

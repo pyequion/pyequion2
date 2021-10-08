@@ -75,11 +75,72 @@ class InterfaceSystem(equilibrium_system.EquilibriumSystem):
                                                             transport_vector,
                                                             reaction_function_exp,
                                                             reaction_function_derivative_exp)
+        reaction_imp = None
         solution = interface_solution.InterfaceSolutionResult(self,
                                                               x,
                                                               TK,
                                                               molals_bulk_,
+                                                              reaction_imp,
                                                               transport_vector)
+        return solution, res
+
+    def solve_interface_equilibrium_2(self, TK, molals_bulk,
+                                      transport_params,
+                                      tol=1e-12, initial_guesses='default'):
+        """
+        TK: float
+        xbulk: numpy.ndarray
+        tranpost_params: Dict[str]
+        """
+        assert(self.explicit_interface_phases or self.implicit_interface_phases)
+        transport_vector = self._get_transport_vector(transport_params, TK)
+        activity_function = self.activity_function
+        balance_matrix = self.reduced_formula_matrix
+        stoich_matrix = self.stoich_matrix
+        log_equilibrium_constants = self.get_log_equilibrium_constants(TK)
+        stoich_matrix_sol_exp = self.solid_stoich_matrix[self._explicit_interface_indexes, :]
+        stoich_matrix_sol_imp = self.solid_stoich_matrix[self._implicit_interface_indexes, :]
+        log_solubility_constants = self.get_solid_log_equilibrium_constants(TK)
+        log_solubility_constants_exp = log_solubility_constants[self._explicit_interface_indexes]
+        log_solubility_constants_imp = log_solubility_constants[self._implicit_interface_indexes]
+        reaction_function_exp = self.explicit_reaction_function
+        reaction_function_derivative_exp = self.explicit_reaction_function_derivative
+        
+        molals_bulk_ = np.array([molals_bulk[k] for k in self.solutes])
+
+        if initial_guesses == 'default':
+            x_guess = np.ones(self.nsolutes)*0.1
+            reaction_imp_guess = np.ones(len(self._implicit_interface_indexes))*0.1
+            stability_imp_guess = np.zeros(len(self._implicit_interface_indexes))
+        elif isinstance(initial_guesses, float):
+            x_guess = np.ones(self.nsolutes)*initial_guesses
+            reaction_imp_guess = np.ones(len(self._implicit_interface_indexes))*initial_guesses
+            stability_imp_guess = np.zeros(len(self._implicit_interface_indexes))
+        else:
+            x_guess, reaction_imp_guess, stability_imp_guess = initial_guesses
+
+        x, reaction_imp, _, res = \
+            eqsolver.solve_equilibrium_interface_slack(x_guess,
+                                                       reaction_imp_guess,
+                                                       stability_imp_guess,
+                                                       TK, molals_bulk_,
+                                                       activity_function,
+                                                       log_equilibrium_constants,
+                                                       log_solubility_constants_exp,
+                                                       log_solubility_constants_imp,
+                                                       balance_matrix,
+                                                       stoich_matrix,
+                                                       stoich_matrix_sol_exp,
+                                                       stoich_matrix_sol_imp,
+                                                       transport_vector,
+                                                       reaction_function_exp,
+                                                       reaction_function_derivative_exp)
+        solution = interface_solution.InterfaceSolutionResult(self,
+                                                              x,
+                                                              TK,
+                                                              molals_bulk_,
+                                                              transport_vector,
+                                                              reaction_imp)
         return solution, res
 
     def set_interface_phases(self, phases=None, TK=None):

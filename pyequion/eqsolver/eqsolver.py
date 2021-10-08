@@ -141,72 +141,6 @@ def solve_equilibrium_xlma(x_guess, x_guess_p, stability_guess_p,
     return molals, molals_p, stability_indexes_p, res
 
 
-def solve_equilibrium_interface_dr(x_guess,
-                                   TK,
-                                   molals_bulk,
-                                   activity_function,
-                                   log_equilibrium_constants, log_solubility_constants,
-                                   balance_matrix, stoich_matrix, stoich_matrix_sol,
-                                   transport_constants,
-                                   reaction_function, reaction_function_derivative,
-                                   solver_function=None,
-                                   tol=1e-6):
-    """
-    Parameters
-    ----------
-    x_guess : numpy.ndarray
-        Initial molals guess
-    TK : float
-        Temperature of system in Kelvins
-    molals_bulk : numpy.ndarray
-        Values of molals in the bulk
-    activity_function : Callable[numpy.ndarray, numpy.ndarray]
-        Function from molals to activities of solute and water, (n,) to (n+1,)
-    log_equilibrium_constants : numpy.ndarray
-        Vector of log-equilibrium constants
-    log_solubility_constants : numpy.ndarray
-        Vector of log-solubility constants
-    balance_matrix : numpy.ndarray
-        Matrix of balance equilibria
-    stoich_matrix : numpy.ndarray
-        Stoichiometric matrix
-    stoich_matrix_sol : numpy.ndarray
-        Stoichiometric matrix of reacting solids
-    transport_constants : numpy.ndarray
-        Transport constants for transport to interface
-    reaction_function : Callable[[numpy.ndarray, numpy.ndarray], numpy.ndarray]
-        Reaction function for solid reactions, taking log_saturation and log_solubility_constants
-    reaction_function_derivative : Callable[[numpy.ndarray, numpy.ndarray], numpy.ndarray]
-        Derivative for reaction function is solubility argument
-    solver_function : None or callable
-        If is not None, solver function of f(x) = 0, x_i > 0,
-        with access to residual and jacobian.
-        If is None, uses constrained newton method for this with
-        default parameters
-    tol : Solver tolerance
-        Tolerance for solver
-
-    returns:
-        molal values that solves equilibria, and residual
-    """
-    if not solver_function:
-        solver_function = solvers.solver_constrained_newton
-    f = functools.partial(residual_functions.residual_and_jacobian_interface_dr,
-                          TK=TK,
-                          molals_bulk=molals_bulk,
-                          activity_function=activity_function,
-                          log_equilibrium_constants=log_equilibrium_constants,
-                          log_solubility_constants=log_solubility_constants,
-                          balance_matrix=balance_matrix,
-                          stoich_matrix=stoich_matrix,
-                          stoich_matrix_sol=stoich_matrix_sol,
-                          transport_constants=transport_constants,
-                          reaction_function=reaction_function,
-                          reaction_function_derivative=reaction_function_derivative)
-    x, res = solver_function(f, x_guess, tol=tol)
-    return x, res
-
-
 def solve_equilibrium_interface_mixed(x_guess,
                                       TK, molals_bulk,
                                       activity_function,
@@ -288,3 +222,48 @@ def solve_equilibrium_interface_mixed(x_guess,
                           reaction_function_derivative_exp=reaction_function_derivative_exp)
     x, res = solver_function(f, x_guess, tol=tol)
     return x, res
+
+
+def solve_equilibrium_interface_slack(x_guess, reaction_imp_guess, stability_imp_guess,
+                                      TK, molals_bulk,
+                                      activity_function,
+                                      log_equilibrium_constants,
+                                      log_solubility_constants_exp,
+                                      log_solubility_constants_imp,
+                                      balance_matrix,
+                                      stoich_matrix,
+                                      stoich_matrix_sol_exp,
+                                      stoich_matrix_sol_imp,
+                                      transport_constants,
+                                      reaction_function_exp,
+                                      reaction_function_derivative_exp,
+                                      solver_function=None,
+                                      tol=1e-6):
+    if not solver_function:
+        solver_function = solvers.solver_constrained_newton
+    ns1 = x_guess.size
+    ns2 = ns1 + reaction_imp_guess.size
+    ns3 = ns2 + stability_imp_guess.size
+    x_guess_total = np.hstack([x_guess, reaction_imp_guess, stability_imp_guess])
+    def f(x):
+        x_guess, reaction_imp_guess, stability_imp_guess = np.split(x, [ns1, ns2, ns3])[:-1]
+        return residual_functions.residual_and_jacobian_interface_slack(
+                                      x_guess,
+                                      reaction_imp_guess,
+                                      stability_imp_guess,
+                                      TK, molals_bulk,
+                                      activity_function,
+                                      log_equilibrium_constants,
+                                      log_solubility_constants_exp,
+                                      log_solubility_constants_imp,
+                                      balance_matrix,
+                                      stoich_matrix,
+                                      stoich_matrix_sol_exp,
+                                      stoich_matrix_sol_imp,
+                                      transport_constants,
+                                      reaction_function_exp,
+                                      reaction_function_derivative_exp)
+    x, res = solver_function(f, x_guess_total, tol=tol)
+    molals, reaction_imp_guess, stability_imp_guess = np.split(x, [ns1, ns2, ns3])[:-1]
+    return molals, reaction_imp_guess, stability_imp_guess, res
+

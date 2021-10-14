@@ -48,7 +48,7 @@ class InterfaceSolutionResult(solution.SolutionResult):
         for i, phase in enumerate(equilibrium_system.implicit_interface_phases):
             reaction_fluxes[equilibrium_system._implicit_interface_indexes_dict[phase]] = jr_imp[i]
         return reaction_fluxes
-
+    
     @property
     def reaction_fluxes(self): #mol/m^2 s
         return {phase: self._reaction_fluxes[i] for i, phase in enumerate(self.solid_phase_names)}
@@ -57,3 +57,11 @@ class InterfaceSolutionResult(solution.SolutionResult):
     @property
     def transport_fluxes(self): #mol/m^2 s
         return {solute: self._transport_fluxes[i] for i, solute in enumerate(self.solutes)}
+    
+    @property
+    def elements_reaction_fluxes(self):
+        return {element: self._elements_reaction_fluxes[i] for i, element in enumerate(self.elements)}
+    
+    @property
+    def _elements_reaction_fluxes(self):
+        return self.formula_matrix@(self.solid_stoich_matrix.T@self._reaction_fluxes)

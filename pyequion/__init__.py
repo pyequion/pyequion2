@@ -40,6 +40,10 @@ array([ 0.00000000e+00,  3.46389584e-14,  6.21724894e-14,  8.47322212e-13,
  'Vaterite': 2.500920170629433,
  'Halite': -4.1933510494726285}
 """
+
 from .equilibrium_system import EquilibriumSystem
 from .interface import InterfaceSystem
 from . import converters
+from . import water_properties
+
+#__all__ = ['EquilibriumSystem', 'InterfaceSystem', 'converters', 'water_properties']

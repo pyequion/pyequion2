@@ -254,7 +254,12 @@ def make_parameter_matrix(species, parameter, property_dict):
                     res_ij *= 2
                 values.append(res_ij)
                 indexes.append((i, j))
-    return np.array(values, dtype=np.double), np.array(indexes, dtype=np.intc)
+    M = np.array(values, dtype=np.double)
+    M_inds = np.array(indexes, dtype=np.intc)
+    if M.shape[0] == 0: #Case of an empty matrix
+        M = M.reshape(0, 6)
+        M_inds = M_inds.reshape(0, 2)
+    return M, M_inds
 
 
 def make_parameter_3_tensor(species, parameter, property_dict):
@@ -273,7 +278,12 @@ def make_parameter_3_tensor(species, parameter, property_dict):
                         res_ij *= 2
                     values.append(res_ij)
                     indexes.append((i, j, k))
-    return np.array(values, dtype=np.double), np.array(indexes, dtype=np.intc)
+    M = np.array(values, dtype=np.double)
+    M_inds = np.array(indexes, dtype=np.intc)
+    if M.shape[0] == 0: #Case of an empty matrix
+        M = M.reshape(0, 6)
+        M_inds = M_inds.reshape(0, 3)
+    return M, M_inds
 
 
 def _find_and_replace_charge_signed(string, sign):

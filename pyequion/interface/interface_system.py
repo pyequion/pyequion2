@@ -103,6 +103,7 @@ class InterfaceSystem(equilibrium_system.EquilibriumSystem):
         self.interface_phases = phases
         self.interface_indexes = indexes
         self.ninterface = len(phases)
+        self.set_reaction_functions()
 
     def set_reaction_functions(self, reaction_dict=None):
         """

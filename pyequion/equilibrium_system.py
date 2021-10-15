@@ -389,6 +389,11 @@ class EquilibriumSystem():
         return self.base_elements
 
     @property
+    def extended_elements(self):
+        """Elements + 'e'"""
+        return self.elements + ['e']
+
+    @property
     def solute_elements(self):  # Ignore H and O
         """Elements excluding H and O"""
         return self.elements[2:]

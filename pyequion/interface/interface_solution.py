@@ -41,7 +41,10 @@ class InterfaceSolutionResult(solution.SolutionResult):
         b2 = -balance_matrix@reaction_stoich_matrix_imp.transpose()@jr_imp
         b = b1 + b2
         A = balance_matrix@reaction_stoich_matrix_exp.transpose()
-        jr_exp, _, _, _ = np.linalg.lstsq(A, b, rcond=None)
+        if A.shape[1] == 0:
+            jr_exp = np.zeros(0)
+        else:
+            jr_exp, _, _, _ = np.linalg.lstsq(A, b, rcond=None)
         reaction_fluxes = np.zeros(len(self.solid_phase_names))
         for i, phase in enumerate(equilibrium_system.explicit_interface_phases):
             reaction_fluxes[equilibrium_system._explicit_interface_indexes_dict[phase]] = jr_exp[i]

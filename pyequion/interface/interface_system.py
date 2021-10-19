@@ -58,6 +58,10 @@ class InterfaceSystem(equilibrium_system.EquilibriumSystem):
             x_guess = np.ones(self.nsolutes)*0.1
             reaction_imp_guess = np.ones(len(self._implicit_interface_indexes))*0.1
             stability_imp_guess = np.zeros(len(self._implicit_interface_indexes))
+        elif initial_guesses == 'bulk':
+            x_guess = molals_bulk_.copy()
+            reaction_imp_guess = np.ones(len(self._implicit_interface_indexes))*0.1
+            stability_imp_guess = np.zeros(len(self._implicit_interface_indexes))
         elif isinstance(initial_guesses, float):
             x_guess = np.ones(self.nsolutes)*initial_guesses
             reaction_imp_guess = np.ones(len(self._implicit_interface_indexes))*initial_guesses
@@ -66,7 +70,7 @@ class InterfaceSystem(equilibrium_system.EquilibriumSystem):
             x_guess, reaction_imp_guess, stability_imp_guess = initial_guesses
 
 #        raise KeyError
-        x, reaction_imp, _, res = \
+        x, reaction_imp, stability_imp, res = \
             eqsolver.solve_equilibrium_interface_slack(x_guess,
                                                        reaction_imp_guess,
                                                        stability_imp_guess,
@@ -88,7 +92,7 @@ class InterfaceSystem(equilibrium_system.EquilibriumSystem):
                                                               molals_bulk_,
                                                               transport_vector,
                                                               reaction_imp)
-        return solution, res
+        return solution, (res, (x, reaction_imp, stability_imp))
 
     def set_interface_phases(self, phases=None, TK=None):
         if phases is None:

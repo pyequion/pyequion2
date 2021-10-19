@@ -166,7 +166,7 @@ class EquilibriumSystem():
 
         Returns
         -------
-        SolutionResult object of equilibrium solution and residual
+        SolutionResult object of equilibrium solution and (residual, solution_values) pair
         """
         assert len(element_balance) == self.nsolelements
         balance_vector = np.array([element_balance[el] for
@@ -209,7 +209,7 @@ class EquilibriumSystem():
 
         Returns
         -------
-        SolutionResult object of equilibrium solution and residual
+        SolutionResult object of equilibrium solution and (residual, solution_values) pair
 
         """
         balance_vector = np.array([element_balance[el] for
@@ -239,7 +239,7 @@ class EquilibriumSystem():
             stability_guess_p = np.zeros(len(solid_indexes))
         else:
             x_guess, x_guess_p, stability_guess_p = initial_guesses
-        molals, molals_p, _, res = \
+        molals, molals_p, stability_p, res = \
             eqsolver.solve_equilibrium_xlma(
                 x_guess, x_guess_p, stability_guess_p,
                 TK, activity_function,
@@ -251,7 +251,7 @@ class EquilibriumSystem():
                 tol=tol)
         sol = solution.SolutionResult(self, molals, TK,
                                       molals_p, solid_phases)
-        return sol, res
+        return sol, (res, (molals, molals_p, stability_p))
 
     def solve_equilibrium_mixed_balance(self, TK, molal_balance=None,
                                         activities_balance=None,
@@ -287,7 +287,7 @@ class EquilibriumSystem():
 
         Returns
         -------
-        SolutionResult object of equilibrium solution and residual
+        SolutionResult object of equilibrium solution and (residual, solution_values) pair
 
         """
         molal_balance = _none_to_dict(molal_balance)
@@ -355,7 +355,7 @@ class EquilibriumSystem():
             Initial guess for solver. If 'default', is chosen as 0.1 for each specie
         Returns
         -------
-        SolutionResult object of equilibrium solution and residual
+        SolutionResult object of equilibrium solution and (residual, solution_values) pair
 
         """
         log_equilibrium_constants = \
@@ -381,7 +381,7 @@ class EquilibriumSystem():
             mask,
             mask_log,
             tol=tol)
-        return solution.SolutionResult(self, x, TK), res
+        return solution.SolutionResult(self, x, TK), (res, x)
 
     @property
     def elements(self):
@@ -458,6 +458,11 @@ class EquilibriumSystem():
     def solutes_alkalinity_vector(self):
         """Vector of alkalinity coefficients for solutes"""
         return self.alkalinity_vector[1:]
+
+    @property
+    def solid_phase_names(self):
+        """Names of solid phases"""
+        return [sol_reac['phase_name'] for sol_reac in self.solid_reactions]
 
     def _initialize_species_reactions(self):
         return builder.get_species_reaction_from_initial_species(

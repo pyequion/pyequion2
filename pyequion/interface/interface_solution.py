@@ -6,9 +6,13 @@ from .. import solution
 
 class InterfaceSolutionResult(solution.SolutionResult):
     def __init__(self, equilibrium_system, x, TK, 
-                 x_bulk, transport_vector, reaction_imp, *args, **kwargs):
+                 x_bulk, transport_vector, reaction_imp, relative_diffusion_vector,
+                 *args, **kwargs):
         super().__init__(equilibrium_system, x, TK, **kwargs)
-        self._transport_fluxes = transport_vector*(x_bulk - x)
+        if relative_diffusion_vector is None:
+            self._transport_fluxes = transport_vector*(x_bulk - x)
+        else:
+            self._transport_fluxes = transport_vector*(x_bulk - x*relative_diffusion_vector)
         self._interface_indexes = equilibrium_system._explicit_interface_indexes + \
                                   equilibrium_system._implicit_interface_indexes
         if reaction_imp is None:

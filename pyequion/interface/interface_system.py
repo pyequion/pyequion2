@@ -32,14 +32,14 @@ class InterfaceSystem(equilibrium_system.EquilibriumSystem):
 
     def solve_interface_equilibrium(self, TK, molals_bulk,
                                     transport_params,
-                                    tol=1e-12, initial_guesses='default'):
+                                    tol=1e-12, initial_guesses='default',
+                                    transport_model="A"):
         """
         TK: float
         xbulk: numpy.ndarray
         tranpost_params: Dict[str]
         """
         assert(self.explicit_interface_phases or self.implicit_interface_phases)
-        transport_vector = self._get_transport_vector(transport_params, TK)
         activity_function = self.activity_function
         balance_matrix = self.reduced_formula_matrix
         stoich_matrix = self.stoich_matrix
@@ -68,30 +68,53 @@ class InterfaceSystem(equilibrium_system.EquilibriumSystem):
             stability_imp_guess = np.zeros(len(self._implicit_interface_indexes))
         else:
             x_guess, reaction_imp_guess, stability_imp_guess = initial_guesses
+        
+        if transport_model == "A":
+            transport_constant = self._get_transport_vector_a(transport_params, TK)
+            relative_diffusion_vector = None
+            x, reaction_imp, stability_imp, res = \
+                eqsolver.solve_equilibrium_interface_slack_a(x_guess,
+                                                             reaction_imp_guess,
+                                                             stability_imp_guess,
+                                                             TK, molals_bulk_,
+                                                             activity_function,
+                                                             log_equilibrium_constants,
+                                                             log_solubility_constants_exp,
+                                                             log_solubility_constants_imp,
+                                                             balance_matrix,
+                                                             stoich_matrix,
+                                                             stoich_matrix_sol_exp,
+                                                             stoich_matrix_sol_imp,
+                                                             transport_constant,
+                                                             reaction_function_exp,
+                                                             reaction_function_derivative_exp)
+        elif transport_model == "B":
+            transport_constant, relative_diffusion_vector = self._get_transport_vector_b(transport_params, TK)
+            x, reaction_imp, stability_imp, res = \
+                eqsolver.solve_equilibrium_interface_slack_b(x_guess,
+                                                             reaction_imp_guess,
+                                                             stability_imp_guess,
+                                                             TK, molals_bulk_,
+                                                             activity_function,
+                                                             log_equilibrium_constants,
+                                                             log_solubility_constants_exp,
+                                                             log_solubility_constants_imp,
+                                                             balance_matrix,
+                                                             stoich_matrix,
+                                                             stoich_matrix_sol_exp,
+                                                             stoich_matrix_sol_imp,
+                                                             transport_constant,
+                                                             relative_diffusion_vector,
+                                                             reaction_function_exp,
+                                                             reaction_function_derivative_exp)
 
-#        raise KeyError
-        x, reaction_imp, stability_imp, res = \
-            eqsolver.solve_equilibrium_interface_slack(x_guess,
-                                                       reaction_imp_guess,
-                                                       stability_imp_guess,
-                                                       TK, molals_bulk_,
-                                                       activity_function,
-                                                       log_equilibrium_constants,
-                                                       log_solubility_constants_exp,
-                                                       log_solubility_constants_imp,
-                                                       balance_matrix,
-                                                       stoich_matrix,
-                                                       stoich_matrix_sol_exp,
-                                                       stoich_matrix_sol_imp,
-                                                       transport_vector,
-                                                       reaction_function_exp,
-                                                       reaction_function_derivative_exp)
         solution = interface_solution.InterfaceSolutionResult(self,
                                                               x,
                                                               TK,
                                                               molals_bulk_,
-                                                              transport_vector,
-                                                              reaction_imp)
+                                                              transport_constant,
+                                                              reaction_imp,
+                                                              relative_diffusion_vector)
         return solution, (res, (x, reaction_imp, stability_imp))
 
     def set_interface_phases(self, phases=None, TK=None):
@@ -168,7 +191,7 @@ class InterfaceSystem(equilibrium_system.EquilibriumSystem):
         self.explicit_interface_phases = explicit_interface_phases
         self.implicit_interface_phases = implicit_interface_phases
         
-    def _get_transport_vector(self, transport_params, TK):
+    def _get_transport_vector_a(self, transport_params, TK):
         """
         transport_params: Dict[str]
         """
@@ -215,6 +238,61 @@ class InterfaceSystem(equilibrium_system.EquilibriumSystem):
                 raise ValueError("Not valid transport_type")
         return transport_vector
 
+    def _get_transport_vector_b(self, transport_params, TK):
+        """
+        transport_params: Dict[str]
+        """
+        transport_type = transport_params['type']
+        #In model B, this is necessary everywhere
+        # We will use diffusion coefficients everywhere,
+        # as well as water density (molality to molarity (in SI))
+        
+        rho_water = water_properties.water_density(TK)
+        diffusion_coefs_ = {k: diffusion_coefficients.COEFFICIENTS[k]
+                            for k in self.solutes
+                            if k in diffusion_coefficients.COEFFICIENTS.keys()}
+        diffusion_coefs = diffusion_coefficients.diffusion_temp(
+            diffusion_coefs_, TK)
+        diffusion_median = np.median(list(diffusion_coefs.values()))
+        diffusion_vector = np.array([diffusion_coefs.get(k, diffusion_median)
+                                     for k in self.solutes])
+        relative_diffusion_vector = diffusion_vector/diffusion_median
+        
+        if transport_type == 'value':
+            transport_constant = transport_params['value']
+        elif transport_type == 'array':
+            transport_vector = transport_params['array']
+            transport_constant = np.median(transport_vector)
+        elif transport_type == 'dict':
+            default_value = transport_params.get('default', np.nan)
+            transport_dict = transport_params['dict']
+            transport_vector = np.array([transport_dict.get(k, default_value)
+                                         for k in self.solutes])
+            if default_value is np.nan:
+                transport_median = np.nanmedian(transport_vector)
+                transport_vector = np.nan_to_num(transport_vector,
+                                                 nan=transport_median)
+            transport_constant = np.median(transport_vector)
+        else:
+            if transport_type == 'sphere':
+                radius = transport_params['radius']
+                transport_constant = rho_water*diffusion_median/radius
+            elif transport_type == 'pipe':
+                shear_velocity = transport_params['shear_velocity']
+                bturb = transport_params.get(
+                    'bturb', constants.TURBULENT_VISCOSITY_CONSTANT)
+                scturb = transport_params.get('scturb', 1.0)
+                kinematic_viscosity = water_properties.water_kinematic_viscosity(
+                    TK)
+                transport_constant_a = 3*np.sqrt(3)/2*(bturb/scturb)**(1.0/3)
+                transport_constant_b = (
+                    diffusion_median/kinematic_viscosity)**(2.0/3)
+                transport_constant_c = shear_velocity*rho_water
+                transport_constant = transport_constant_a*transport_constant_b*transport_constant_c
+            else:
+                raise ValueError("Not valid transport_type")
+        return transport_constant, relative_diffusion_vector
+    
     @property
     def interface_indexes_dict(self):
         return {k: v for k, v

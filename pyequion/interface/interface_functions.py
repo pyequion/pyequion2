@@ -24,8 +24,6 @@ def log_decorator_deriv(df):
 def arrhenize(f):
     def f_(satur, ksp, TK, preexp, energy):
         reaction_constant = preexp*np.exp(-energy/(GAS_CONSTANT*TK))
-        print(energy)
-        print(reaction_constant)
         return f(satur, ksp, TK, reaction_constant)
     return f_
 

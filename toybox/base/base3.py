@@ -11,8 +11,9 @@ from pyequion import InterfaceSystem
 
 
 intsys = InterfaceSystem(['Ca', 'C', 'Na', 'Cl'], from_elements=True,
-                         activity_model="PITZER")
+                         activity_model="DEBYE")
 elements_balance = {'Ca':0.028, 'C':0.065, 'Na':0.075, 'Cl':0.056}
+elements_balance = {k: 1e2*v for k, v in elements_balance.items()}
 #species_balance = {'Ca++':0.028, 'Cl-':0.056, 'Na+':0.075, 'HCO3-':0.065}
 TK = 298.15
 solution,res = intsys.solve_equilibrium_elements_balance(TK, elements_balance, tol=1e-12)
@@ -23,7 +24,7 @@ intsys.set_interface_phases(fill_defaults=True)
 #intsys.set_reaction_functions({})
 #intsys.set_reaction_functions({'Calcite': ('linear', [7.64119601e-2], None)})
 #
-molals_bulk = solution.molals
+molals_bulk = solution.solute_molals
 transport_params = {'type': 'pipe',
                     'shear_velocity': 0.05}
 solution_int_a, res_int_a = intsys.solve_interface_equilibrium(TK,
@@ -38,3 +39,4 @@ solution_int_b, res_int_b = intsys.solve_interface_equilibrium(TK,
 
 print(solution_int_a.reaction_fluxes)
 print(solution_int_b.reaction_fluxes)
+print()

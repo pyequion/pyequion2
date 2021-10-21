@@ -5,6 +5,10 @@ from . import builder
 from . import converters
 
 
+MOLAL_MASS_WATER = 18.01528 #g/mol
+MOLALITY_WATER = 1e3*1/MOLAL_MASS_WATER #mol/kg
+
+
 class SolutionResult():
     """
     Class for solution of equilibria
@@ -54,13 +58,27 @@ class SolutionResult():
 
     @property
     def molals(self):
-        """molals"""
-        return {self.solutes[i]: self._x_molal[i]
-                for i in range(len(self._x_molal))}
+        """Molals"""
+        molals_dict = {'H2O': MOLALITY_WATER}
+        molals_dict.update(self.solute_molals)
+        return molals_dict
 
     @property
+    def solute_molals(self):
+        """Molals of solutes"""
+        molals_dict = {self.solutes[i]: self._x_molal[i]
+                for i in range(len(self._x_molal))}
+        return molals_dict
+
+    @property
+    def mole_fractions(self):
+        molal_sum = sum(self.molals.values())
+        return {key: value/molal_sum for key, value in self.molals.items()}
+    
+    @property
     def concentrations(self):  # mM or mol/m^3
-        """Equilibrium concentrations"""
+        """Equilibrium concentrations. Assumes water volue much greater than ionic volumes. 
+           At high ionic concentration one should give preference to molals"""
         return {self.solutes[i]: converters.molal_to_mmolar(self._x_molal[i])
                 for i in range(len(self._x_molal))}
 
@@ -111,7 +129,7 @@ class SolutionResult():
     def elements_molals(self):
         """Molals for elements"""
         balance_vector = self._balance_vector
-        return {k: balance_vector[i] for i, k in enumerate(self.solute_elements)}
+        return {k: balance_vector[i] for i, k in enumerate(self.elements)}
 
     @property
     def charge_density(self):
@@ -139,11 +157,15 @@ class SolutionResult():
         logks = builder.get_log_equilibrium_constants(solid_reactions, TK)
         logsatur = logiap - logks
         return logsatur
-
+    
+    @property
+    def _extended_x_molal(self):
+        return np.hstack([MOLALITY_WATER, self._x_molal])
+    
     @property
     def _charge_vector(self):
         return self.formula_matrix[-1, :]
 
     @property
     def _balance_vector(self):
-        return self.formula_matrix[2:-1, 1:]@self._x_molal
+        return self.formula_matrix[:-1, :]@self._extended_x_molal

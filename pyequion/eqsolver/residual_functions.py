@@ -144,7 +144,7 @@ def residual_and_jacobian_interface_slack_a(molals, reaction_vector_imp,
     reduced_stoich_matrix_sol_imp = stoich_matrix_sol_imp[:, 1:]
     logacts = activity_function(molals, TK)
     logsatur_exp = stoich_matrix_sol_exp@logacts - log_solubility_constants_exp
-    reaction_vector_exp = reaction_function_exp(logsatur_exp, log_solubility_constants_exp)
+    reaction_vector_exp = reaction_function_exp(logsatur_exp, log_solubility_constants_exp, TK)
     transport_vector = transport_constants*(molals_bulk - molals)
     res1 = log_equilibrium_constants - stoich_matrix@logacts
     res2 = reduced_balance_matrix@(transport_vector - \
@@ -157,7 +157,8 @@ def residual_and_jacobian_interface_slack_a(molals, reaction_vector_imp,
     mole_fractions = molals/(np.sum(molals))
     activity_hessian_diag = (1-mole_fractions)/molals
     reaction_vector_prime_exp = reaction_function_derivative_exp(logsatur_exp,
-                                                           log_solubility_constants_exp)
+                                                           log_solubility_constants_exp,
+                                                           TK)
     jacobian11 = -reduced_stoich_matrix*activity_hessian_diag
     jacobian12 = np.zeros((jacobian11.shape[0], nri))
     jacobian13 = np.zeros((jacobian11.shape[0], nri))
@@ -206,7 +207,7 @@ def residual_and_jacobian_interface_slack_b(molals, reaction_vector_imp,
     reduced_stoich_matrix_sol_imp = stoich_matrix_sol_imp[:, 1:]
     logacts = activity_function(molals, TK)
     logsatur_exp = stoich_matrix_sol_exp@logacts - log_solubility_constants_exp
-    reaction_vector_exp = reaction_function_exp(logsatur_exp, log_solubility_constants_exp)
+    reaction_vector_exp = reaction_function_exp(logsatur_exp, log_solubility_constants_exp, TK)
     transport_vector = transport_constant*(molals_bulk - molals*relative_diffusion_vector)
     res1 = log_equilibrium_constants - stoich_matrix@logacts
     res2 = reduced_balance_matrix@(transport_vector - \
@@ -219,7 +220,7 @@ def residual_and_jacobian_interface_slack_b(molals, reaction_vector_imp,
     mole_fractions = molals/(np.sum(molals))
     activity_hessian_diag = (1-mole_fractions)/molals
     reaction_vector_prime_exp = reaction_function_derivative_exp(logsatur_exp,
-                                                           log_solubility_constants_exp)
+                                                           log_solubility_constants_exp, TK)
     jacobian11 = -reduced_stoich_matrix*activity_hessian_diag
     jacobian12 = np.zeros((jacobian11.shape[0], nri))
     jacobian13 = np.zeros((jacobian11.shape[0], nri))

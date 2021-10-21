@@ -18,20 +18,23 @@ TK = 298.15
 solution,res = intsys.solve_equilibrium_elements_balance(TK, elements_balance, tol=1e-12)
 #print(solution.saturation_indexes)
 #intsys.set_interface_phases(['Calcite', 'Dolomite', 'Halite'])
-intsys.set_interface_phases()
+intsys.set_interface_phases(fill_defaults=True)
 #intsys.set_interface_phases()
-intsys.set_reaction_functions({})
+#intsys.set_reaction_functions({})
 #intsys.set_reaction_functions({'Calcite': ('linear', [7.64119601e-2], None)})
 #
 molals_bulk = solution.molals
 transport_params = {'type': 'pipe',
                     'shear_velocity': 0.05}
 solution_int_a, res_int_a = intsys.solve_interface_equilibrium(TK,
-                                                             molals_bulk,
-                                                             transport_params,
-                                                             transport_model="A")
+                                                               molals_bulk,
+                                                               transport_params,
+                                                               transport_model="A")
 
 solution_int_b, res_int_b = intsys.solve_interface_equilibrium(TK,
-                                                             molals_bulk,
-                                                             transport_params,
-                                                             transport_model="B")
+                                                               molals_bulk,
+                                                               transport_params,
+                                                               transport_model="B")
+
+print(solution_int_a.reaction_fluxes)
+print(solution_int_b.reaction_fluxes)

@@ -25,6 +25,7 @@ DEFAULT_DB_FILES = {
     "phases": data.reactions_solids,
     "irreversible": data.reactions_irreversible,
     "species": data.species,
+    "gases": data.reactions_gases
 }
 ELEMENTS = ['H', 'He', 'Li', 'Be', 'B', 'C', 'N', 'O', 'F',
             'Ne', 'Na', 'Mg', 'Al', 'Si', 'P', 'S', 'Cl', 'Ar',
@@ -65,11 +66,17 @@ def species_to_elements(species_set):
 
 def get_species_reaction_from_initial_species(initial_species,
                                               possible_reactions=None,
-                                              possible_solid_reactions=None):
+                                              possible_solid_reactions=None,
+                                              possible_gas_reactions=None,
+                                              database_files=None):
+    if database_files is None:
+        database_files = DEFAULT_DB_FILES
     if not possible_reactions:
-        possible_reactions = get_all_possible_reactions()
+        possible_reactions = get_all_possible_reactions(database_files)
     if not possible_solid_reactions:
-        possible_solid_reactions = get_all_possible_solid_reactions()
+        possible_solid_reactions = get_all_possible_solid_reactions(database_files)
+    if not possible_gas_reactions:
+        possible_gas_reactions = get_all_possible_gas_reactions(database_files)
     species, reactions = _get_species_reactions_from_compounds(
         initial_species, possible_reactions)
     species = list(species)
@@ -77,7 +84,9 @@ def get_species_reaction_from_initial_species(initial_species,
     _, solid_reactions = _get_species_reactions_from_compounds(
         set(species), possible_solid_reactions
     )
-    return species, reactions, solid_reactions
+    _, gas_reactions = _get_species_reactions_from_compounds(
+            set(species), possible_gas_reactions)
+    return species, reactions, solid_reactions, gas_reactions
 
 
 def get_all_possible_reactions(database_files=DEFAULT_DB_FILES):
@@ -90,6 +99,11 @@ def get_all_possible_reactions(database_files=DEFAULT_DB_FILES):
 def get_all_possible_solid_reactions(database_files=DEFAULT_DB_FILES):
     possible_solid_reactions = utils.load_from_db(database_files["phases"])
     return possible_solid_reactions
+
+
+def get_all_possible_gas_reactions(database_files=DEFAULT_DB_FILES):
+    possible_gas_reactions = utils.load_from_db(database_files["gases"])
+    return possible_gas_reactions
 
 
 def get_log_equilibrium_constants(reactions, TK):
@@ -112,6 +126,16 @@ def make_solid_formula_matrix(solid_reactions, elements):
                                       for solid_formula in solid_formulas]
                                      for element in elements])
     return solid_formula_matrix
+
+
+def make_gas_formula_matrix(gas_reactions, elements):
+    gas_formulas = [_get_gas_formula(gas_reaction)
+                      for gas_reaction in gas_reactions]
+    elements = elements + ['e']
+    gas_formula_matrix = np.array([[utils.stoich_number(gas_formula, element)
+                                      for gas_formula in gas_formulas]
+                                     for element in elements])
+    return gas_formula_matrix
 
 
 def make_stoich_matrix(species, reactions):
@@ -294,6 +318,9 @@ def _check_validity_specie_tag_in_reaction_dict(k):
         or k == "log_K_coefs"
         or k == "deltah"
         or k == "phase_name"
+        or k == "Omega"
+        or k == "T_c"
+        or k == "P_c"
     )
 
 
@@ -347,3 +374,15 @@ def _get_solid_formula(solid_reaction, drop_phase_name=True):
                 solid_formula = solid_formula[:solid_formula.index('(')]
             break
     return solid_formula
+
+
+def _get_gas_formula(gas_reaction, drop_phase_name=True):
+    phase_name = gas_reaction['phase_name']
+    gas_formula = None
+    for key in gas_reaction.keys():
+        if key == phase_name:
+            gas_formula = key
+            if '(' in gas_formula and drop_phase_name:  # Will remove (g) or (s)
+                gas_formula = gas_formula[:gas_formula.index('(')]
+            break
+    return gas_formula

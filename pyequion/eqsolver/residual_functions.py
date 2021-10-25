@@ -120,6 +120,91 @@ def residual_and_jacobian_xlma(molals, molals_p, stability_indexes_p,
     return res, jacobian
 
 
+
+def residual_and_jacobian_xlma_2(molals, molals_solids, molals_gases, 
+                                 stability_indexes_solids, stability_indexes_gases,
+                                 TK, P, activity_function, activity_function_gas,
+                                 balance_vector,
+                                 log_equilibrium_constants, log_solubility_constants, log_gases_constants,
+                                 balance_matrix, balance_matrix_solids, balance_matrix_gases,
+                                 stoich_matrix, stoich_matrix_solids, stoich_matrix_gases):
+    # S@loga - logKs = 0
+    # A_1@x_* - b_1 = 0
+    # A_2@logx_* - b_2 = 0
+    # x_{*,i} = x_{extended,i} if not m_{1,i} else a
+    # With x_{extended} = hstack[1,x]
+    # Here, solid reactions is : reagents positives, solid negatives
+    # stability_index_p = -log(saturation) (for solids)
+    logacts = activity_function(molals, TK)
+    logacts_gases = activity_function_gas(molals_gases, TK, P)
+    
+    molal_star = np.append(1.0, molals)
+    res1 = log_equilibrium_constants - stoich_matrix@logacts
+    res2 = balance_vector - \
+           balance_matrix@molal_star - \
+           balance_matrix_solids@molals_solids - \
+           balance_matrix_gases@molals_gases
+    res3 = log_solubility_constants - stability_indexes_solids - \
+        stoich_matrix_solids@logacts
+    res4 = log_gases_constants - stability_indexes_gases - \
+           stoich_matrix_gases@logacts + logacts_gases
+
+    res5 = molals_solids*stability_indexes_solids
+    res6 = molals_gases*stability_indexes_gases
+    res = np.hstack([res1, res2, res3, res4, res5, res6])
+
+    #lines: res1, res2, res3, res4, res5, res6
+    #columns: molals, molals_solids, molals_gases, stability_indexes_solids, stability_indexes_gases
+    # Jacobian approximation
+    reduced_balance_matrix = balance_matrix[:, 1:]
+    reduced_stoich_matrix = stoich_matrix[:, 1:]
+    reduced_stoich_matrix_solids = stoich_matrix_solids[:, 1:]
+    reduced_stoich_matrix_gases = stoich_matrix_gases[:, 1:]    
+    mole_fractions = molals/(np.sum(molals))
+    activity_hessian_diag = (1-mole_fractions)/molals
+    gas_mole_fractions = molals_gases/(np.sum(molals_gases))
+    activity_gas_hessian_diag = (1-gas_mole_fractions)/molals_gases
+    
+    jacobian11 = -reduced_stoich_matrix*activity_hessian_diag
+    jacobian21 = -reduced_balance_matrix
+    jacobian31 = -reduced_stoich_matrix_solids*activity_hessian_diag
+    jacobian41 = -reduced_stoich_matrix_gases*activity_hessian_diag
+    jacobian51 = np.zeros((res5.size, molals.size))
+    jacobian61 = np.zeros((res6.size, molals.size))    
+    jacobian12 = np.zeros((res1.size, molals_solids.size))
+    jacobian22 = -balance_matrix_solids
+    jacobian32 = np.zeros((res3.size, molals_solids.size))
+    jacobian42 = np.zeros((res4.size, molals_solids.size))
+    jacobian52 = np.diag(stability_indexes_solids)
+    jacobian62 = np.zeros((res6.size, molals_solids.size))
+    jacobian13 = np.zeros((res1.size, molals_gases.size))
+    jacobian23 = -balance_matrix_gases
+    jacobian33 = np.zeros((res3.size, molals_gases.size))
+    jacobian43 = np.diag(activity_gas_hessian_diag)
+    jacobian53 = np.zeros((res5.size, molals_gases.size))
+    jacobian63 = np.diag(stability_indexes_gases)
+    jacobian14 = np.zeros((res1.size, stability_indexes_solids.size))
+    jacobian24 = np.zeros((res2.size, stability_indexes_solids.size))
+    jacobian34 = np.zeros((res3.size, stability_indexes_solids.size))
+    jacobian44 = np.zeros((res4.size, stability_indexes_solids.size))
+    jacobian54 = np.diag(molals_solids)
+    jacobian64 = np.zeros((res6.size, stability_indexes_solids.size))
+    jacobian15 = np.zeros((res1.size, stability_indexes_gases.size))
+    jacobian25 = np.zeros((res2.size, stability_indexes_gases.size))
+    jacobian35 = np.zeros((res3.size, stability_indexes_gases.size))
+    jacobian45 = np.zeros((res4.size, stability_indexes_gases.size))
+    jacobian55 = np.zeros((res5.size, stability_indexes_gases.size))
+    jacobian65 = np.diag(molals_gases)
+
+    jacobian = np.block([[jacobian11, jacobian12, jacobian13, jacobian14, jacobian15],
+                         [jacobian21, jacobian22, jacobian23, jacobian24, jacobian25],
+                         [jacobian31, jacobian32, jacobian33, jacobian34, jacobian35],
+                         [jacobian41, jacobian42, jacobian43, jacobian44, jacobian45],
+                         [jacobian51, jacobian52, jacobian53, jacobian54, jacobian55],
+                         [jacobian61, jacobian62, jacobian63, jacobian64, jacobian65]])
+    return res, jacobian
+
+
 def residual_and_jacobian_interface_slack_a(molals, reaction_vector_imp,
                                             stability_indexes_imp,
                                             TK, molals_bulk,
@@ -159,6 +244,9 @@ def residual_and_jacobian_interface_slack_a(molals, reaction_vector_imp,
     reaction_vector_prime_exp = reaction_function_derivative_exp(logsatur_exp,
                                                            log_solubility_constants_exp,
                                                            TK)
+    
+    #rows: res1, res2, res3, res4
+    #columns: molals, reaction_vector_imp, satbility_indexes_imp
     jacobian11 = -reduced_stoich_matrix*activity_hessian_diag
     jacobian12 = np.zeros((jacobian11.shape[0], nri))
     jacobian13 = np.zeros((jacobian11.shape[0], nri))

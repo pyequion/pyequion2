@@ -140,7 +140,46 @@ def solve_equilibrium_xlma(x_guess, x_guess_p, stability_guess_p,
     molals, molals_p, stability_indexes_p = np.split(x, [ns1, ns2, ns3])[:-1]
     return molals, molals_p, stability_indexes_p, res
 
+def solve_equilibrium_xlma_2(molals_guess, molals_solids_guess, molals_gases_guess, 
+                             stability_indexes_solids_guess, stability_indexes_gases_guess,
+                             TK, P, activity_function, activity_function_gas,
+                             balance_vector,
+                             log_equilibrium_constants, log_solubility_constants, log_gases_constants,
+                             balance_matrix, balance_matrix_solids, balance_matrix_gases,
+                             stoich_matrix, stoich_matrix_solids, stoich_matrix_gases,
+                             solver_function=None, tol=1e-6):
+    if not solver_function:
+        solver_function = solvers.solver_constrained_newton
+    ns1 = molals_guess.size
+    ns2 = ns1 + molals_solids_guess.size
+    ns3 = ns2 + molals_gases_guess.size
+    ns4 = ns3 + stability_indexes_solids_guess.size
+    ns5 = ns4 + stability_indexes_gases_guess.size
+    
+    x_guess_total = np.hstack([molals_guess, molals_solids_guess, molals_gases_guess, 
+                               stability_indexes_solids_guess, stability_indexes_gases_guess])
 
+    def f(x):
+        molals, molals_solids, molals_gases, \
+        stability_indexes_solids, stability_indexes_gases = \
+            np.split(x, [ns1, ns2, ns3, ns4, ns5])[
+            :-1]
+        return residual_functions.residual_and_jacobian_xlma_2(
+            molals, molals_solids, molals_gases, 
+            stability_indexes_solids, stability_indexes_gases,
+            TK, P, activity_function, activity_function_gas,
+            balance_vector,
+            log_equilibrium_constants, log_solubility_constants, log_gases_constants,
+            balance_matrix, balance_matrix_solids, balance_matrix_gases,
+            stoich_matrix, stoich_matrix_solids, stoich_matrix_gases)
+    x, res = solver_function(f, x_guess_total, tol=tol)
+    molals, molals_solids, molals_gases, \
+    stability_indexes_solids, stability_indexes_gases = \
+        np.split(x, [ns1, ns2, ns3, ns4, ns5])[
+        :-1]
+    return molals, molals_solids, molals_gases, stability_indexes_solids, stability_indexes_gases, res
+
+    
 def solve_equilibrium_interface_mixed(x_guess,
                                       TK, molals_bulk,
                                       activity_function,

@@ -37,22 +37,29 @@ class SolutionResult():
         Solid stoichiometric matrix of system
     """
 
-    def __init__(self, equilibrium_system, x, TK, molals_p=None, solid_phases_p=None):
+    def __init__(self, equilibrium_system, x, TK,
+                 molals_solids=None, solid_phases_in=None,
+                 molals_gases=None, gas_phases_in=None):
         self.TK = TK
         self._x_molal = x
         self._x_logact = equilibrium_system.activity_function(x, TK)
         self._x_act = np.nan_to_num(10**self._x_logact)
-        self._molals_p = molals_p
-        self._solid_phases_p = solid_phases_p
+        self._molals_solids = molals_solids
+        self._solid_phases_in = solid_phases_in
+        self._molals_gases = molals_gases
+        self._gas_phases_in = gas_phases_in
         self.base_species = equilibrium_system.base_species
         self.species = equilibrium_system.species
         self.reactions = equilibrium_system.reactions
         self.solid_reactions = equilibrium_system.solid_reactions
+        self.gas_reactions = equilibrium_system.gas_reactions
         self.elements = equilibrium_system.elements
         self.formula_matrix = equilibrium_system.formula_matrix
         self.stoich_matrix = equilibrium_system.stoich_matrix
         self.solid_formula_matrix = equilibrium_system.solid_formula_matrix
         self.solid_stoich_matrix = equilibrium_system.solid_stoich_matrix
+        self.gas_formula_matrix = equilibrium_system.gas_formula_matrix
+        self.gas_stoich_matrix = equilibrium_system.gas_stoich_matrix
         self._logsatur = \
             self._build_saturation_indexes()
 
@@ -118,12 +125,27 @@ class SolutionResult():
     @property
     def solid_molals(self):
         """Solid molals"""
-        if self._solid_phases_p is None:
+        if self._solid_phases_in is None:
             solid_molals_ = dict()
         else:
-            solid_molals_ = dict(zip(self._solid_phases_p, self._molals_p))
+            solid_molals_ = dict(zip(self._solid_phases_in, self._molals_solids))
         solid_molals = {k: solid_molals_.get(k, 0.0) for k in self.solid_phase_names}
         return solid_molals
+
+    @property
+    def gas_phase_names(self):
+        """Names of solid phases"""
+        return [gas_reac['phase_name'] for gas_reac in self.gas_reactions]
+
+    @property
+    def gas_molals(self):
+        """Solid molals"""
+        if self._gas_phases_in is None:
+            gas_molals_ = dict()
+        else:
+            gas_molals_ = dict(zip(self._gas_phases_in, self._molals_gases))
+        gas_molals = {k: gas_molals_.get(k, 0.0) for k in self.gas_phase_names}
+        return gas_molals
 
     @property
     def elements_molals(self):

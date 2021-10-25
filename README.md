@@ -7,7 +7,7 @@ Repository: https://github.com/nidf-scaling/pyequion
 ## Features
 
 - Pure python package: hence it is easy to install in any platform
-- Calculation of equilibrium of inorganic salts in water solution with precipitation
+- Calculation of equilibrium of inorganic salts in water solution with precipitation and degassing
 - Automatic determination of reactions
 - Provides information as: Ionic Strength, pH, Electric Conductivity and the concentrations of each species as well their activity coefficient
 - A modular approach for the activity coefficient calculation allows the usage of new thermodynamic models

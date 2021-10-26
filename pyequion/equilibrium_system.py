@@ -139,17 +139,18 @@ class EquilibriumSystem():
         TK: float
             Temperature in Kelvin
         P: float
-            Pressure in Pa
+            Pressure in atm
 
         Returns
         -------
         ndarray
             Log-activity of gases
         """
-        #FIXME: Toy model. Just to make things work
+        # FIXME: Toy model. Just to make things work
         molal_fractions = molals_gases/np.sum(molals_gases)
-        fugacity_coefficient_term = self._fugacity_coefficient_function(molal_fractions, TK, P/constants.PATM)
-        partial_pressure_term = np.log(P/constants.PATM) +  np.log(molal_fractions)
+        fugacity_coefficient_term = self._fugacity_coefficient_function(
+            molal_fractions, TK, P)
+        partial_pressure_term = np.log(P) + np.log(molal_fractions)
         logact = fugacity_coefficient_term + partial_pressure_term
         return logact
 
@@ -166,7 +167,7 @@ class EquilibriumSystem():
             Log-fugacity function, accepting molal_fractions, temperature (TK), and pressure (ATM)
         """
         reactions_gases = [self.gas_reactions[i] for i in gas_indexes]
-        if reactions_gases == []: #Edge case
+        if reactions_gases == []:  # Edge case
             self._fugacity_coefficient_function = lambda x, TK, P: 0.0
         else:
             self._fugacity_coefficient_function = \
@@ -207,12 +208,12 @@ class EquilibriumSystem():
 
         Returns
         -------
-        List[float] of log equilibria constants of solid reactions
+        List[float] of log equilibria constants of gas reactions
         """
-        return builder.get_log_equilibrium_constants(self.solid_reactions, TK)
+        return builder.get_log_equilibrium_constants(self.gas_reactions, TK)
 
     def solve_equilibrium_elements_balance(self, TK, element_balance,
-                                           tol=1e-12, initial_guess='default'):
+                                           tol=1e-12, maxiter=1000, initial_guess='default'):
         """
         Parameters
         ----------
@@ -249,10 +250,10 @@ class EquilibriumSystem():
                                               initial_guess=initial_guess)
 
     def solve_equilibrium_elements_balance_phases(self, TK, element_balance,
-                                                  P=constants.PATM,
+                                                  PATM=1.0,
                                                   solid_phases=None,
                                                   has_gas_phases=True,
-                                                  tol=1e-12,
+                                                  tol=1e-12, maxiter=1000,
                                                   initial_guesses='default'):
         """
         Parameters
@@ -287,7 +288,7 @@ class EquilibriumSystem():
             gas_phases = self.gas_phase_names
         else:
             gas_phases = []
-        #FIXME: Remove need of popping H20
+        # FIXME: Remove need of popping H20
         if 'H2O(g)' in gas_phases:
             gas_phases.remove('H2O(g)')
         solid_indexes = self._get_solid_indexes(solid_phases)
@@ -322,13 +323,13 @@ class EquilibriumSystem():
             x_guess_gas = np.ones(len(gas_indexes))*0.1
             stability_gas_guess = np.zeros(len(gas_indexes))
         else:
-            x_guess, x_guess_solid, stability_guess_solid, x_guess_gas, stability_guess_gas = initial_guesses
+            x_guess, x_guess_solid, x_guess_gas, stability_solid_guess, stability_gas_guess = initial_guesses
 
         molals, molals_solids, molals_gases, stability_solids, stability_gases, res = \
             eqsolver.solve_equilibrium_xlma_2(
                 x_guess, x_guess_solid, x_guess_gas,
                 stability_solid_guess, stability_gas_guess,
-                TK, P, activity_function, activity_function_gas,
+                TK, PATM, activity_function, activity_function_gas,
                 balance_vector,
                 log_equilibrium_constants, log_solubility_constants, log_gases_constants,
                 balance_matrix, balance_matrix_solids, balance_matrix_gases,
@@ -345,7 +346,7 @@ class EquilibriumSystem():
                                         activities_balance_log=None,
                                         closing_equation='electroneutrality',
                                         closing_equation_value=0.0,
-                                        tol=1e-12, initial_guess='default'):
+                                        tol=1e-12, maxiter=1000, initial_guess='default'):
         """
         Parameters
         ----------
@@ -416,7 +417,7 @@ class EquilibriumSystem():
                                   mask,
                                   mask_log,
                                   TK,
-                                  tol=1e-12,
+                                  tol=1e-12, maxiter=1000,
                                   initial_guess='default'):
         """
         Parameters
@@ -588,9 +589,9 @@ class EquilibriumSystem():
             gas_stoich_matrix = np.zeros((0, self.nspecies))
         else:
             gas_formula_matrix = builder.make_gas_formula_matrix(
-                    self.gas_reactions, self.elements)
+                self.gas_reactions, self.elements)
             gas_stoich_matrix = builder.make_stoich_matrix(
-                    self.species, self.gas_reactions)
+                self.species, self.gas_reactions)
         return gas_formula_matrix, gas_stoich_matrix
 
     def _prepare_balance_arrays(self, balances):

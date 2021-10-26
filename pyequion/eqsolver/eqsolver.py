@@ -19,7 +19,7 @@ def solve_equilibrium_solutes(x_guess,
                               mask,
                               mask_log,
                               solver_function=None,
-                              tol=1e-6):
+                              tol=1e-6, maxiter=1000):
     """
     Parameters
     ----------
@@ -69,7 +69,7 @@ def solve_equilibrium_solutes(x_guess,
                           stoich_matrix=stoich_matrix,
                           mask=mask,
                           mask_log=mask_log)
-    x, res = solver_function(f, x_guess, tol=tol)
+    x, res = solver_function(f, x_guess, tol=tol, maxiter=maxiter)
     return x, res
 
 
@@ -80,7 +80,7 @@ def solve_equilibrium_xlma(x_guess, x_guess_p, stability_guess_p,
                            balance_matrix, balance_matrix_p,
                            stoich_matrix, stoich_matrix_p,
                            solver_function=None,
-                           tol=1e-6):
+                           tol=1e-6, maxiter=1000):
     """
     Parameters
     ----------
@@ -136,7 +136,7 @@ def solve_equilibrium_xlma(x_guess, x_guess_p, stability_guess_p,
             log_equilibrium_constants, log_solubility_constants,
             balance_matrix, balance_matrix_p,
             stoich_matrix, stoich_matrix_p)
-    x, res = solver_function(f, x_guess_total, tol=tol)
+    x, res = solver_function(f, x_guess_total, tol=tol, maxiter=maxiter)
     molals, molals_p, stability_indexes_p = np.split(x, [ns1, ns2, ns3])[:-1]
     return molals, molals_p, stability_indexes_p, res
 
@@ -147,7 +147,7 @@ def solve_equilibrium_xlma_2(molals_guess, molals_solids_guess, molals_gases_gue
                              log_equilibrium_constants, log_solubility_constants, log_gases_constants,
                              balance_matrix, balance_matrix_solids, balance_matrix_gases,
                              stoich_matrix, stoich_matrix_solids, stoich_matrix_gases,
-                             solver_function=None, tol=1e-6):
+                             solver_function=None, tol=1e-6, maxiter=1000):
     if not solver_function:
         solver_function = solvers.solver_constrained_newton
     ns1 = molals_guess.size
@@ -172,7 +172,7 @@ def solve_equilibrium_xlma_2(molals_guess, molals_solids_guess, molals_gases_gue
             log_equilibrium_constants, log_solubility_constants, log_gases_constants,
             balance_matrix, balance_matrix_solids, balance_matrix_gases,
             stoich_matrix, stoich_matrix_solids, stoich_matrix_gases)
-    x, res = solver_function(f, x_guess_total, tol=tol)
+    x, res = solver_function(f, x_guess_total, tol=tol, maxiter=maxiter)
     molals, molals_solids, molals_gases, \
     stability_indexes_solids, stability_indexes_gases = \
         np.split(x, [ns1, ns2, ns3, ns4, ns5])[
@@ -195,7 +195,7 @@ def solve_equilibrium_interface_mixed(x_guess,
                                       reaction_function_exp,
                                       reaction_function_derivative_exp,
                                       solver_function=None,
-                                      tol=1e-6):
+                                      tol=1e-6, maxiter=1000):
     """
     Parameters
     ----------
@@ -259,7 +259,7 @@ def solve_equilibrium_interface_mixed(x_guess,
                           transport_constants=transport_constants,
                           reaction_function_exp=reaction_function_exp,
                           reaction_function_derivative_exp=reaction_function_derivative_exp)
-    x, res = solver_function(f, x_guess, tol=tol)
+    x, res = solver_function(f, x_guess, tol=tol, maxiter=maxiter)
     return x, res
 
 
@@ -277,7 +277,7 @@ def solve_equilibrium_interface_slack_a(x_guess, reaction_imp_guess, stability_i
                                         reaction_function_exp,
                                         reaction_function_derivative_exp,
                                         solver_function=None,
-                                        tol=1e-6):
+                                        tol=1e-6, maxiter=1000):
     if not solver_function:
         solver_function = solvers.solver_constrained_newton
     ns1 = x_guess.size
@@ -302,7 +302,7 @@ def solve_equilibrium_interface_slack_a(x_guess, reaction_imp_guess, stability_i
                                       transport_constants,
                                       reaction_function_exp,
                                       reaction_function_derivative_exp)
-    x, res = solver_function(f, x_guess_total, tol=tol)
+    x, res = solver_function(f, x_guess_total, tol=tol, maxiter=maxiter)
     molals, reaction_imp_guess, stability_imp_guess = np.split(x, [ns1, ns2, ns3])[:-1]
     return molals, reaction_imp_guess, stability_imp_guess, res
 
@@ -322,7 +322,7 @@ def solve_equilibrium_interface_slack_b(x_guess, reaction_imp_guess, stability_i
                                         reaction_function_exp,
                                         reaction_function_derivative_exp,
                                         solver_function=None,
-                                        tol=1e-6):
+                                        tol=1e-6, maxiter=1000):
     if not solver_function:
         solver_function = solvers.solver_constrained_newton
     ns1 = x_guess.size
@@ -348,6 +348,6 @@ def solve_equilibrium_interface_slack_b(x_guess, reaction_imp_guess, stability_i
                                       relative_diffusion_vectors,
                                       reaction_function_exp,
                                       reaction_function_derivative_exp)
-    x, res = solver_function(f, x_guess_total, tol=tol)
+    x, res = solver_function(f, x_guess_total, tol=tol, maxiter=maxiter)
     molals, reaction_imp_guess, stability_imp_guess = np.split(x, [ns1, ns2, ns3])[:-1]
     return molals, reaction_imp_guess, stability_imp_guess, res

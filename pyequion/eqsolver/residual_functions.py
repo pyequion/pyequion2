@@ -120,7 +120,7 @@ def residual_and_jacobian_xlma(molals, molals_p, stability_indexes_p,
     return res, jacobian
 
 
-
+#COUNTER = 0
 def residual_and_jacobian_xlma_2(molals, molals_solids, molals_gases, 
                                  stability_indexes_solids, stability_indexes_gases,
                                  TK, P, activity_function, activity_function_gas,
@@ -153,6 +153,14 @@ def residual_and_jacobian_xlma_2(molals, molals_solids, molals_gases,
     res6 = molals_gases*stability_indexes_gases
     res = np.hstack([res1, res2, res3, res4, res5, res6])
 
+#    print(molals, molals_solids, molals_gases, 
+#                                 stability_indexes_solids, stability_indexes_gases)
+#    print(res3, res5)
+#    global COUNTER
+#    COUNTER += 1
+#    print(COUNTER)
+#    if COUNTER == 70:
+#        raise KeyError
     #lines: res1, res2, res3, res4, res5, res6
     #columns: molals, molals_solids, molals_gases, stability_indexes_solids, stability_indexes_gases
     # Jacobian approximation
@@ -185,14 +193,14 @@ def residual_and_jacobian_xlma_2(molals, molals_solids, molals_gases,
     jacobian63 = np.diag(stability_indexes_gases)
     jacobian14 = np.zeros((res1.size, stability_indexes_solids.size))
     jacobian24 = np.zeros((res2.size, stability_indexes_solids.size))
-    jacobian34 = np.zeros((res3.size, stability_indexes_solids.size))
+    jacobian34 = -np.identity(stability_indexes_solids.size)
     jacobian44 = np.zeros((res4.size, stability_indexes_solids.size))
     jacobian54 = np.diag(molals_solids)
     jacobian64 = np.zeros((res6.size, stability_indexes_solids.size))
     jacobian15 = np.zeros((res1.size, stability_indexes_gases.size))
     jacobian25 = np.zeros((res2.size, stability_indexes_gases.size))
     jacobian35 = np.zeros((res3.size, stability_indexes_gases.size))
-    jacobian45 = np.zeros((res4.size, stability_indexes_gases.size))
+    jacobian45 = -np.identity(stability_indexes_gases.size)
     jacobian55 = np.zeros((res5.size, stability_indexes_gases.size))
     jacobian65 = np.diag(molals_gases)
 

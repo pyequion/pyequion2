@@ -19,6 +19,7 @@ ELEMENT_SPECIES_MAP = {
     'Fe': 'Fe++',
     'K': 'K+',
     'Sr': 'Sr++',
+    'N': 'NH3'
 }
 DEFAULT_DB_FILES = {
     "solutions": data.reactions_solutions,
@@ -86,6 +87,8 @@ def get_species_reaction_from_initial_species(initial_species,
     )
     _, gas_reactions = _get_species_reactions_from_compounds(
             set(species), possible_gas_reactions)
+    species, reactions, solid_reactions, gas_reactions = \
+        _sort_species_and_reactions(species, reactions, solid_reactions, gas_reactions)
     return species, reactions, solid_reactions, gas_reactions
 
 
@@ -386,3 +389,18 @@ def _get_gas_formula(gas_reaction, drop_phase_name=True):
                 gas_formula = gas_formula[:gas_formula.index('(')]
             break
     return gas_formula
+
+
+def _sort_species_and_reactions(species, reactions, solid_reactions, gas_reactions):
+    dummy_reaction_sort_ = lambda reaction: ' '.join(sorted(reaction.keys()))
+    dummy_phase_reaction_sort_ = lambda reaction: reaction['phase_name']
+    reactions = sorted(reactions, key=dummy_reaction_sort_)
+    solid_reactions = sorted(solid_reactions, key=dummy_phase_reaction_sort_)
+    gas_reactions = sorted(gas_reactions, key=dummy_phase_reaction_sort_)
+    species = [species[0]] + sorted(species[1:]) #Ensure H2O first
+    return species, reactions, solid_reactions, gas_reactions
+    
+    
+    
+    
+    

@@ -102,6 +102,10 @@ class SolutionResult():
                 for i in range(len(self._logsatur))}
 
     @property
+    def saturations(self):
+        return {k:10**v for k, v in self.saturation_indexes.items()}
+    
+    @property
     def ionic_strength(self):
         """Ionic strength of system"""
         return 0.5*np.sum(

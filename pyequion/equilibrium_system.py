@@ -291,8 +291,8 @@ class EquilibriumSystem():
         # FIXME: Remove need of popping H20
         if 'H2O(g)' in gas_phases:
             gas_phases.remove('H2O(g)')
-        solid_indexes = self._get_solid_indexes(solid_phases)
-        gas_indexes = self._get_gas_indexes(gas_phases)
+        solid_indexes = self.get_solid_indexes(solid_phases)
+        gas_indexes = self.get_gas_indexes(gas_phases)
         self.set_fugacity_coefficient_function(gas_indexes)
 
         activity_function = self.activity_function
@@ -346,6 +346,7 @@ class EquilibriumSystem():
                                         activities_balance_log=None,
                                         closing_equation='electroneutrality',
                                         closing_equation_value=0.0,
+                                        PATM=1.0,
                                         tol=1e-12, maxiter=1000, initial_guess='default'):
         """
         Parameters
@@ -609,7 +610,7 @@ class EquilibriumSystem():
                 balance_matrix[i, self.species.index(key)] = 1.0
         return balance_vector, balance_matrix, mask
 
-    def _get_solid_indexes(self, solid_phases):
+    def get_solid_indexes(self, solid_phases):
         indexes = [None for _ in range(len(solid_phases))]
         for i, solid_phase in enumerate(solid_phases):
             for j, solid_reaction in enumerate(self.solid_reactions):
@@ -617,7 +618,7 @@ class EquilibriumSystem():
                     indexes[i] = j
         return indexes
 
-    def _get_gas_indexes(self, gas_phases):
+    def get_gas_indexes(self, gas_phases):
         indexes = [None for _ in range(len(gas_phases))]
         for i, gas_phase in enumerate(gas_phases):
             for j, gas_reaction in enumerate(self.gas_reactions):

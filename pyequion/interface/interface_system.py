@@ -126,7 +126,7 @@ class InterfaceSystem(equilibrium_system.EquilibriumSystem):
                 print("Getting all stable phases at %.2f K" % TK)
             phases = builder.get_most_stable_phases(
                 self.solid_reactions, TK)
-        indexes = self._get_solid_indexes(phases)
+        indexes = self.get_solid_indexes(phases)
         self.interface_phases = phases
         self.interface_indexes = indexes
         self.ninterface = len(phases)
@@ -147,6 +147,7 @@ class InterfaceSystem(equilibrium_system.EquilibriumSystem):
             for phase, (fname, args) in interface_functions.SPECIFIC_SOLIDS_MODEL.items():
                 if phase in self.solid_phase_names:
                     reaction_dict[phase] = (fname, args, None)
+        print(reaction_dict)
         self._split_implicit_explicit(reaction_dict)
         self._explicit_flist_reac = []
         self._explicit_dflist_reac = []

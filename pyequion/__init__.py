@@ -39,6 +39,11 @@ array([ 0.00000000e+00,  3.46389584e-14,  6.21724894e-14,  8.47322212e-13,
  'Aragonite': 2.923581817451497,
  'Vaterite': 2.500920170629433,
  'Halite': -4.1933510494726285}
+
+GUI Example
+-----------
+>>> import pyequion
+>>> pyequion.rungui()
 """
 
 from .equilibrium_system import EquilibriumSystem

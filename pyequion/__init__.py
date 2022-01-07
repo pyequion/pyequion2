@@ -43,6 +43,7 @@ array([ 0.00000000e+00,  3.46389584e-14,  6.21724894e-14,  8.47322212e-13,
 
 from .equilibrium_system import EquilibriumSystem
 from .interface import InterfaceSystem
+from .gui import rungui
 from . import converters
 from . import water_properties
 

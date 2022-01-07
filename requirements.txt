@@ -4,3 +4,4 @@ commentjson>=0.8.3
 scipy>=1.6.2
 numpy>=1.20.2
 ordered_set>=3.1.1
+pyqt5>=5.12.3

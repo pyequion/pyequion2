@@ -153,6 +153,7 @@ class SolutionGUI(QWidget):
         phases_grid.addWidget(title_phase, 0, 0)
         phases_grid.addWidget(title_molal, 0, 1)
         
+        i = 0
         for i, solid_phase in enumerate(solid_phases, 1):
             phase_label = QLabel(solid_phase)
             molal_label = self.show_value_label(solid_phase,

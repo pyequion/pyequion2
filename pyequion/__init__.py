@@ -48,7 +48,7 @@ GUI Example
 
 from .equilibrium_system import EquilibriumSystem
 from .interface import InterfaceSystem
-from .gui import rungui
+from .gui import run as rungui
 from . import converters
 from . import water_properties
 

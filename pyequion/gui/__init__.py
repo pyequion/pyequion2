@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-from .run import rungui
+from .run import run

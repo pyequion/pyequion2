@@ -9,9 +9,12 @@ from PyQt5.QtWidgets import (QApplication, QWidget, QLabel,
                              QHBoxLayout, QMessageBox,
                              QComboBox, QMainWindow,
                              QTabWidget, QTabBar,
-                             QScrollArea)
+                             QScrollArea, QAction,
+                             QFileDialog)
 from PyQt5.QtGui import QFont, QPixmap
 from PyQt5.QtCore import Qt
+
+import cloudpickle
 
 from .. import EquilibriumSystem
 from .solver import SolverGUI
@@ -28,12 +31,71 @@ class PyEquionGUI(QMainWindow):
         self.setGeometry(100, 100, 900, 600)
         self.setWindowTitle('PyEquion GUI')
         self.setCentralWidget(WelcomeWidget(self))
+        self.create_menu()
+        self.tabWidget = None
         self.show()
+        
+    def create_menu(self):
+        exit_act = QAction('Exit', self)
+        exit_act.setShortcut('Ctrl+Q')
+        exit_act.triggered.connect(self.close)
+        
+        open_act = QAction('Open', self)
+        open_act.setShortcut('Ctrl+O')
+        open_act.triggered.connect(self.close)
 
+        save_act = QAction('Save', self)
+        save_act.setShortcut('Ctrl+S')
+        save_act.triggered.connect(self.saveToFile)
+
+        self.menu_bar = self.menuBar()
+        self.menu_bar.setNativeMenuBar(False)
+        
+        file_menu = self.menu_bar.addMenu('File')
+        file_menu.addAction(open_act)
+        file_menu.addAction(save_act)
+        file_menu.addSeparator()
+        file_menu.addAction(exit_act)
+
+        
     def initialize(self):
         self.tabWidget = TabController(self)
         self.setCentralWidget(self.tabWidget)
+    
+    def load(self, filename):
+        with open(filename, "rb") as f:
+            loaded_widget = cloudpickle.load(f)
+        self.tabWidget = loaded_widget
+        self.setCentralWidget(self.tabWidget)
+
+    def closeEvent(self, event):
+        """
+        Display a QMessageBox when asking the user if they want to 
+        quit the program. 
+        """
+        answer = QMessageBox.question(self, "Quit PyEquion?",
+            "Are you sure you want to Quit?", QMessageBox.No | QMessageBox.Yes, 
+            QMessageBox.Yes)
+        if answer == QMessageBox.Yes:
+            event.accept() # accept the event and close the application
+        else:
+            event.ignore() # ignore the close event
         
+    def saveToFile(self):
+        if self.tabWidget is None:
+            QMessageBox.information(self, "Error", 
+                "Nothing to be saved.", QMessageBox.Ok)
+            return
+
+        #else
+        file_name, _ = QFileDialog.getSaveFileName(self, 'Save File',
+            "","Picke File (*.pkl)")
+        if file_name.endswith('.pkl'):
+            self.tabWidget.save(file_name)
+        else:
+            QMessageBox.information(self, "Error", 
+                "Unable to save file.", QMessageBox.Ok)
+
     def setupWidgets(self):
         pass
 
@@ -80,6 +142,11 @@ class TabController(QWidget):
         else:
             index = self.tabs.addTab(created_widget, name_)
         self.tabs.setCurrentIndex(index)
+
+    def save(self, filename):
+        #Saving and loading are done through TabController
+        with open(filename, 'wb') as f:
+            cloudpickle.dump(self, f)
 
 
 class WelcomeWidget(QWidget):

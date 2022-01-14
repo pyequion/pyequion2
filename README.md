@@ -2,6 +2,8 @@
 
 A pure python implementation for electrolytes chemical equilibrium.
 
+Repository at https://github.com/pyequion/pyequion
+
 =======
 ## Features
 

@@ -1,6 +1,6 @@
 # PyEquIon
 
-A pure python implementation for electrolytes chemical equilibrium. This is a major update from the software found in https://github.com/caiofcm/pyequion
+A pure python implementation for electrolytes chemical equilibrium.
 
 ## Features
 

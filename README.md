@@ -14,13 +14,4 @@ A pure python implementation for electrolytes chemical equilibrium.
 
 ## Installation
 
-The package can be installed with `pip install pyequion` or `pip install <folder>`
-
-## Contributors
-
-- Caio Curitiba Marcellos
-- Danilo Naiff
-- Gerson Francisco da Silva Junior
-- Elvis do Amaral Soares
-- Fabio Ramos
-- Amaro G. Barreto Jr
+The package can be installed with `pip install pyequion` or `pip install <folder>` (TO BE UPDATED)

@@ -2,8 +2,6 @@
 
 A pure python implementation for electrolytes chemical equilibrium.
 
-Repository: https://github.com/nidf-scaling/pyequion
-
 =======
 ## Features
 

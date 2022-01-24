@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 import re
+import copy
 
 import numpy as np
 import ordered_set
+import commentjson
 
 from . import data
-from . import utils
 
 
 ELEMENT_SPECIES_MAP = {
@@ -93,19 +94,19 @@ def get_species_reaction_from_initial_species(initial_species,
 
 
 def get_all_possible_reactions(database_files=DEFAULT_DB_FILES):
-    aqueous_reactions = utils.load_from_db(database_files["solutions"])
-    irreversible_reactions = utils.load_from_db(database_files["irreversible"])
+    aqueous_reactions = load_from_db(database_files["solutions"])
+    irreversible_reactions = load_from_db(database_files["irreversible"])
     possible_reactions = aqueous_reactions + irreversible_reactions
     return possible_reactions
 
 
 def get_all_possible_solid_reactions(database_files=DEFAULT_DB_FILES):
-    possible_solid_reactions = utils.load_from_db(database_files["phases"])
+    possible_solid_reactions = load_from_db(database_files["phases"])
     return possible_solid_reactions
 
 
 def get_all_possible_gas_reactions(database_files=DEFAULT_DB_FILES):
-    possible_gas_reactions = utils.load_from_db(database_files["gases"])
+    possible_gas_reactions = load_from_db(database_files["gases"])
     return possible_gas_reactions
 
 
@@ -115,7 +116,7 @@ def get_log_equilibrium_constants(reactions, TK):
 
 def make_formula_matrix(species, elements):
     elements = elements + ['e']
-    formula_matrix = np.array([[utils.stoich_number(specie, element)
+    formula_matrix = np.array([[stoich_number(specie, element)
                                 for specie in species]
                                for element in elements])
     return formula_matrix
@@ -125,7 +126,7 @@ def make_solid_formula_matrix(solid_reactions, elements):
     solid_formulas = [_get_solid_formula(solid_reaction)
                       for solid_reaction in solid_reactions]
     elements = elements + ['e']
-    solid_formula_matrix = np.array([[utils.stoich_number(solid_formula, element)
+    solid_formula_matrix = np.array([[stoich_number(solid_formula, element)
                                       for solid_formula in solid_formulas]
                                      for element in elements])
     return solid_formula_matrix
@@ -135,7 +136,7 @@ def make_gas_formula_matrix(gas_reactions, elements):
     gas_formulas = [_get_gas_formula(gas_reaction)
                       for gas_reaction in gas_reactions]
     elements = elements + ['e']
-    gas_formula_matrix = np.array([[utils.stoich_number(gas_formula, element)
+    gas_formula_matrix = np.array([[stoich_number(gas_formula, element)
                                       for gas_formula in gas_formulas]
                                      for element in elements])
     return gas_formula_matrix
@@ -198,6 +199,34 @@ def get_elements_and_their_coefs(list_of_species):
     ]
 
     return elements_with_coefs
+
+
+def stoich_number(specie, element):
+    """
+    Get stoichometric coeficient of element in specie
+    """
+    if element == 'e':  # Charge number
+        return charge_number(specie)
+    else:
+        elements_and_coefs = dict(get_elements_and_their_coefs([specie])[0])
+        coef = elements_and_coefs.get(element, 0)
+        return coef
+
+
+def charge_number(specie):
+    """
+    Get charge number of specie
+    """
+    return 1*specie.count('+') - 1*specie.count('-')
+
+
+def load_from_db(fname):
+    if not isinstance(fname, str):
+        return copy.deepcopy(fname)
+    #Open a json file as dict
+    with open(fname, "r") as json_file:
+        db = commentjson.load(json_file)
+    return db
 
 
 def _get_logk(reaction, TK):

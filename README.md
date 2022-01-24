@@ -2,7 +2,7 @@
 
 A pure python implementation for electrolytes chemical equilibrium.
 
-Repository: https://github.com/nidf-scaling/pyequion
+Repository at https://github.com/pyequion/pyequion
 
 =======
 ## Features
@@ -26,4 +26,4 @@ The package can be installed with `pip install pyequion` or `pip install <folder
 - Gerson Francisco da Silva Junior
 - Elvis do Amaral Soares
 - Fabio Ramos
-- Amaro G. Barreto Jrqw
+- Amaro G. Barreto Jr

@@ -26,4 +26,4 @@ The package can be installed with `pip install pyequion` or `pip install <folder
 - Gerson Francisco da Silva Junior
 - Elvis do Amaral Soares
 - Fabio Ramos
-- Amaro G. Barreto Jr
+- Amaro G. Barreto Jrqw

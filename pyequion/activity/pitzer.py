@@ -201,7 +201,9 @@ def make_pitzer_dictionary():
     with open(filepath, 'r') as file:
         lines = file.read().split('\n')
     # Excluding (OH) labeled elements (boron elements, essentialy) and PITZER line
-    lines = [line for line in lines[1:] if '(OH)' not in line]
+    # lines = [line for line in lines[1:] if '(OH)' not in line]
+    # Excluding PITZER line
+    lines = lines[1:]
     lines_processed = [_process_line_pitzer(line) for line in lines]
     property_names = []
     property_indexes = []

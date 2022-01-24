@@ -20,8 +20,19 @@ ELEMENT_SPECIES_MAP = {
     'Fe': 'Fe++',
     'K': 'K+',
     'Sr': 'Sr++',
-    'N': 'NH3'
+    'N': 'NH3',
+    'Cd': 'Cd++',
+    'Li': 'Li+',
+    'Cu': 'Cu+',
+    'Al': 'Al+++',
+    'Br': 'Br-',
+    'F': 'F-',
+    'Mn': 'Mn++',
+    'P': 'PO4---',
+    'Pb': 'Pb++',
+    'Zn': 'Zn++'
 }
+
 DEFAULT_DB_FILES = {
     "solutions": data.reactions_solutions,
     "phases": data.reactions_solids,

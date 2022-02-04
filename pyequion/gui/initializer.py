@@ -65,10 +65,10 @@ class InitializerGUI(QWidget):
                                       activity_model="PITZER")
         except:
             QMessageBox.critical(self, 
-                                 "Could not create equilibrium",
-                                 "Could not create equilibrium. Did you set seeds correctly?",
-                                 QMessageBox.Close,
-                                 QMessageBox.Close)
+                                  "Could not create equilibrium",
+                                  "Could not create equilibrium. Did you set seeds correctly?",
+                                  QMessageBox.Close,
+                                  QMessageBox.Close)
             return
         if self.equilibrium_type_cb.currentText() == "Aqueous equilibrium":
             type_eq = "aqueous"

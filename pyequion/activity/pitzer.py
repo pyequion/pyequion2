@@ -9,6 +9,7 @@ import numpy as np
 from .coo_tensor_ops import coo_tensor_ops
 from .. import utils
 from .. import constants
+from .. import data
 
 
 def setup_pitzer(solutes, calculate_osmotic_coefficient=False):
@@ -196,10 +197,11 @@ def f_debye(sqrtI):
 
 
 def make_pitzer_dictionary():
-    ownpath = pathlib.Path(os.path.dirname(os.path.realpath(__file__)))
-    filepath = ownpath.parents[0]/'data'/'pitzer.txt'
-    with open(filepath, 'r') as file:
-        lines = file.read().split('\n')
+    # ownpath = pathlib.Path(os.path.dirname(os.path.realpath(__file__)))
+    # filepath = ownpath.parents[0]/'data'/'pitzer.txt'
+    # with open(filepath, 'r') as file:
+    #     lines = file.read().split('\n')
+    lines = data.pitzer_data.split('\n')
     # Excluding (OH) labeled elements (boron elements, essentialy) and PITZER line
     # lines = [line for line in lines[1:] if '(OH)' not in line]
     # Excluding PITZER line

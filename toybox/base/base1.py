@@ -6,8 +6,6 @@
 import numpy as np
 
 from pyequion import EquilibriumSystem
-from pyequion import builder
-from pyequion import converters
 
 
 eqsys = EquilibriumSystem(['C','Ca'], from_elements=True, activity_model="DEBYE")

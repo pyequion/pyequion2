@@ -13,7 +13,7 @@ from PyQt5.QtCore import Qt
 import numpy as np
 
 from .solution import SolutionGUI
-from . import logmaker
+from .. import logmaker
 
 
 class EquilibriumCreationError(Exception):

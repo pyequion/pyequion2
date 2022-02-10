@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import (QApplication, QWidget, QLabel,
                              QGridLayout, QVBoxLayout,
                              QHBoxLayout, QMessageBox,
                              QComboBox, QScrollArea,
-                             QFrame)
+                             QFrame, QFileDialog)
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt
 
@@ -40,6 +40,9 @@ class SolutionGUI(QWidget):
     def setupWidgets(self):
         self.main_layout = QGridLayout()
 
+        save_log_button = QPushButton("Save log")
+        save_log_button.clicked.connect(self.save_log_to_file)
+
         properties_vbox = self.make_properties_vbox()
         properties_vbox.setContentsMargins(5, 5, 25, 5)
         
@@ -55,7 +58,8 @@ class SolutionGUI(QWidget):
         self.main_layout.addLayout(properties_vbox, 0, 0)
         self.main_layout.addLayout(species_grid, 0, 1)
         self.main_layout.addLayout(phases_grid, 0, 2)
-
+        self.main_layout.addWidget(save_log_button, 1, 0)
+        
         self.setLayout(self.main_layout)
         
     def make_species_grid(self):
@@ -206,6 +210,16 @@ class SolutionGUI(QWidget):
             label_str = ""
         label = QLabel(label_str)
         return label
+    
+    def save_log_to_file(self):
+        #else
+        file_name, _ = QFileDialog.getSaveFileName(self, 'Save File',
+            "","Text File (*.txt)")
+        try:
+            self.solution.savelog(file_name)
+        except:
+            QMessageBox.information(self, "Error", 
+                "Unable to save file.", QMessageBox.Ok)
     
     @property
     def has_parent(self):

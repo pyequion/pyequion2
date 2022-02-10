@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 
-#DEPRECATED: Use pyequion.logmaker.py
-
-
 def make_solver_log(molal_balance, activity_balance,
                     molal_balance_log, activity_balance_log,
                     temperature, pressure,
                     closing_equation, closing_equation_value):
     lines = []
-    temperature_line = "T - {0:.2f} atm".format(temperature)
+    temperature_line = "T - {0:.2f} K".format(temperature)
     pressure_line = "P - {0:.2f} atm".format(pressure)
     lines.append(temperature_line)
     lines.append(pressure_line)

@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import itertools
+
 import numpy as np
 
 from . import builder
@@ -41,6 +43,8 @@ class SolutionResult():
                  molals_solids=None, solid_phases_in=None,
                  molals_gases=None, gas_phases_in=None):
         self.TK = TK
+        self.solverlog = equilibrium_system.solverlog
+        self.solvertype = equilibrium_system.solvertype
         self._x_molal = x
         self._x_logact = equilibrium_system.activity_function(x, TK)
         self._x_act = np.nan_to_num(10**self._x_logact)
@@ -62,7 +66,26 @@ class SolutionResult():
         self.gas_stoich_matrix = equilibrium_system.gas_stoich_matrix
         self._logsatur = \
             self._build_saturation_indexes()
-
+    
+    def getlog(self):
+        separator = "\n" + "-"*40 + "\n"
+        conditions_block_init = f"CONDITIONS\n{self.solvertype}"
+        conditions_block = conditions_block_init + "\n" + self.solverlog
+        species_block = self._make_species_string()
+        properties_block = self._make_properties_string()
+        phases_block = self._make_phases_string()
+        saturation_block = self._make_saturation_string()
+        log = separator.join((conditions_block,
+                              species_block,
+                              properties_block,
+                              phases_block,
+                              saturation_block))
+        return log
+    
+    def savelog(self, filename):
+        with open(filename, "w") as f:
+            f.write(self.getlog())
+            
     @property
     def molals(self):
         """Molals"""
@@ -173,7 +196,7 @@ class SolutionResult():
         #https://www.aqion.de/site/electrical-conductivity
         ec = 6.2*self.ionic_strength #muS/cm to S/m
         return ec
-    
+            
     def _build_saturation_indexes(self):
         logacts = np.log10(self._x_act)
         solid_reactions = self.solid_reactions
@@ -195,3 +218,54 @@ class SolutionResult():
     @property
     def _balance_vector(self):
         return self.formula_matrix[:-1, :]@self._extended_x_molal
+    
+    def _make_species_string(self, which_value="molals", precision=3):
+        lines = []
+        head = "[COMPONENT]    [CONCENTRATION (mol/kg H2O)]    "\
+               "[ACTIVITY (mol/kg H2O)]    [MOLE FRACTION]"
+        lines.append(head)
+        base_string = "{0}    {1:.%ie}    {2:.%ie}    {3:%ie}"%(precision, precision, precision)
+        for sp in sorted(self.molals.keys(),
+                          key = lambda sp : self.molals[sp],
+                          reverse=True):
+            string = base_string.format(sp, self.molals[sp], 
+                                        self.activities[sp], 
+                                        self.mole_fractions[sp])
+            lines.append(string)
+        base_element_string = "{0}    {1:.%ie}"%precision
+        for el in sorted(self.elements_molals.keys()):
+            string = base_element_string.format(el, self.elements_molals[el])
+            lines.append(string)
+        text = '\n'.join(lines)
+        return text
+    
+    def _make_properties_string(self, precision=3):
+        head = "PROPERTIES"
+        ph_line = f"pH = {self.ph:.{precision}f}"
+        ionic_strength_line = f"I = {self.ionic_strength:.{precision}f} mol/kg H2O"
+        conductivity_line = f"conductivity = {self.electrical_conductivity:.{precision}f} S/m"
+        lines = [head, ph_line, ionic_strength_line, conductivity_line]
+        text = '\n'.join(lines)
+        return text
+    
+    def _make_saturation_string(self, precision=3):
+        lines = []
+        head = "[PHASE]    [SUPERSATURATION]    [SI]"
+        lines.append(head)
+        for phase, si in self.saturation_indexes.items():
+            string = f"{phase}    {10**si}   {si}"
+            lines.append(string)
+        text = '\n'.join(lines)
+        return text
+    
+    def _make_phases_string(self, precision=3):
+        lines = []
+        head = "[PHASE]    [AMOUNT mol/kg H2O]"
+        lines.append(head)
+        iterator = itertools.chain(self.solid_molals.items(),
+                                   self.gas_molals.items())
+        for phase, molal in iterator:
+            string = f"{phase}    {molal}"
+            lines.append(string)
+        text = '\n'.join(lines)
+        return text

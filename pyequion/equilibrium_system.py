@@ -7,6 +7,7 @@ from . import constants
 from . import eqsolver
 from . import solution
 from . import fugacity
+from . import logmaker
 
 
 ACTIVITY_MODEL_MAP = {
@@ -45,6 +46,10 @@ class EquilibriumSystem():
         Activity model for equilibrium
     calculate_water_activity: bool
         Whether to calculate water activity
+    solverlog: None or str
+        The log for last solver
+    solvertype: None or str
+        The type of last solver
     """
 
     def __init__(self, components, from_elements=False, activity_model="EXTENDED_DEBYE",
@@ -78,6 +83,8 @@ class EquilibriumSystem():
             self._make_gas_formula_and_stoich_matrices()
         self.activity_model = activity_model
         self.calculate_water_activity = calculate_water_activity
+        self.solverlog = None
+        self.solvertype = None
         self._activity_model_func = ACTIVITY_MODEL_MAP[activity_model](
             self.solutes, calculate_water_activity)
         self._fugacity_coefficient_function = lambda x, TK, P: 0.0
@@ -215,6 +222,8 @@ class EquilibriumSystem():
     def solve_equilibrium_elements_balance(self, TK, element_balance,
                                            tol=1e-12, maxiter=1000, initial_guess='default'):
         """
+        DEPECRATED: use solve_equilibrium_mixed_balance
+        
         Parameters
         ----------
         TK: float
@@ -239,6 +248,15 @@ class EquilibriumSystem():
         balance_vector_log = np.zeros(0)
         balance_matrix_log = np.zeros((0, self.nspecies))
         mask_log = 0
+        self.solverlog = logmaker.make_solver_log(element_balance,
+                                                  dict(),
+                                                  dict(),
+                                                  dict(),
+                                                  TK,
+                                                  1.0,
+                                                  "electroneutrality",
+                                                  0.0)
+
         return self.solve_equilibrium_balance(balance_vector,
                                               balance_vector_log,
                                               balance_matrix,
@@ -335,6 +353,18 @@ class EquilibriumSystem():
                 balance_matrix, balance_matrix_solids, balance_matrix_gases,
                 stoich_matrix, stoich_matrix_solids, stoich_matrix_gases,
                 solver_function=None, tol=tol)
+        self.solverlog = logmaker.make_solver_log(element_balance,
+                                                  dict(),
+                                                  dict(),
+                                                  dict(),
+                                                  TK,
+                                                  1.0,
+                                                  "electroneutrality",
+                                                  0.0)
+        if self.has_gas_phases:
+            self.solvertype = "phase (with gas)"
+        else:
+            self.solvertype = "phase (no gas)"
         sol = solution.SolutionResult(self, molals, TK,
                                       molals_solids, solid_phases,
                                       molals_gases, gas_phases)
@@ -378,6 +408,8 @@ class EquilibriumSystem():
         SolutionResult object of equilibrium solution and (residual, solution_values) pair
 
         """
+        
+        
         molal_balance = _none_to_dict(molal_balance)
         activities_balance = _none_to_dict(activities_balance)
         molal_balance_log = _none_to_dict(molal_balance_log)
@@ -400,6 +432,15 @@ class EquilibriumSystem():
                 closing_mask = 1
             balance_matrix = np.vstack([balance_matrix, closing_row])
             mask = np.hstack([mask, closing_mask])
+        self.solverlog = logmaker.make_solver_log(molal_balance,
+                                                  activities_balance,
+                                                  molal_balance_log,
+                                                  activities_balance_log,
+                                                  TK,
+                                                  PATM,
+                                                  closing_equation,
+                                                  closing_equation_value)
+        self.solvertype = "aqueous"
         return self.solve_equilibrium_balance(balance_vector,
                                               balance_vector_log,
                                               balance_matrix,

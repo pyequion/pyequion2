@@ -1,0 +1,5 @@
+--noconfirm
+--onedir or --onefile
+--additional-hooks-dir .hook
+
+pyinstaller --noconfirm --onefile --additional-hooks-dir .hook pyequion.py

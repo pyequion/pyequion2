@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+import collections
+import itertools
+
 import numpy as np
 
 from . import builder
@@ -8,6 +11,7 @@ from . import eqsolver
 from . import solution
 from . import fugacity
 from . import logmaker
+from . import sequencer
 
 
 ACTIVITY_MODEL_MAP = {
@@ -280,6 +284,8 @@ class EquilibriumSystem():
             Temperature in Kelvins
         element_balance: dict[str, float]
             Dictionary of element balances
+        PATM: float
+            Pressure in atms
         solid_phases: None or List[str]
             Phases of solid equilibria that precipitates. If None,
             we assume all stable-at-temperature TK phases precipitates
@@ -370,6 +376,55 @@ class EquilibriumSystem():
                                       molals_gases, gas_phases)
         return sol, (res, (molals, molals_solids, molals_gases, stability_solids, stability_gases))
 
+    def solve_equilibrium_elements_balance_phases_sequential(self,
+                                                             TK, element_balance,
+                                                             PATM=1.0,
+                                                             solid_phases=None,
+                                                             has_gas_phases=True,
+                                                             tol=1e-12, maxiter=1000,
+                                                             initial_guesses='default',
+                                                             npoints=100):
+        """
+        Parameters
+        ----------
+        TK: float | (float, float)
+            Temperature in Kelvins
+        PATM: float
+            Pressure in atms
+        element_balance: dict[str, float | (float, float)]
+            Dictionary of element balances
+        solid_phases: None or List[str]
+            Phases of solid equilibria that precipitates. If None,
+            we assume all stable-at-temperature TK phases precipitates
+        has_gas_phases: bool
+            Whether to consider gas equilibria
+        tol: float
+            Tolerance for solver
+        initial_guess: ndarray or str or float
+            Initial guess for solver. If 'default', is chosen as 0.1 for each specie.
+            If float, is chosen as initial_guess for each specie
+
+        Returns
+        -------
+        list of SolutionResult object of equilibrium solution and list of residuals
+        """
+        TK_list, PATM_list, element_balance_list = \
+            sequencer.transform_to_sequence_of_arguments(npoints, TK, PATM, element_balance)
+        solutions = []
+        residuals = []
+        iterator = zip(TK_list, PATM_list, element_balance_list)
+        for (TK, PATM, element_balance) in iterator:
+            solution, (res, initial_guesses) = self.solve_equilibrium_elements_balance_phases(
+                                              TK, element_balance,
+                                              PATM,
+                                              solid_phases,
+                                              has_gas_phases,
+                                              tol, maxiter,
+                                              initial_guesses)
+            solutions.append(solution)
+            residuals.append(res)
+        return solutions
+
     def solve_equilibrium_mixed_balance(self, TK, molal_balance=None,
                                         activities_balance=None,
                                         molal_balance_log=None,
@@ -398,8 +453,12 @@ class EquilibriumSystem():
             If None, closure must come from dictionaries
         closing_equation_value: float
             Value of closing equation
+        PATM: float
+            Pressure in atms
         tol: float
             Tolerance for solver
+        maxiter: int
+            Maximum iterations for solver
         initial_guess: ndarray or str
             Initial guess for solver. If 'default', is chosen as 0.1 for each specie
 
@@ -451,6 +510,80 @@ class EquilibriumSystem():
                                               tol=tol,
                                               initial_guess=initial_guess)
 
+    def solve_equilibrium_mixed_balance_sequential(self, TK, molal_balance=None,
+                                                   activities_balance=None,
+                                                   molal_balance_log=None,
+                                                   activities_balance_log=None,
+                                                   closing_equation='electroneutrality',
+                                                   closing_equation_value=0.0,
+                                                   PATM=1.0,
+                                                   tol=1e-12, maxiter=1000,
+                                                   initial_guess='default',
+                                                   npoints=20):
+        """
+        Parameters
+        ----------
+        TK: float | (float, float)
+            Temperature in Kelvins
+        molal_balance: dict[str, float | (float, float)] or None
+            Dictionary of molal balances
+        activities_balance: dict[str, float | (float, float)] or None
+            Dictionary of activities balances
+        molal_balance_log: dict[str, float | (float, float)] or None
+            Dictionary of log-molal balances
+        activities_balance_log: dict[str, float | (float, float)] or None
+            Dictionary of log-activities balances
+        closing_equation: str or None
+            Which closing equation to be used.
+            If 'electroneutrality', closes assuming electroneutrality of elements
+            If 'alkalinity', closes by alkaline balance defined by closing_equation_value
+            If None, closure must come from dictionaries
+        closing_equation_value: float | (float, float)
+            Value of closing equation
+        PATM: float
+            Pressure in atms
+        tol: float
+            Tolerance for solver
+        maxiter: int
+            Maximum iterations for solver
+        initial_guess: ndarray or str
+            Initial guess for solver. If 'default', is chosen as 0.1 for each specie
+
+        Returns
+        -------
+        list of SolutionResult object of equilibrium solution and list of residuals
+
+        """
+        molal_balance = _none_to_dict(molal_balance)
+        activities_balance = _none_to_dict(activities_balance)
+        molal_balance_log = _none_to_dict(molal_balance_log)
+        activities_balance_log = _none_to_dict(activities_balance_log)
+        iterator = zip(*sequencer.transform_to_sequence_of_arguments(
+                        npoints, TK, molal_balance, activities_balance, 
+                        molal_balance_log, activities_balance_log, 
+                        closing_equation_value, PATM))
+        solutions = []
+        residuals = []
+        for (TK, molal_balance, activities_balance, molal_balance_log, 
+             activities_balance_log, closing_equation_value, PATM) in iterator:
+            
+            solution, (res, initial_guess) = \
+                self.solve_equilibrium_mixed_balance_sequential(self,
+                                                                TK,
+                                                                molal_balance,
+                                                                activities_balance,
+                                                                molal_balance_log,
+                                                                activities_balance_log,
+                                                                closing_equation,
+                                                                closing_equation_value,
+                                                                PATM,
+                                                                tol, maxiter,
+                                                                initial_guess,
+                                                                npoints)
+            solutions.append(solution)
+            residuals.append(res)
+        return solutions
+    
     def solve_equilibrium_balance(self,
                                   balance_vector,
                                   balance_vector_log,

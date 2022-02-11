@@ -367,7 +367,7 @@ class EquilibriumSystem():
                                                   1.0,
                                                   "electroneutrality",
                                                   0.0)
-        if self.has_gas_phases:
+        if has_gas_phases:
             self.solvertype = "phase (with gas)"
         else:
             self.solvertype = "phase (no gas)"
@@ -383,7 +383,7 @@ class EquilibriumSystem():
                                                              has_gas_phases=True,
                                                              tol=1e-12, maxiter=1000,
                                                              initial_guesses='default',
-                                                             npoints=100):
+                                                             npoints=20):
         """
         Parameters
         ----------
@@ -568,18 +568,16 @@ class EquilibriumSystem():
              activities_balance_log, closing_equation_value, PATM) in iterator:
             
             solution, (res, initial_guess) = \
-                self.solve_equilibrium_mixed_balance_sequential(self,
-                                                                TK,
-                                                                molal_balance,
-                                                                activities_balance,
-                                                                molal_balance_log,
-                                                                activities_balance_log,
-                                                                closing_equation,
-                                                                closing_equation_value,
-                                                                PATM,
-                                                                tol, maxiter,
-                                                                initial_guess,
-                                                                npoints)
+                self.solve_equilibrium_mixed_balance(TK,
+                                                     molal_balance,
+                                                     activities_balance,
+                                                     molal_balance_log,
+                                                     activities_balance_log,
+                                                     closing_equation,
+                                                     closing_equation_value,
+                                                     PATM,
+                                                     tol, maxiter,
+                                                     initial_guess)
             solutions.append(solution)
             residuals.append(res)
         return solutions

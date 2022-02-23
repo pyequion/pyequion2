@@ -349,13 +349,17 @@ class SolverGUI(QWidget):
         if isinstance(closing_equation_value, tuple):
             pairs.append(pair_tuple(closing_equation, closing_equation_value, " "))
         for key, value in molal_balance.items():
-            pairs.append(pair_tuple("[{0}]".format(key), value, "mol/kg H2O"))
+            if isinstance(value, tuple):
+                pairs.append(pair_tuple("[{0}]".format(key), value, "mol/kg H2O"))
         for key, value in activity_balance.items():
-            pairs.append(pair_tuple("{{{0}}}".format(key), value, "mol/kg H2O"))
+            if isinstance(value, tuple):
+                pairs.append(pair_tuple("{{{0}}}".format(key), value, "mol/kg H2O"))
         for key, value in molal_balance_log.items():
-            pairs.append(pair_tuple("log[{0}]".format(key), value, "mol/kg H2O"))
+            if isinstance(value, tuple):
+                pairs.append(pair_tuple("log[{0}]".format(key), value, "mol/kg H2O"))
         for key, value in activity_balance_log.items():
-            pairs.append(pair_tuple("log{{{0}}}".format(key), value, "mol/kg H2O"))
+            if isinstance(value, tuple):
+                pairs.append(pair_tuple("log{{{0}}}".format(key), value, "mol/kg H2O"))
         return pairs
     
     def convert_comp(self, comp_val, comp_unit):

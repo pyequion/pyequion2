@@ -17,10 +17,6 @@ import numpy as np
 HEADER_COLOR = "cyan"
 
 
-class EquilibriumCreationError(Exception):
-    pass
-
-
 class SolutionGUI(QWidget):
     def __init__(self, solution, solver_log, type_eq, parent=None):
         super().__init__(parent)

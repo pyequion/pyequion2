@@ -59,7 +59,7 @@ class InitializerGUI(QWidget):
         
     def create_equilibrium(self):
         from_elements = self.from_elements_checker.isChecked()
-        base_species = [s.strip() for s in self.elements_inserter.toPlainText().split('\n')]
+        base_species = [s.strip() for s in self.elements_inserter.toPlainText().strip('\n').split('\n')]
         try:
             eqsys = EquilibriumSystem(base_species, from_elements=from_elements,
                                       activity_model="PITZER")

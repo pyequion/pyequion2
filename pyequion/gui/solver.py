@@ -1,18 +1,20 @@
 # -*- coding: utf-8 -*-
 import itertools
+import collections
 
 from PyQt5.QtWidgets import (QApplication, QWidget, QLabel,
                              QTextEdit, QLineEdit,
                              QPushButton, QCheckBox,
                              QGridLayout, QVBoxLayout,
                              QHBoxLayout, QMessageBox,
-                             QComboBox)
+                             QComboBox, QSpinBox)
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt
 
 import numpy as np
 
 from .solution import SolutionGUI
+from .seqsolution import SeqSolutionGUI
 from .. import logmaker
 
 
@@ -126,10 +128,22 @@ class SolverGUI(QWidget):
         closing_equation_hbox.addWidget(closing_equation_label)
         closing_equation_hbox.addWidget(self.closing_equation_cbox)
         
+        sequencer_hbox = QHBoxLayout()
+        self.sequencer_checkbox = QCheckBox("Calculate sequence")
+        self.sequencer_checkbox.setLayoutDirection(Qt.RightToLeft)
+        sequencer_number_points_label = QLabel(" "*5 + "Number of points")
+        self.sequencer_number_points_spinbox = QSpinBox()
+        self.sequencer_number_points_spinbox.setMinimum(1)
+        self.sequencer_number_points_spinbox.setValue(10)
+        sequencer_hbox.addWidget(self.sequencer_checkbox)
+        sequencer_hbox.addWidget(sequencer_number_points_label)
+        sequencer_hbox.addWidget(self.sequencer_number_points_spinbox)        
+        
         self.calculate_button = QPushButton("Calculate equilibrium")
         self.calculate_button.clicked.connect(self.calculate_equilibrium)
         components_layout.addLayout(comps_vbox)
         components_layout.addLayout(closing_equation_hbox)
+        components_layout.addLayout(sequencer_hbox)
         components_layout.addStretch()
         components_layout.setContentsMargins(25, 5, 5, 5)
 
@@ -149,34 +163,58 @@ class SolverGUI(QWidget):
         self.eqsys.set_activity_functions(activity_function, water_activity)
         
     def calculate_equilibrium(self):
+        is_sequence = self.sequencer_checkbox.isChecked()
+        npoints = self.sequencer_number_points_spinbox.value() if is_sequence else None
         try:
             molal_balance, activity_balance, \
             molal_balance_log, activity_balance_log = self.get_balances()
             temperature = self.get_temperature()
             pressure = self.get_pressure()
             closing_equation, closing_equation_value = self.get_closing_conditions()
+            pairs = self.get_pairs(molal_balance, activity_balance, molal_balance_log, activity_balance_log,
+                                   temperature, pressure, closing_equation, closing_equation_value)
         except EquilibriumCreationError:
             return
         solver_log = logmaker.make_solver_log(
                         molal_balance, activity_balance,
                         molal_balance_log, activity_balance_log,
                         temperature, pressure,
-                        closing_equation, closing_equation_value)
+                        closing_equation, closing_equation_value,
+                        npoints=npoints)
         try:
-            if self.type_eq == "aqueous":
-                solution, (res, _) = self.eqsys.solve_equilibrium_mixed_balance(
-                                        temperature,
-                                        molal_balance,
-                                        activity_balance,
-                                        molal_balance_log,
-                                        activity_balance_log,
-                                        closing_equation,
-                                        closing_equation_value,
-                                        pressure)
-            elif self.type_eq == "phase":
-                solution, (res, _) = self.eqsys.solve_equilibrium_elements_balance_phases(
-                                        temperature, molal_balance,
-                                        PATM=pressure)
+            if not is_sequence:
+                if self.type_eq == "aqueous":
+                    solution, (res, _) = self.eqsys.solve_equilibrium_mixed_balance(
+                                            temperature,
+                                            molal_balance,
+                                            activity_balance,
+                                            molal_balance_log,
+                                            activity_balance_log,
+                                            closing_equation,
+                                            closing_equation_value,
+                                            pressure)
+                elif self.type_eq == "phase":
+                    solution, (res, _) = self.eqsys.solve_equilibrium_elements_balance_phases(
+                                            temperature, molal_balance,
+                                            PATM=pressure)
+            else:
+                if self.type_eq == "aqueous":
+                    solution, (res, _) = self.eqsys.solve_equilibrium_mixed_balance_sequential(
+                                              temperature,
+                                              molal_balance,
+                                              activity_balance,
+                                              molal_balance_log,
+                                              activity_balance_log,
+                                              closing_equation,
+                                              closing_equation_value,
+                                              pressure,
+                                              npoints=npoints)
+                elif self.type_eq == "phase":
+                    solution, (res, _) = self.eqsys.solve_equilibrium_elements_balance_phases_sequential(
+                                              temperature, molal_balance,
+                                              PATM=pressure,
+                                              npoints=npoints)
+
         except: #Generic something happened
             QMessageBox.critical(self, 
                                  "Could not complete calculation",
@@ -186,16 +224,20 @@ class SolverGUI(QWidget):
                                  QMessageBox.Close,
                                  QMessageBox.Close)
             return
-        res_num = np.max(np.abs(res))
+        res_num = np.max(np.abs(np.array(res))) #Valid for both cases
         QMessageBox.information(self,
                                 "Calculation successful",
                                 "Calculation successful. "\
                                 "The residual was {:.3e}".format(res_num),
                                 QMessageBox.Ok,
                                 QMessageBox.Ok)
-        solution_gui = SolutionGUI(solution, solver_log, self.type_eq, self.parent_)
+        if not is_sequence:
+            solution_gui = SolutionGUI(solution, solver_log, self.type_eq, self.parent_)
+        else:
+            solution_gui = SeqSolutionGUI(solution, solver_log, self.type_eq, pairs, self.parent_)
         self.create_new_gui(solution_gui)
         
+    #FIXME: in get_balances, get_temperature and get_pressure there is severe boilerplating
     def get_balances(self):
         molal_balance = dict()
         activity_balance = dict()
@@ -212,7 +254,12 @@ class SolverGUI(QWidget):
             comp = comp_cbox.currentText()
             comp = self.convert_comp(comp, unit_cbox.currentText())
             try:
-                val = float(line_edit.text().strip())
+                text = line_edit.text()
+                text = ''.join(text.split()) #HACK
+                if "," in text:
+                    val = tuple(map(float, text.split(",")))
+                else:
+                    val = float(text)
             except ValueError:
                 self.show_creation_error("Some component was set to non-numerical value "\
                                          "or is not positive")
@@ -220,7 +267,8 @@ class SolverGUI(QWidget):
                 if comp in self.eqsys.solute_elements:
                     self.show_creation_error("Element balance can't be in activity")
             if not is_log:
-                if val <= 0:
+                if (logmaker.is_number(val) and val <= 0) or \
+                    (logmaker.is_sequence(val) and (val[0]*val[1] <= 0)):
                     self.show_creation_error("Only balance in logs can be set to negative")
             if is_log and self.type_eq == "phase":
                 self.show_creation_error("In phases mode, elements can't be set in log")
@@ -239,7 +287,13 @@ class SolverGUI(QWidget):
     def get_temperature(self):
         TK = None
         try:
-            T = float(self.temp_value_ledit.text())
+            text = self.temp_value_ledit.text()
+            text = ''.join(text.split()) #HACK
+            if "," in text:
+                T = tuple(map(float, text.split(",")))
+            else:
+                T = float(text)
+            T = np.array(T)
         except ValueError:
             self.show_creation_error("Temperature is non-numerical")
         temp_unit = self.temp_unit_cbox.currentText()
@@ -249,18 +303,28 @@ class SolverGUI(QWidget):
             TK = T + 273.15
         elif temp_unit == "ºF": 
             TK = (32.*T - 32.)*5/9 + 273.15
-        if TK < 0:
-            self.show_creation_error("Temperature below 0K")
+        # if TK < 0:
+        #     self.show_creation_error("Temperature below 0K")
+        try:
+            TK = float(TK)
+        except:
+            TK = tuple(TK)
         return TK
         
     def get_pressure(self):
         pressure = None
         try:
-            pressure = float(self.pressure_value_ledit.text())
+            text = self.pressure_value_ledit.text()
+            text = ''.join(text.split()) #HACK
+            if "," in text:
+                pressure = tuple(map(float, text.split(",")))
+            else:
+                pressure = float(text)
+            pressure = np.array(pressure)
         except ValueError:
             self.show_creation_error("Pressure is non-numerical")
-        if pressure <= 0:
-            self.show_creation_error("Pressure is non-positive")
+        # if pressure <= 0:
+        #     self.show_creation_error("Pressure is non-positive")
         pressure_unit = self.pressure_unit_cbox.currentText()
         if pressure_unit == "atm":
             pressure = pressure #No change
@@ -268,7 +332,31 @@ class SolverGUI(QWidget):
             pressure = pressure*0.98692326671
         elif pressure_unit == "Pa":
             pressure = pressure*0.98692326671*1e-5
+        try:
+            pressure = float(pressure)
+        except:
+            pressure = tuple(pressure)
         return pressure
+    
+    def get_pairs(self, molal_balance, activity_balance, molal_balance_log, activity_balance_log,
+                  temperature, pressure, closing_equation, closing_equation_value):
+        pairs = []
+        pair_tuple = collections.namedtuple("Pair", "name bounds unit")
+        if isinstance(temperature, tuple):
+            pairs.append(pair_tuple("T", temperature, "K"))
+        if isinstance(pressure, tuple):
+            pairs.append(pair_tuple("P", pressure, "atm"))
+        if isinstance(closing_equation_value, tuple):
+            pairs.append(pair_tuple(closing_equation, closing_equation_value, " "))
+        for key, value in molal_balance.items():
+            pairs.append(pair_tuple("[{0}]".format(key), value, "mol/kg H2O"))
+        for key, value in activity_balance.items():
+            pairs.append(pair_tuple("{{{0}}}".format(key), value, "mol/kg H2O"))
+        for key, value in molal_balance_log.items():
+            pairs.append(pair_tuple("log[{0}]".format(key), value, "mol/kg H2O"))
+        for key, value in activity_balance_log.items():
+            pairs.append(pair_tuple("log{{{0}}}".format(key), value, "mol/kg H2O"))
+        return pairs
     
     def convert_comp(self, comp_val, comp_unit):
         if comp_unit == "Molal":

@@ -423,7 +423,7 @@ class EquilibriumSystem():
                                               initial_guesses)
             solutions.append(solution)
             residuals.append(res)
-        return solutions
+        return solutions, (res, initial_guesses)
 
     def solve_equilibrium_mixed_balance(self, TK, molal_balance=None,
                                         activities_balance=None,
@@ -580,7 +580,7 @@ class EquilibriumSystem():
                                                      initial_guess)
             solutions.append(solution)
             residuals.append(res)
-        return solutions
+        return solutions, (res, initial_guess)
     
     def solve_equilibrium_balance(self,
                                   balance_vector,

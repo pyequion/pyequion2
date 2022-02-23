@@ -26,6 +26,7 @@ def transform_to_sequence_of_arguments(npoints, *args):
             res.append(_dict_iterator(arg, npoints))
     return res
 
+
 def _is_sequence(obj):
     try:
         len(obj)

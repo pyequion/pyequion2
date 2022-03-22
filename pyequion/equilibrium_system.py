@@ -184,7 +184,7 @@ class EquilibriumSystem():
             self._fugacity_coefficient_function = \
                 fugacity.make_peng_robinson_fugacity_function(reactions_gases)
 
-    def get_log_equilibrium_constants(self, TK):
+    def get_log_equilibrium_constants(self, TK, PATM):
         """
         Parameters
         ----------
@@ -197,7 +197,7 @@ class EquilibriumSystem():
         """
         return builder.get_log_equilibrium_constants(self.reactions, TK)
 
-    def get_solid_log_equilibrium_constants(self, TK):
+    def get_solid_log_equilibrium_constants(self, TK, PATM):
         """
         Parameters
         ----------
@@ -210,7 +210,7 @@ class EquilibriumSystem():
         """
         return builder.get_log_equilibrium_constants(self.solid_reactions, TK)
 
-    def get_gases_log_equilibrium_constants(self, TK):
+    def get_gases_log_equilibrium_constants(self, TK, PATM):
         """
         Parameters
         ----------
@@ -325,10 +325,10 @@ class EquilibriumSystem():
         balance_matrix_solids = self.reduced_solid_formula_matrix[:, solid_indexes]
         balance_matrix_gases = self.reduced_gas_formula_matrix[:, gas_indexes]
         log_equilibrium_constants = \
-            self.get_log_equilibrium_constants(TK)
-        log_solubility_constants = self.get_solid_log_equilibrium_constants(TK)
+            self.get_log_equilibrium_constants(TK, PATM)
+        log_solubility_constants = self.get_solid_log_equilibrium_constants(TK, PATM)
         log_solubility_constants = log_solubility_constants[solid_indexes]
-        log_gases_constants = self.get_gases_log_equilibrium_constants(TK)
+        log_gases_constants = self.get_gases_log_equilibrium_constants(TK, PATM)
         log_gases_constants = log_gases_constants[gas_indexes]
         stoich_matrix = self.stoich_matrix
         stoich_matrix_solids = self.solid_stoich_matrix[solid_indexes, :]
@@ -619,7 +619,7 @@ class EquilibriumSystem():
 
         """
         log_equilibrium_constants = \
-            self.get_log_equilibrium_constants(TK)
+            self.get_log_equilibrium_constants(TK, PATM)
         stoich_matrix = self.stoich_matrix
         activity_function = self.activity_function
         if initial_guess == 'default':

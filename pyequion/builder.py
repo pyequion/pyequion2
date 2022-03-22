@@ -121,8 +121,8 @@ def get_all_possible_gas_reactions(database_files=DEFAULT_DB_FILES):
     return possible_gas_reactions
 
 
-def get_log_equilibrium_constants(reactions, TK):
-    return np.array([_get_logk(reaction, TK) for reaction in reactions])
+def get_log_equilibrium_constants(reactions, TK, PATM):
+    return np.array([_get_logk(reaction, TK, PATM) for reaction in reactions])
 
 
 def make_formula_matrix(species, elements):
@@ -240,7 +240,7 @@ def load_from_db(fname):
     return db
 
 
-def _get_logk(reaction, TK):
+def _get_logk(reaction, TK, PATM):
     log_K_coefs = reaction.get('log_K_coefs', '')
     if type(log_K_coefs) != str:
         return _calculate_logk_1(log_K_coefs, TK)

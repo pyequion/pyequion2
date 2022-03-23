@@ -11,7 +11,7 @@ try:
     from .coo_tensor_ops import coo_tensor_ops
 except: #Some import error. Use pythonized way
     warnings.warn("Problem with Cython import. Using pure python operation.")
-    from . import coo_tensor_ops_py as coo_tensor_ops
+    from . import py_coo_tensor_ops as coo_tensor_ops
 from .. import utils
 from .. import constants
 from .. import data

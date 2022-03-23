@@ -8,7 +8,7 @@ import numpy as np
 from pyequion import EquilibriumSystem
 
 
-eqsys = EquilibriumSystem(['C','Ca', 'Na', 'Cl'], from_elements=True, activity_model="DEBYE")
+eqsys = EquilibriumSystem(['C','Ca', 'Na', 'Cl'], from_elements=True, activity_model="PITZER")
 elements_balance = {'Ca':0.028, 'C':0.065, 'Na':0.075, 'Cl':0.056}
 #species_balance = {'Ca++':0.028, 'Cl-':0.056, 'Na+':0.075, 'HCO3-':0.065}
 TK = 273.15 + 95.0

@@ -3,10 +3,15 @@ import os
 import pathlib
 import re
 import functools
+import warnings
 
 import numpy as np
 
-from .coo_tensor_ops import coo_tensor_ops
+try:
+    from .coo_tensor_ops import coo_tensor_ops
+except: #Some import error. Use pythonized way
+    warnings.warn("Problem with Cython import. Using pure python operation.")
+    from . import coo_tensor_ops_py as coo_tensor_ops
 from .. import utils
 from .. import constants
 from .. import data

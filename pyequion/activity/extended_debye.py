@@ -3,12 +3,12 @@ import functools
 
 import numpy as np
 
-from .. import data
+from .. import datamods
 from .. import utils
 from .. import constants
 
 
-DB_SPECIES = data.species['debye']
+DB_SPECIES = datamods.species['debye']
 
 
 def setup_extended_debye(solutes, calculate_osmotic_coefficient=False):

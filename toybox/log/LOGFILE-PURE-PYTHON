@@ -1,0 +1,365 @@
+2022-03-23T14:31:47,888 Using pip 21.3.1 from /home/dfnaiff/miniconda3/envs/mainenv/lib/python3.9/site-packages/pip (python 3.9)
+2022-03-23T14:31:47,890 Non-user install because site-packages writeable
+2022-03-23T14:31:47,961 Created temporary directory: /tmp/pip-ephem-wheel-cache-3r44n222
+2022-03-23T14:31:47,961 Created temporary directory: /tmp/pip-req-tracker-yhgbzabf
+2022-03-23T14:31:47,961 Initialized build tracking at /tmp/pip-req-tracker-yhgbzabf
+2022-03-23T14:31:47,961 Created build tracker: /tmp/pip-req-tracker-yhgbzabf
+2022-03-23T14:31:47,961 Entered build tracker: /tmp/pip-req-tracker-yhgbzabf
+2022-03-23T14:31:47,961 Created temporary directory: /tmp/pip-install-qyev_ofw
+2022-03-23T14:31:47,974 Processing /home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion
+2022-03-23T14:31:47,974   Added file:///home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion to build tracker '/tmp/pip-req-tracker-yhgbzabf'
+2022-03-23T14:31:47,975   Running setup.py (path:/home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion/setup.py) egg_info for package from file:///home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion
+2022-03-23T14:31:47,975   Created temporary directory: /tmp/pip-pip-egg-info-9kki4tdv
+2022-03-23T14:31:47,975   Running command python setup.py egg_info
+2022-03-23T14:31:48,328   running egg_info
+2022-03-23T14:31:48,328   creating /tmp/pip-pip-egg-info-9kki4tdv/pyequion.egg-info
+2022-03-23T14:31:48,328   writing /tmp/pip-pip-egg-info-9kki4tdv/pyequion.egg-info/PKG-INFO
+2022-03-23T14:31:48,328   writing dependency_links to /tmp/pip-pip-egg-info-9kki4tdv/pyequion.egg-info/dependency_links.txt
+2022-03-23T14:31:48,329   writing top-level names to /tmp/pip-pip-egg-info-9kki4tdv/pyequion.egg-info/top_level.txt
+2022-03-23T14:31:48,329   writing manifest file '/tmp/pip-pip-egg-info-9kki4tdv/pyequion.egg-info/SOURCES.txt'
+2022-03-23T14:31:48,385   adding license file 'LICENSE'
+2022-03-23T14:31:48,386   writing manifest file '/tmp/pip-pip-egg-info-9kki4tdv/pyequion.egg-info/SOURCES.txt'
+2022-03-23T14:31:48,424   Source in /home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion has version 0.0.6.1, which satisfies requirement pyequion==0.0.6.1 from file:///home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion
+2022-03-23T14:31:48,424   Removed pyequion==0.0.6.1 from file:///home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion from build tracker '/tmp/pip-req-tracker-yhgbzabf'
+2022-03-23T14:31:48,426 Created temporary directory: /tmp/pip-unpack-9_nbx496
+2022-03-23T14:31:48,426 Building wheels for collected packages: pyequion
+2022-03-23T14:31:48,427   Created temporary directory: /tmp/pip-wheel-k4vq7mke
+2022-03-23T14:31:48,427   Destination directory: /tmp/pip-wheel-k4vq7mke
+2022-03-23T14:31:48,427   Running command /home/dfnaiff/miniconda3/envs/mainenv/bin/python3.9 -u -c 'import io, os, sys, setuptools, tokenize; sys.argv[0] = '"'"'/home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion/setup.py'"'"'; __file__='"'"'/home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion/setup.py'"'"';f = getattr(tokenize, '"'"'open'"'"', open)(__file__) if os.path.exists(__file__) else io.StringIO('"'"'from setuptools import setup; setup()'"'"');code = f.read().replace('"'"'\r\n'"'"', '"'"'\n'"'"');f.close();exec(compile(code, __file__, '"'"'exec'"'"'))' bdist_wheel -d /tmp/pip-wheel-k4vq7mke
+2022-03-23T14:31:48,764   running bdist_wheel
+2022-03-23T14:31:48,765   running build
+2022-03-23T14:31:48,765   running build_py
+2022-03-23T14:31:48,768   installing to build/bdist.linux-x86_64/wheel
+2022-03-23T14:31:48,768   running install
+2022-03-23T14:31:48,768   running install_lib
+2022-03-23T14:31:48,769   creating build/bdist.linux-x86_64/wheel
+2022-03-23T14:31:48,769   creating build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:31:48,769   copying build/lib/pyequion/equilibrium_system.py -> build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:31:48,769   copying build/lib/pyequion/sequencer.py -> build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:31:48,769   copying build/lib/pyequion/utils.py -> build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:31:48,769   copying build/lib/pyequion/__init__.py -> build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:31:48,769   copying build/lib/pyequion/solution.py -> build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:31:48,770   copying build/lib/pyequion/builder.py -> build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:31:48,770   copying build/lib/pyequion/water_properties.py -> build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:31:48,770   copying build/lib/pyequion/constants.py -> build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:31:48,770   copying build/lib/pyequion/converters.py -> build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:31:48,770   copying build/lib/pyequion/logmaker.py -> build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:31:48,770   running install_egg_info
+2022-03-23T14:31:48,776   running egg_info
+2022-03-23T14:31:48,777   writing pyequion.egg-info/PKG-INFO
+2022-03-23T14:31:48,777   writing dependency_links to pyequion.egg-info/dependency_links.txt
+2022-03-23T14:31:48,777   writing top-level names to pyequion.egg-info/top_level.txt
+2022-03-23T14:31:48,837   adding license file 'LICENSE'
+2022-03-23T14:31:48,838   writing manifest file 'pyequion.egg-info/SOURCES.txt'
+2022-03-23T14:31:48,838   Copying pyequion.egg-info to build/bdist.linux-x86_64/wheel/pyequion-0.0.6.1-py3.9.egg-info
+2022-03-23T14:31:48,839   running install_scripts
+2022-03-23T14:31:48,865   adding license file "LICENSE" (matched pattern "LICEN[CS]E*")
+2022-03-23T14:31:48,865   creating build/bdist.linux-x86_64/wheel/pyequion-0.0.6.1.dist-info/WHEEL
+2022-03-23T14:31:48,866   creating '/tmp/pip-wheel-k4vq7mke/pyequion-0.0.6.1-py3-none-any.whl' and adding 'build/bdist.linux-x86_64/wheel' to it
+2022-03-23T14:31:48,866   adding 'pyequion/__init__.py'
+2022-03-23T14:31:48,867   adding 'pyequion/builder.py'
+2022-03-23T14:31:48,867   adding 'pyequion/constants.py'
+2022-03-23T14:31:48,867   adding 'pyequion/converters.py'
+2022-03-23T14:31:48,868   adding 'pyequion/equilibrium_system.py'
+2022-03-23T14:31:48,869   adding 'pyequion/logmaker.py'
+2022-03-23T14:31:48,869   adding 'pyequion/sequencer.py'
+2022-03-23T14:31:48,870   adding 'pyequion/solution.py'
+2022-03-23T14:31:48,870   adding 'pyequion/utils.py'
+2022-03-23T14:31:48,870   adding 'pyequion/water_properties.py'
+2022-03-23T14:31:48,871   adding 'pyequion-0.0.6.1.dist-info/LICENSE'
+2022-03-23T14:31:48,871   adding 'pyequion-0.0.6.1.dist-info/METADATA'
+2022-03-23T14:31:48,871   adding 'pyequion-0.0.6.1.dist-info/WHEEL'
+2022-03-23T14:31:48,871   adding 'pyequion-0.0.6.1.dist-info/top_level.txt'
+2022-03-23T14:31:48,871   adding 'pyequion-0.0.6.1.dist-info/RECORD'
+2022-03-23T14:31:48,871   removing build/bdist.linux-x86_64/wheel
+2022-03-23T14:31:48,912   Created wheel for pyequion: filename=pyequion-0.0.6.1-py3-none-any.whl size=19786 sha256=19a6e26a4b5f3878285dd629f833170eafb3d9b83fa534547b3cb64762ed7113
+2022-03-23T14:31:48,912   Stored in directory: /tmp/pip-ephem-wheel-cache-3r44n222/wheels/ea/3e/8f/c66780db309b8e74e51bbceb74e2ea3d7f42a7a1267aefb44d
+2022-03-23T14:31:48,915 Successfully built pyequion
+2022-03-23T14:31:49,679 Installing collected packages: pyequion
+
+2022-03-23T14:31:49,732 Successfully installed pyequion-0.0.6.1
+2022-03-23T14:31:49,735 Removed build tracker: '/tmp/pip-req-tracker-yhgbzabf'
+2022-03-23T14:42:12,724 Using pip 21.3.1 from /home/dfnaiff/miniconda3/envs/mainenv/lib/python3.9/site-packages/pip (python 3.9)
+2022-03-23T14:42:12,725 Non-user install because site-packages writeable
+2022-03-23T14:42:12,796 Created temporary directory: /tmp/pip-ephem-wheel-cache-idzwivok
+2022-03-23T14:42:12,797 Created temporary directory: /tmp/pip-req-tracker-4fldnfa9
+2022-03-23T14:42:12,797 Initialized build tracking at /tmp/pip-req-tracker-4fldnfa9
+2022-03-23T14:42:12,797 Created build tracker: /tmp/pip-req-tracker-4fldnfa9
+2022-03-23T14:42:12,797 Entered build tracker: /tmp/pip-req-tracker-4fldnfa9
+2022-03-23T14:42:12,797 Created temporary directory: /tmp/pip-install-qp8xkll_
+2022-03-23T14:42:12,810 Processing /home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion
+2022-03-23T14:42:12,810   Added file:///home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion to build tracker '/tmp/pip-req-tracker-4fldnfa9'
+2022-03-23T14:42:12,810   Running setup.py (path:/home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion/setup.py) egg_info for package from file:///home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion
+2022-03-23T14:42:12,811   Created temporary directory: /tmp/pip-pip-egg-info-6dwpouqu
+2022-03-23T14:42:12,811   Running command python setup.py egg_info
+2022-03-23T14:42:13,261   /home/dfnaiff/miniconda3/envs/mainenv/lib/python3.9/site-packages/Cython/Compiler/Main.py:369: FutureWarning: Cython directive 'language_level' not set, using 2 for now (Py2). This will change in a later release! File: /home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion/pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx
+2022-03-23T14:42:13,261     tree = Parsing.p_module(s, pxd, full_module_name)
+
+2022-03-23T14:42:13,530   Error compiling Cython file:
+2022-03-23T14:42:13,530   ------------------------------------------------------------
+2022-03-23T14:42:13,530   ...
+2022-03-23T14:42:13,530   import numpy as np
+
+
+2022-03-23T14:42:13,531   @cython.boundscheck(False)  # Deactivate bounds checking
+2022-03-23T14:42:13,531   ^
+2022-03-23T14:42:13,531   ------------------------------------------------------------
+
+2022-03-23T14:42:13,531   pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx:4:0: undeclared name not builtin: cython
+2022-03-23T14:42:13,789   Traceback (most recent call last):
+2022-03-23T14:42:13,789     File "<string>", line 1, in <module>
+2022-03-23T14:42:13,789     File "/home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion/setup.py", line 33, in <module>
+2022-03-23T14:42:13,789       ext_modules=cythonize([ext]),
+2022-03-23T14:42:13,789     File "/home/dfnaiff/miniconda3/envs/mainenv/lib/python3.9/site-packages/Cython/Build/Dependencies.py", line 1103, in cythonize
+2022-03-23T14:42:13,789       cythonize_one(*args)
+2022-03-23T14:42:13,789     File "/home/dfnaiff/miniconda3/envs/mainenv/lib/python3.9/site-packages/Cython/Build/Dependencies.py", line 1226, in cythonize_one
+2022-03-23T14:42:13,789       raise CompileError(None, pyx_file)
+2022-03-23T14:42:13,789   Cython.Compiler.Errors.CompileError: /home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion/pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx
+2022-03-23T14:42:13,789   Compiling /home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion/pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx because it changed.
+2022-03-23T14:42:13,789   [1/1] Cythonizing /home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion/pyequion/activity/coo_tensor_ops/coo_tensor_ops.pyx
+2022-03-23T14:42:13,919 WARNING: Discarding file:///home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion. Command errored out with exit status 1: python setup.py egg_info Check the logs for full command output.
+2022-03-23T14:42:13,919 ERROR: Command errored out with exit status 1: python setup.py egg_info Check the logs for full command output.
+2022-03-23T14:42:13,919 Exception information:
+2022-03-23T14:42:13,919 Traceback (most recent call last):
+2022-03-23T14:42:13,919   File "/home/dfnaiff/miniconda3/envs/mainenv/lib/python3.9/site-packages/pip/_internal/cli/base_command.py", line 164, in exc_logging_wrapper
+2022-03-23T14:42:13,919     status = run_func(*args)
+2022-03-23T14:42:13,919   File "/home/dfnaiff/miniconda3/envs/mainenv/lib/python3.9/site-packages/pip/_internal/cli/req_command.py", line 205, in wrapper
+2022-03-23T14:42:13,919     return func(self, options, args)
+2022-03-23T14:42:13,919   File "/home/dfnaiff/miniconda3/envs/mainenv/lib/python3.9/site-packages/pip/_internal/commands/install.py", line 338, in run
+2022-03-23T14:42:13,919     requirement_set = resolver.resolve(
+2022-03-23T14:42:13,919   File "/home/dfnaiff/miniconda3/envs/mainenv/lib/python3.9/site-packages/pip/_internal/resolution/resolvelib/resolver.py", line 73, in resolve
+2022-03-23T14:42:13,919     collected = self.factory.collect_root_requirements(root_reqs)
+2022-03-23T14:42:13,919   File "/home/dfnaiff/miniconda3/envs/mainenv/lib/python3.9/site-packages/pip/_internal/resolution/resolvelib/factory.py", line 468, in collect_root_requirements
+2022-03-23T14:42:13,919     req = self._make_requirement_from_install_req(
+2022-03-23T14:42:13,919   File "/home/dfnaiff/miniconda3/envs/mainenv/lib/python3.9/site-packages/pip/_internal/resolution/resolvelib/factory.py", line 445, in _make_requirement_from_install_req
+2022-03-23T14:42:13,919     raise self._build_failures[ireq.link]
+2022-03-23T14:42:13,919   File "/home/dfnaiff/miniconda3/envs/mainenv/lib/python3.9/site-packages/pip/_internal/resolution/resolvelib/factory.py", line 201, in _make_candidate_from_link
+2022-03-23T14:42:13,919     self._link_candidate_cache[link] = LinkCandidate(
+2022-03-23T14:42:13,919   File "/home/dfnaiff/miniconda3/envs/mainenv/lib/python3.9/site-packages/pip/_internal/resolution/resolvelib/candidates.py", line 281, in __init__
+2022-03-23T14:42:13,919     super().__init__(
+2022-03-23T14:42:13,919   File "/home/dfnaiff/miniconda3/envs/mainenv/lib/python3.9/site-packages/pip/_internal/resolution/resolvelib/candidates.py", line 156, in __init__
+2022-03-23T14:42:13,919     self.dist = self._prepare()
+2022-03-23T14:42:13,919   File "/home/dfnaiff/miniconda3/envs/mainenv/lib/python3.9/site-packages/pip/_internal/resolution/resolvelib/candidates.py", line 225, in _prepare
+2022-03-23T14:42:13,919     dist = self._prepare_distribution()
+2022-03-23T14:42:13,919   File "/home/dfnaiff/miniconda3/envs/mainenv/lib/python3.9/site-packages/pip/_internal/resolution/resolvelib/candidates.py", line 292, in _prepare_distribution
+2022-03-23T14:42:13,919     return preparer.prepare_linked_requirement(self._ireq, parallel_builds=True)
+2022-03-23T14:42:13,919   File "/home/dfnaiff/miniconda3/envs/mainenv/lib/python3.9/site-packages/pip/_internal/operations/prepare.py", line 482, in prepare_linked_requirement
+2022-03-23T14:42:13,919     return self._prepare_linked_requirement(req, parallel_builds)
+2022-03-23T14:42:13,919   File "/home/dfnaiff/miniconda3/envs/mainenv/lib/python3.9/site-packages/pip/_internal/operations/prepare.py", line 546, in _prepare_linked_requirement
+2022-03-23T14:42:13,919     dist = _get_prepared_distribution(
+2022-03-23T14:42:13,919   File "/home/dfnaiff/miniconda3/envs/mainenv/lib/python3.9/site-packages/pip/_internal/operations/prepare.py", line 58, in _get_prepared_distribution
+2022-03-23T14:42:13,919     abstract_dist.prepare_distribution_metadata(finder, build_isolation)
+2022-03-23T14:42:13,919   File "/home/dfnaiff/miniconda3/envs/mainenv/lib/python3.9/site-packages/pip/_internal/distributions/sdist.py", line 49, in prepare_distribution_metadata
+2022-03-23T14:42:13,919     self.req.prepare_metadata()
+2022-03-23T14:42:13,919   File "/home/dfnaiff/miniconda3/envs/mainenv/lib/python3.9/site-packages/pip/_internal/req/req_install.py", line 561, in prepare_metadata
+2022-03-23T14:42:13,919     self.metadata_directory = generate_metadata_legacy(
+2022-03-23T14:42:13,919   File "/home/dfnaiff/miniconda3/envs/mainenv/lib/python3.9/site-packages/pip/_internal/operations/build/metadata_legacy.py", line 59, in generate_metadata
+2022-03-23T14:42:13,919     call_subprocess(
+2022-03-23T14:42:13,919   File "/home/dfnaiff/miniconda3/envs/mainenv/lib/python3.9/site-packages/pip/_internal/utils/subprocess.py", line 254, in call_subprocess
+2022-03-23T14:42:13,919     raise InstallationSubprocessError(proc.returncode, command_desc)
+2022-03-23T14:42:13,919 pip._internal.exceptions.InstallationSubprocessError: Command errored out with exit status 1: python setup.py egg_info Check the logs for full command output.
+2022-03-23T14:42:13,925 Removed file:///home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion from build tracker '/tmp/pip-req-tracker-4fldnfa9'
+2022-03-23T14:42:13,926 Removed build tracker: '/tmp/pip-req-tracker-4fldnfa9'
+2022-03-23T14:42:26,403 Using pip 21.3.1 from /home/dfnaiff/miniconda3/envs/mainenv/lib/python3.9/site-packages/pip (python 3.9)
+2022-03-23T14:42:26,404 Non-user install because site-packages writeable
+2022-03-23T14:42:26,476 Created temporary directory: /tmp/pip-ephem-wheel-cache-5r8_767q
+2022-03-23T14:42:26,476 Created temporary directory: /tmp/pip-req-tracker-v99x0pw4
+2022-03-23T14:42:26,476 Initialized build tracking at /tmp/pip-req-tracker-v99x0pw4
+2022-03-23T14:42:26,476 Created build tracker: /tmp/pip-req-tracker-v99x0pw4
+2022-03-23T14:42:26,476 Entered build tracker: /tmp/pip-req-tracker-v99x0pw4
+2022-03-23T14:42:26,476 Created temporary directory: /tmp/pip-install-av_a9qa1
+2022-03-23T14:42:26,489 Processing /home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion
+2022-03-23T14:42:26,489   Added file:///home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion to build tracker '/tmp/pip-req-tracker-v99x0pw4'
+2022-03-23T14:42:26,489   Running setup.py (path:/home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion/setup.py) egg_info for package from file:///home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion
+2022-03-23T14:42:26,489   Created temporary directory: /tmp/pip-pip-egg-info-7rsh5pt4
+2022-03-23T14:42:26,490   Running command python setup.py egg_info
+2022-03-23T14:42:26,795   running egg_info
+2022-03-23T14:42:26,796   creating /tmp/pip-pip-egg-info-7rsh5pt4/pyequion.egg-info
+2022-03-23T14:42:26,796   writing /tmp/pip-pip-egg-info-7rsh5pt4/pyequion.egg-info/PKG-INFO
+2022-03-23T14:42:26,796   writing dependency_links to /tmp/pip-pip-egg-info-7rsh5pt4/pyequion.egg-info/dependency_links.txt
+2022-03-23T14:42:26,796   writing top-level names to /tmp/pip-pip-egg-info-7rsh5pt4/pyequion.egg-info/top_level.txt
+2022-03-23T14:42:26,797   writing manifest file '/tmp/pip-pip-egg-info-7rsh5pt4/pyequion.egg-info/SOURCES.txt'
+2022-03-23T14:42:26,852   adding license file 'LICENSE'
+2022-03-23T14:42:26,853   writing manifest file '/tmp/pip-pip-egg-info-7rsh5pt4/pyequion.egg-info/SOURCES.txt'
+2022-03-23T14:42:26,891   Source in /home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion has version 0.0.6.1, which satisfies requirement pyequion==0.0.6.1 from file:///home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion
+2022-03-23T14:42:26,891   Removed pyequion==0.0.6.1 from file:///home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion from build tracker '/tmp/pip-req-tracker-v99x0pw4'
+2022-03-23T14:42:26,893 Created temporary directory: /tmp/pip-unpack-0bz2kevo
+2022-03-23T14:42:26,894 Building wheels for collected packages: pyequion
+2022-03-23T14:42:26,894   Created temporary directory: /tmp/pip-wheel-5p8_4qm2
+2022-03-23T14:42:26,895   Destination directory: /tmp/pip-wheel-5p8_4qm2
+2022-03-23T14:42:26,895   Running command /home/dfnaiff/miniconda3/envs/mainenv/bin/python3.9 -u -c 'import io, os, sys, setuptools, tokenize; sys.argv[0] = '"'"'/home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion/setup.py'"'"'; __file__='"'"'/home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion/setup.py'"'"';f = getattr(tokenize, '"'"'open'"'"', open)(__file__) if os.path.exists(__file__) else io.StringIO('"'"'from setuptools import setup; setup()'"'"');code = f.read().replace('"'"'\r\n'"'"', '"'"'\n'"'"');f.close();exec(compile(code, __file__, '"'"'exec'"'"'))' bdist_wheel -d /tmp/pip-wheel-5p8_4qm2
+2022-03-23T14:42:27,225   running bdist_wheel
+2022-03-23T14:42:27,226   running build
+2022-03-23T14:42:27,226   running build_py
+2022-03-23T14:42:27,229   installing to build/bdist.linux-x86_64/wheel
+2022-03-23T14:42:27,229   running install
+2022-03-23T14:42:27,229   running install_lib
+2022-03-23T14:42:27,230   creating build/bdist.linux-x86_64/wheel
+2022-03-23T14:42:27,230   creating build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:42:27,230   copying build/lib/pyequion/equilibrium_system.py -> build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:42:27,230   copying build/lib/pyequion/sequencer.py -> build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:42:27,230   copying build/lib/pyequion/utils.py -> build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:42:27,230   copying build/lib/pyequion/__init__.py -> build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:42:27,230   copying build/lib/pyequion/solution.py -> build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:42:27,231   copying build/lib/pyequion/builder.py -> build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:42:27,231   copying build/lib/pyequion/water_properties.py -> build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:42:27,231   copying build/lib/pyequion/constants.py -> build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:42:27,231   copying build/lib/pyequion/converters.py -> build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:42:27,231   copying build/lib/pyequion/logmaker.py -> build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:42:27,231   running install_egg_info
+2022-03-23T14:42:27,237   running egg_info
+2022-03-23T14:42:27,237   writing pyequion.egg-info/PKG-INFO
+2022-03-23T14:42:27,237   writing dependency_links to pyequion.egg-info/dependency_links.txt
+2022-03-23T14:42:27,238   writing top-level names to pyequion.egg-info/top_level.txt
+2022-03-23T14:42:27,298   adding license file 'LICENSE'
+2022-03-23T14:42:27,299   writing manifest file 'pyequion.egg-info/SOURCES.txt'
+2022-03-23T14:42:27,299   Copying pyequion.egg-info to build/bdist.linux-x86_64/wheel/pyequion-0.0.6.1-py3.9.egg-info
+2022-03-23T14:42:27,300   running install_scripts
+2022-03-23T14:42:27,326   adding license file "LICENSE" (matched pattern "LICEN[CS]E*")
+2022-03-23T14:42:27,326   creating build/bdist.linux-x86_64/wheel/pyequion-0.0.6.1.dist-info/WHEEL
+2022-03-23T14:42:27,327   creating '/tmp/pip-wheel-5p8_4qm2/pyequion-0.0.6.1-py3-none-any.whl' and adding 'build/bdist.linux-x86_64/wheel' to it
+2022-03-23T14:42:27,327   adding 'pyequion/__init__.py'
+2022-03-23T14:42:27,328   adding 'pyequion/builder.py'
+2022-03-23T14:42:27,328   adding 'pyequion/constants.py'
+2022-03-23T14:42:27,328   adding 'pyequion/converters.py'
+2022-03-23T14:42:27,329   adding 'pyequion/equilibrium_system.py'
+2022-03-23T14:42:27,330   adding 'pyequion/logmaker.py'
+2022-03-23T14:42:27,330   adding 'pyequion/sequencer.py'
+2022-03-23T14:42:27,331   adding 'pyequion/solution.py'
+2022-03-23T14:42:27,331   adding 'pyequion/utils.py'
+2022-03-23T14:42:27,331   adding 'pyequion/water_properties.py'
+2022-03-23T14:42:27,332   adding 'pyequion-0.0.6.1.dist-info/LICENSE'
+2022-03-23T14:42:27,332   adding 'pyequion-0.0.6.1.dist-info/METADATA'
+2022-03-23T14:42:27,332   adding 'pyequion-0.0.6.1.dist-info/WHEEL'
+2022-03-23T14:42:27,332   adding 'pyequion-0.0.6.1.dist-info/top_level.txt'
+2022-03-23T14:42:27,333   adding 'pyequion-0.0.6.1.dist-info/RECORD'
+2022-03-23T14:42:27,333   removing build/bdist.linux-x86_64/wheel
+2022-03-23T14:42:27,375   Created wheel for pyequion: filename=pyequion-0.0.6.1-py3-none-any.whl size=19786 sha256=9bb5b9f7f8a39b3e9ed1e6ad7b1a90b89953d931862d77e5de15c7af9334b25e
+2022-03-23T14:42:27,375   Stored in directory: /tmp/pip-ephem-wheel-cache-5r8_767q/wheels/ea/3e/8f/c66780db309b8e74e51bbceb74e2ea3d7f42a7a1267aefb44d
+2022-03-23T14:42:27,378 Successfully built pyequion
+2022-03-23T14:42:28,118 Installing collected packages: pyequion
+
+2022-03-23T14:42:28,175 Successfully installed pyequion-0.0.6.1
+2022-03-23T14:42:28,178 Removed build tracker: '/tmp/pip-req-tracker-v99x0pw4'
+2022-03-23T14:43:48,461 Using pip 21.3.1 from /home/dfnaiff/miniconda3/envs/mainenv/lib/python3.9/site-packages/pip (python 3.9)
+2022-03-23T14:43:48,463 Non-user install because site-packages writeable
+2022-03-23T14:43:48,533 Created temporary directory: /tmp/pip-ephem-wheel-cache-zo4dojqc
+2022-03-23T14:43:48,533 Created temporary directory: /tmp/pip-req-tracker-g81zitz0
+2022-03-23T14:43:48,534 Initialized build tracking at /tmp/pip-req-tracker-g81zitz0
+2022-03-23T14:43:48,534 Created build tracker: /tmp/pip-req-tracker-g81zitz0
+2022-03-23T14:43:48,534 Entered build tracker: /tmp/pip-req-tracker-g81zitz0
+2022-03-23T14:43:48,534 Created temporary directory: /tmp/pip-install-w9rwa1xk
+2022-03-23T14:43:48,542 Obtaining file:///home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion
+2022-03-23T14:43:48,542   Added file:///home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion to build tracker '/tmp/pip-req-tracker-g81zitz0'
+2022-03-23T14:43:48,542   Running setup.py (path:/home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion/setup.py) egg_info for package from file:///home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion
+2022-03-23T14:43:48,542   Created temporary directory: /tmp/pip-pip-egg-info-05sd7eub
+2022-03-23T14:43:48,542   Running command python setup.py egg_info
+2022-03-23T14:43:48,895   running egg_info
+2022-03-23T14:43:48,895   creating /tmp/pip-pip-egg-info-05sd7eub/pyequion.egg-info
+2022-03-23T14:43:48,895   writing /tmp/pip-pip-egg-info-05sd7eub/pyequion.egg-info/PKG-INFO
+2022-03-23T14:43:48,895   writing dependency_links to /tmp/pip-pip-egg-info-05sd7eub/pyequion.egg-info/dependency_links.txt
+2022-03-23T14:43:48,896   writing top-level names to /tmp/pip-pip-egg-info-05sd7eub/pyequion.egg-info/top_level.txt
+2022-03-23T14:43:48,896   writing manifest file '/tmp/pip-pip-egg-info-05sd7eub/pyequion.egg-info/SOURCES.txt'
+2022-03-23T14:43:48,951   adding license file 'LICENSE'
+2022-03-23T14:43:48,952   writing manifest file '/tmp/pip-pip-egg-info-05sd7eub/pyequion.egg-info/SOURCES.txt'
+2022-03-23T14:43:48,987   Source in /home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion has version 0.0.6.1, which satisfies requirement pyequion==0.0.6.1 from file:///home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion
+2022-03-23T14:43:48,987   Removed pyequion==0.0.6.1 from file:///home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion from build tracker '/tmp/pip-req-tracker-g81zitz0'
+2022-03-23T14:43:49,014 Created temporary directory: /tmp/pip-unpack-1njajm81
+2022-03-23T14:43:49,751 Installing collected packages: pyequion
+2022-03-23T14:43:49,752   Running setup.py develop for pyequion
+2022-03-23T14:43:49,752     Running command /home/dfnaiff/miniconda3/envs/mainenv/bin/python3.9 -c 'import io, os, sys, setuptools, tokenize; sys.argv[0] = '"'"'/home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion/setup.py'"'"'; __file__='"'"'/home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion/setup.py'"'"';f = getattr(tokenize, '"'"'open'"'"', open)(__file__) if os.path.exists(__file__) else io.StringIO('"'"'from setuptools import setup; setup()'"'"');code = f.read().replace('"'"'\r\n'"'"', '"'"'\n'"'"');f.close();exec(compile(code, __file__, '"'"'exec'"'"'))' develop --no-deps
+2022-03-23T14:43:50,116     running develop
+2022-03-23T14:43:50,247     running egg_info
+2022-03-23T14:43:50,247     writing pyequion.egg-info/PKG-INFO
+2022-03-23T14:43:50,248     writing dependency_links to pyequion.egg-info/dependency_links.txt
+2022-03-23T14:43:50,248     writing top-level names to pyequion.egg-info/top_level.txt
+2022-03-23T14:43:50,301     adding license file 'LICENSE'
+2022-03-23T14:43:50,302     writing manifest file 'pyequion.egg-info/SOURCES.txt'
+2022-03-23T14:43:50,303     running build_ext
+2022-03-23T14:43:50,303     Creating /home/dfnaiff/miniconda3/envs/mainenv/lib/python3.9/site-packages/pyequion.egg-link (link to .)
+2022-03-23T14:43:50,303     Adding pyequion 0.0.6.1 to easy-install.pth file
+
+2022-03-23T14:43:50,305     Installed /home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion
+2022-03-23T14:43:50,422 Successfully installed pyequion-0.0.6.1
+2022-03-23T14:43:50,425 Removed build tracker: '/tmp/pip-req-tracker-g81zitz0'
+2022-03-23T14:44:23,787 Using pip 21.3.1 from /home/dfnaiff/miniconda3/envs/mainenv/lib/python3.9/site-packages/pip (python 3.9)
+2022-03-23T14:44:23,789 Non-user install because site-packages writeable
+2022-03-23T14:44:23,859 Created temporary directory: /tmp/pip-ephem-wheel-cache-rl0wyzw2
+2022-03-23T14:44:23,859 Created temporary directory: /tmp/pip-req-tracker-7k2wq02q
+2022-03-23T14:44:23,859 Initialized build tracking at /tmp/pip-req-tracker-7k2wq02q
+2022-03-23T14:44:23,859 Created build tracker: /tmp/pip-req-tracker-7k2wq02q
+2022-03-23T14:44:23,859 Entered build tracker: /tmp/pip-req-tracker-7k2wq02q
+2022-03-23T14:44:23,859 Created temporary directory: /tmp/pip-install-14rmmuem
+2022-03-23T14:44:23,872 Processing /home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion
+2022-03-23T14:44:23,873   Added file:///home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion to build tracker '/tmp/pip-req-tracker-7k2wq02q'
+2022-03-23T14:44:23,873   Running setup.py (path:/home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion/setup.py) egg_info for package from file:///home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion
+2022-03-23T14:44:23,873   Created temporary directory: /tmp/pip-pip-egg-info-89x8m_iq
+2022-03-23T14:44:23,873   Running command python setup.py egg_info
+2022-03-23T14:44:24,203   running egg_info
+2022-03-23T14:44:24,203   creating /tmp/pip-pip-egg-info-89x8m_iq/pyequion.egg-info
+2022-03-23T14:44:24,203   writing /tmp/pip-pip-egg-info-89x8m_iq/pyequion.egg-info/PKG-INFO
+2022-03-23T14:44:24,204   writing dependency_links to /tmp/pip-pip-egg-info-89x8m_iq/pyequion.egg-info/dependency_links.txt
+2022-03-23T14:44:24,204   writing top-level names to /tmp/pip-pip-egg-info-89x8m_iq/pyequion.egg-info/top_level.txt
+2022-03-23T14:44:24,204   writing manifest file '/tmp/pip-pip-egg-info-89x8m_iq/pyequion.egg-info/SOURCES.txt'
+2022-03-23T14:44:24,260   adding license file 'LICENSE'
+2022-03-23T14:44:24,261   writing manifest file '/tmp/pip-pip-egg-info-89x8m_iq/pyequion.egg-info/SOURCES.txt'
+2022-03-23T14:44:24,298   Source in /home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion has version 0.0.6.1, which satisfies requirement pyequion==0.0.6.1 from file:///home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion
+2022-03-23T14:44:24,298   Removed pyequion==0.0.6.1 from file:///home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion from build tracker '/tmp/pip-req-tracker-7k2wq02q'
+2022-03-23T14:44:24,300 Created temporary directory: /tmp/pip-unpack-cq550vdt
+2022-03-23T14:44:24,301 Building wheels for collected packages: pyequion
+2022-03-23T14:44:24,301   Created temporary directory: /tmp/pip-wheel-j3s_lzvk
+2022-03-23T14:44:24,301   Destination directory: /tmp/pip-wheel-j3s_lzvk
+2022-03-23T14:44:24,301   Running command /home/dfnaiff/miniconda3/envs/mainenv/bin/python3.9 -u -c 'import io, os, sys, setuptools, tokenize; sys.argv[0] = '"'"'/home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion/setup.py'"'"'; __file__='"'"'/home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion/setup.py'"'"';f = getattr(tokenize, '"'"'open'"'"', open)(__file__) if os.path.exists(__file__) else io.StringIO('"'"'from setuptools import setup; setup()'"'"');code = f.read().replace('"'"'\r\n'"'"', '"'"'\n'"'"');f.close();exec(compile(code, __file__, '"'"'exec'"'"'))' bdist_wheel -d /tmp/pip-wheel-j3s_lzvk
+2022-03-23T14:44:24,655   running bdist_wheel
+2022-03-23T14:44:24,656   running build
+2022-03-23T14:44:24,656   running build_py
+2022-03-23T14:44:24,658   installing to build/bdist.linux-x86_64/wheel
+2022-03-23T14:44:24,659   running install
+2022-03-23T14:44:24,659   running install_lib
+2022-03-23T14:44:24,660   creating build/bdist.linux-x86_64/wheel
+2022-03-23T14:44:24,660   creating build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:44:24,660   copying build/lib/pyequion/equilibrium_system.py -> build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:44:24,660   copying build/lib/pyequion/sequencer.py -> build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:44:24,660   copying build/lib/pyequion/utils.py -> build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:44:24,660   copying build/lib/pyequion/__init__.py -> build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:44:24,660   copying build/lib/pyequion/solution.py -> build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:44:24,660   copying build/lib/pyequion/builder.py -> build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:44:24,660   copying build/lib/pyequion/water_properties.py -> build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:44:24,660   copying build/lib/pyequion/constants.py -> build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:44:24,661   copying build/lib/pyequion/converters.py -> build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:44:24,661   copying build/lib/pyequion/logmaker.py -> build/bdist.linux-x86_64/wheel/pyequion
+2022-03-23T14:44:24,661   running install_egg_info
+2022-03-23T14:44:24,666   running egg_info
+2022-03-23T14:44:24,667   writing pyequion.egg-info/PKG-INFO
+2022-03-23T14:44:24,667   writing dependency_links to pyequion.egg-info/dependency_links.txt
+2022-03-23T14:44:24,667   writing top-level names to pyequion.egg-info/top_level.txt
+2022-03-23T14:44:24,737   adding license file 'LICENSE'
+2022-03-23T14:44:24,739   writing manifest file 'pyequion.egg-info/SOURCES.txt'
+2022-03-23T14:44:24,739   Copying pyequion.egg-info to build/bdist.linux-x86_64/wheel/pyequion-0.0.6.1-py3.9.egg-info
+2022-03-23T14:44:24,740   running install_scripts
+2022-03-23T14:44:24,778   adding license file "LICENSE" (matched pattern "LICEN[CS]E*")
+2022-03-23T14:44:24,779   creating build/bdist.linux-x86_64/wheel/pyequion-0.0.6.1.dist-info/WHEEL
+2022-03-23T14:44:24,779   creating '/tmp/pip-wheel-j3s_lzvk/pyequion-0.0.6.1-py3-none-any.whl' and adding 'build/bdist.linux-x86_64/wheel' to it
+2022-03-23T14:44:24,780   adding 'pyequion/__init__.py'
+2022-03-23T14:44:24,781   adding 'pyequion/builder.py'
+2022-03-23T14:44:24,781   adding 'pyequion/constants.py'
+2022-03-23T14:44:24,782   adding 'pyequion/converters.py'
+2022-03-23T14:44:24,783   adding 'pyequion/equilibrium_system.py'
+2022-03-23T14:44:24,784   adding 'pyequion/logmaker.py'
+2022-03-23T14:44:24,784   adding 'pyequion/sequencer.py'
+2022-03-23T14:44:24,785   adding 'pyequion/solution.py'
+2022-03-23T14:44:24,785   adding 'pyequion/utils.py'
+2022-03-23T14:44:24,785   adding 'pyequion/water_properties.py'
+2022-03-23T14:44:24,786   adding 'pyequion-0.0.6.1.dist-info/LICENSE'
+2022-03-23T14:44:24,786   adding 'pyequion-0.0.6.1.dist-info/METADATA'
+2022-03-23T14:44:24,786   adding 'pyequion-0.0.6.1.dist-info/WHEEL'
+2022-03-23T14:44:24,786   adding 'pyequion-0.0.6.1.dist-info/top_level.txt'
+2022-03-23T14:44:24,787   adding 'pyequion-0.0.6.1.dist-info/RECORD'
+2022-03-23T14:44:24,787   removing build/bdist.linux-x86_64/wheel
+2022-03-23T14:44:24,840   Created wheel for pyequion: filename=pyequion-0.0.6.1-py3-none-any.whl size=19786 sha256=af107b03e040b1a96a760f3d3edb733bd8a2b57f8937614f5d182df14a593edf
+2022-03-23T14:44:24,840   Stored in directory: /tmp/pip-ephem-wheel-cache-rl0wyzw2/wheels/ea/3e/8f/c66780db309b8e74e51bbceb74e2ea3d7f42a7a1267aefb44d
+2022-03-23T14:44:24,842 Successfully built pyequion
+2022-03-23T14:44:25,653 Installing collected packages: pyequion
+
+2022-03-23T14:44:25,706 Successfully installed pyequion-0.0.6.1
+2022-03-23T14:44:25,709 Removed build tracker: '/tmp/pip-req-tracker-7k2wq02q'

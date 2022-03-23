@@ -1,9 +1,9 @@
 import numpy as np
-# import cython
+import cython
 
 
-# @cython.boundscheck(False)  # Deactivate bounds checking
-# @cython.wraparound(False)   # Deactivate negative indexing.
+@cython.boundscheck(False)  # Deactivate bounds checking
+@cython.wraparound(False)   # Deactivate negative indexing.
 def coo_matrix_vector(double[:] A_data, int[:,:] A_inds, int[:] A_shape, double[:] b):
     assert A_shape[1] == b.shape[0]
     result = np.zeros(A_shape[0],dtype=np.double)
@@ -19,8 +19,8 @@ def coo_matrix_vector(double[:] A_data, int[:,:] A_inds, int[:] A_shape, double[
     return result
 
 
-# @cython.boundscheck(False)  # Deactivate bounds checking
-# @cython.wraparound(False)   # Deactivate negative indexing.
+@cython.boundscheck(False)  # Deactivate bounds checking
+@cython.wraparound(False)   # Deactivate negative indexing.
 def coo_matrix_vector_vector(double[:] A_data, int[:,:] A_inds, int[:] A_shape,
                              double[:] b1, double[:] b2):
     assert A_shape[0] == b1.shape[0]
@@ -38,8 +38,8 @@ def coo_matrix_vector_vector(double[:] A_data, int[:,:] A_inds, int[:] A_shape,
     return result
 
 
-# @cython.boundscheck(False)  # Deactivate bounds checking
-# @cython.wraparound(False)   # Deactivate negative indexing.
+@cython.boundscheck(False)  # Deactivate bounds checking
+@cython.wraparound(False)   # Deactivate negative indexing.
 def coo_tensor_vector_vector(double[:] A_data, int[:,:] A_inds, int[:] A_shape,
                              double[:] b1, double[:] b2):
     assert A_shape[1] == b1.shape[0]
@@ -59,8 +59,8 @@ def coo_tensor_vector_vector(double[:] A_data, int[:,:] A_inds, int[:] A_shape,
         result_view[ind0] += A_data[i]*b1[ind1]*b2[ind2]
     return result
 
-# @cython.boundscheck(False)  # Deactivate bounds checking
-# @cython.wraparound(False)   # Deactivate negative indexing.
+@cython.boundscheck(False)  # Deactivate bounds checking
+@cython.wraparound(False)   # Deactivate negative indexing.
 def coo_tensor_vector_vector_vector(double[:] A_data, int[:,:] A_inds, int[:] A_shape,
                                     double[:] b1, double[:] b2, double[:] b3):
     assert A_shape[0] == b1.shape[0]

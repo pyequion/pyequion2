@@ -14,7 +14,7 @@ except: #Some import error. Use pythonized way
     from . import py_coo_tensor_ops as coo_tensor_ops
 from .. import utils
 from .. import constants
-from .. import data
+from .. import datamods
 
 
 def setup_pitzer(solutes, calculate_osmotic_coefficient=False):
@@ -206,7 +206,7 @@ def make_pitzer_dictionary():
     # filepath = ownpath.parents[0]/'data'/'pitzer.txt'
     # with open(filepath, 'r') as file:
     #     lines = file.read().split('\n')
-    lines = data.pitzer_data.split('\n')
+    lines = datamods.pitzer_data.split('\n')
     # Excluding (OH) labeled elements (boron elements, essentialy) and PITZER line
     # lines = [line for line in lines[1:] if '(OH)' not in line]
     # Excluding PITZER line

@@ -6,7 +6,7 @@ import numpy as np
 import ordered_set
 import commentjson
 
-from . import data
+from . import datamods
 
 
 ELEMENT_SPECIES_MAP = {
@@ -34,11 +34,11 @@ ELEMENT_SPECIES_MAP = {
 }
 
 DEFAULT_DB_FILES = {
-    "solutions": data.reactions_solutions,
-    "phases": data.reactions_solids,
-    "irreversible": data.reactions_irreversible,
-    "species": data.species,
-    "gases": data.reactions_gases
+    "solutions": datamods.reactions_solutions,
+    "phases": datamods.reactions_solids,
+    "irreversible": datamods.reactions_irreversible,
+    "species": datamods.species,
+    "gases": datamods.reactions_gases
 }
 ELEMENTS = ['H', 'He', 'Li', 'Be', 'B', 'C', 'N', 'O', 'F',
             'Ne', 'Na', 'Mg', 'Al', 'Si', 'P', 'S', 'Cl', 'Ar',

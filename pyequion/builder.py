@@ -243,16 +243,18 @@ def load_from_db(fname):
 def _get_logk(reaction, TK, PATM):
     log_K_coefs = reaction.get('log_K_coefs', '')
     if type(log_K_coefs) != str:
-        return _calculate_logk_1(log_K_coefs, TK)
+        log_K_patm = _calculate_logk_1(log_K_coefs, TK)
     else:
         log_K25 = reaction.get('log_K25', '')
         if type(log_K25) != str:
             deltah = reaction.get('deltah', 0.0)
             if type(deltah) == str:
                 deltah = 0.0
-            return _calculate_logk_2(log_K25, deltah, TK)
+            log_K_patm = _calculate_logk_2(log_K25, deltah, TK)
         else:
-            return 0.0  # Can't do nothing beyond this
+            log_K_patm = 0.0  # Can't do nothing beyond this
+    log_K = log_K_patm + _adjust_pressure(reaction, TK, PATM)
+    return log_K
 
 
 def _calculate_logk_1(log_K_coefs, TK):
@@ -268,6 +270,30 @@ def _calculate_logk_2(log_K25, deltah, TK):
     logK = log_K25 - deltah/(2.303 * R)*(1/TK - 1/T0)
     return logK
 
+
+def _adjust_pressure(reaction, TK, PATM):
+    vm_coefs = reaction.get('Vm', '')
+    if vm_coefs == '':
+        return 0.0 #No adjustment
+    else:
+        if TK <= 229: #Out of validity
+            return 0.0            
+        R = 8.314
+        Pb = 1.01325*PATM
+        vm_coefs = vm_coefs + [0.0]*(10-len(vm_coefs)) #Padding
+        a1, a2, a3, a4, W, ao, i1, i2, i3, i4 = vm_coefs
+        phi_inf = 41.84*(
+            a1*0.1 + 
+            a2*100/(2600+Pb) + 
+            a3/(TK - 228) + 
+            a4*1e4/((Pb + 2600)*(TK - 228)))
+        #Due to other terms depending on ionic strength
+        #(which depends on the composition itself)
+        #They won't be calculated
+        vm = phi_inf #+ Debye-Huckel terms + Born volume therms
+        #Volumes can be negative because it is actually a volume change
+        adjustment = -vm/(R*TK)*(Pb - 1.01325)
+        return adjustment
 
 def _get_reactions_species(reac):
     return [k for k in reac.keys()
@@ -364,6 +390,7 @@ def _check_validity_specie_tag_in_reaction_dict(k):
         or k == "Omega"
         or k == "T_c"
         or k == "P_c"
+        or k == "Vm"
     )
 
 

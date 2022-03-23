@@ -41,8 +41,10 @@ class SolutionResult():
 
     def __init__(self, equilibrium_system, x, TK,
                  molals_solids=None, solid_phases_in=None,
-                 molals_gases=None, gas_phases_in=None):
+                 molals_gases=None, gas_phases_in=None,
+                 PATM=1.0):
         self.TK = TK
+        self.PATM = PATM
         self.solverlog = equilibrium_system.solverlog
         self.solvertype = equilibrium_system.solvertype
         self._x_molal = x
@@ -201,9 +203,10 @@ class SolutionResult():
         logacts = np.log10(self._x_act)
         solid_reactions = self.solid_reactions
         TK = self.TK
+        PATM = self.PATM
         solid_stoich_matrix = self.solid_stoich_matrix
         logiap = solid_stoich_matrix@logacts
-        logks = builder.get_log_equilibrium_constants(solid_reactions, TK)
+        logks = builder.get_log_equilibrium_constants(solid_reactions, TK, PATM)
         logsatur = logiap - logks
         return logsatur
     

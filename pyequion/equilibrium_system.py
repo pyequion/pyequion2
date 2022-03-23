@@ -195,7 +195,7 @@ class EquilibriumSystem():
         -------
         List[float] of log equilibria constants of aqueous reactions
         """
-        return builder.get_log_equilibrium_constants(self.reactions, TK)
+        return builder.get_log_equilibrium_constants(self.reactions, TK, PATM)
 
     def get_solid_log_equilibrium_constants(self, TK, PATM):
         """
@@ -208,7 +208,7 @@ class EquilibriumSystem():
         -------
         List[float] of log equilibria constants of solid reactions
         """
-        return builder.get_log_equilibrium_constants(self.solid_reactions, TK)
+        return builder.get_log_equilibrium_constants(self.solid_reactions, TK, PATM)
 
     def get_gases_log_equilibrium_constants(self, TK, PATM):
         """
@@ -221,10 +221,13 @@ class EquilibriumSystem():
         -------
         List[float] of log equilibria constants of gas reactions
         """
-        return builder.get_log_equilibrium_constants(self.gas_reactions, TK)
+        return builder.get_log_equilibrium_constants(self.gas_reactions, TK, PATM)
 
     def solve_equilibrium_elements_balance(self, TK, element_balance,
-                                           tol=1e-12, maxiter=1000, initial_guess='default'):
+                                           PATM=1.0,
+                                           tol=1e-12,
+                                           maxiter=1000,
+                                           initial_guess='default'):
         """
         DEPECRATED: use solve_equilibrium_mixed_balance
         
@@ -268,6 +271,7 @@ class EquilibriumSystem():
                                               mask,
                                               mask_log,
                                               TK,
+                                              PATM,
                                               tol=tol,
                                               initial_guess=initial_guess)
 
@@ -373,7 +377,8 @@ class EquilibriumSystem():
             self.solvertype = "phase (no gas)"
         sol = solution.SolutionResult(self, molals, TK,
                                       molals_solids, solid_phases,
-                                      molals_gases, gas_phases)
+                                      molals_gases, gas_phases,
+                                      PATM=PATM)
         return sol, (res, (molals, molals_solids, molals_gases, stability_solids, stability_gases))
 
     def solve_equilibrium_elements_balance_phases_sequential(self,
@@ -507,6 +512,7 @@ class EquilibriumSystem():
                                               mask,
                                               mask_log,
                                               TK,
+                                              PATM,
                                               tol=tol,
                                               initial_guess=initial_guess)
 
@@ -590,6 +596,7 @@ class EquilibriumSystem():
                                   mask,
                                   mask_log,
                                   TK,
+                                  PATM=1.0,
                                   tol=1e-12, maxiter=1000,
                                   initial_guess='default'):
         """
@@ -641,7 +648,7 @@ class EquilibriumSystem():
             mask,
             mask_log,
             tol=tol)
-        return solution.SolutionResult(self, x, TK), (res, x)
+        return solution.SolutionResult(self, x, TK, PATM=PATM), (res, x)
 
     @property
     def elements(self):

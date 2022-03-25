@@ -28,6 +28,13 @@ try:
         setup_requires=['setuptools>=18.0', 'cython'],
         ext_modules=cythonize([ext]),
         include_dirs=[numpy.get_include()],
+        classifiers=[
+            "Programming Language :: Python :: 3",
+            "License :: OSI Approved :: BSD License",
+            "Operating System :: OS Independent",
+        ],
+        url="https://github.com/pyequion/pyequion2/",
+        python_requires=">=3.6",
     )
 except:
     warnings.warn("Could not install with cython module. Installing pure python")
@@ -37,4 +44,11 @@ except:
         description="Chemical equilibrium for electrolytes in pure python",
         packages=packages,
         author="PyEquion",
+        classifiers=[
+            "Programming Language :: Python :: 3",
+            "License :: OSI Approved :: BSD License",
+            "Operating System :: OS Independent",
+        ],
+        url="https://github.com/pyequion/pyequion2/",
+        python_requires=">=3.6",
     )

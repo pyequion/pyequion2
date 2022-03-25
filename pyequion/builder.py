@@ -32,7 +32,6 @@ ELEMENT_SPECIES_MAP = {
     'Pb': 'Pb++',
     'Zn': 'Zn++'
 }
-
 DEFAULT_DB_FILES = {
     "solutions": datamods.reactions_solutions,
     "phases": datamods.reactions_solids,
@@ -180,10 +179,10 @@ def set_h_and_o_as_first_elements(elements):
     return elements
 
 
-def get_most_stable_phases(solid_reactions, TK):
+def get_most_stable_phases(solid_reactions, TK, PATM):
     stable_phases_group = dict()
     stable_lowest_ksp = dict()
-    log_ksps = get_log_equilibrium_constants(solid_reactions, TK)
+    log_ksps = get_log_equilibrium_constants(solid_reactions, TK, PATM)
     for i, solid_reaction in enumerate(solid_reactions):
         phase_name = solid_reaction['phase_name']
         solid_formula = _get_solid_formula(

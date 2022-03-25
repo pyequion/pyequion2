@@ -56,7 +56,7 @@ class EquilibriumSystem():
         The type of last solver
     """
 
-    def __init__(self, components, from_elements=False, activity_model="EXTENDED_DEBYE",
+    def __init__(self, components, from_elements=False, activity_model="PITZER",
                  calculate_water_activity=False):
         """
         Parameters
@@ -68,7 +68,8 @@ class EquilibriumSystem():
             If True, base components are elements, and representative species
             are chosen for these elements (see builder.ELEMENT_SPECIES_MAP).
             Current elements implemented are
-            'C', 'Ca', 'Cl', 'Na', 'S', 'Ba', 'Mg', 'Fe', 'K', 'Sr'
+            C, Ca, Cl, Na, S, Ba, Mg, Fe, K, Sr,
+            N, Cd, Li, Cu, Al, Br, F, Mn, P, Pb, Zn
         activity_model: str
             Model for activity coefficients. One of
             'IDEAL', 'DEBYE', 'EXTENDED_DEBYE', 'PITZER'
@@ -311,7 +312,7 @@ class EquilibriumSystem():
         balance_matrix = self.reduced_formula_matrix
         if solid_phases is None:
             solid_phases = builder.get_most_stable_phases(
-                self.solid_reactions, TK)
+                self.solid_reactions, TK, PATM)
         if has_gas_phases:
             gas_phases = self.gas_phase_names
         else:

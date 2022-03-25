@@ -8,7 +8,7 @@ Welcome to PyEquion's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   tutorial.rst
+   tutorials.rst
    mainclasses.rst
    reference.rst
 

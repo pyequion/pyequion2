@@ -4,7 +4,8 @@ A pure python implementation for electrolytes chemical equilibrium.
 
 Repository at https://github.com/pyequion/pyequion
 
-=======
+A heavily update version of the previous package found in https://github.com/caiofcm/pyequion
+
 ## Features
 
 - Pure python package: hence it is easy to install in any platform
@@ -17,7 +18,7 @@ Repository at https://github.com/pyequion/pyequion
 
 ## Installation
 
-The package can be installed with `pip install pyequion` or `pip install <folder>`
+The package can be installed with `pip install .` on this folder.
 
 ## Contributors
 

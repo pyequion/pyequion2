@@ -11,7 +11,7 @@ First, we calculate the balance
 .. code-block:: python
    :linenos:
 
-   from pyequion import EquilibriumSystem #Import the necessary module
+   from pyequion2 import EquilibriumSystem #Import the necessary module
    eqsys = EquilibriumSystem(['CaCl2', 'NaHCO3']) #We set up the feed components of our system
    molal_balance = {'Ca':0.028, 'C':0.065, 'Na':0.065, 'Cl':0.056} #Set up the balances
    TK = 298.15 #Temperature in Kelvin
@@ -21,7 +21,7 @@ First, we calculate the balance
 
 We go line by line here. First, we import the necessary module
 
->>> from pyequion import EquilibriumSystem
+>>> from pyequion2 import EquilibriumSystem
 
 *EquilibriumSystem* is the main API interface in PyEquion. It is a general
 class for setting up and calculating a variety of electrolytical balance systems.
@@ -211,7 +211,7 @@ We want to then know the concentration of carbon left in our system.
 
 We first set up our system.
 
->>> from pyequion import EquilibriumSystem
+>>> from pyequion2 import EquilibriumSystem
 >>> EquilibriumSystem(['Na', 'C'], from_elements=True)
 
 Since there is no volatile Na component, we know that it's amount must be 
@@ -256,7 +256,7 @@ Example 3 - Equilibrium with precipitation
 
 Let's set up a similar case than in example 1
 
->>> from pyequion import EquilibriumSystem #Import the necessary module
+>>> from pyequion2 import EquilibriumSystem #Import the necessary module
 >>> eqsys = EquilibriumSystem(['Ca', 'Na', 'C', 'Cl'], from_elements=True)
 >>> molal_balance = {'Ca':0.028, 'C':0.065, 'Na':0.065, 'Cl':0.056}
 >>> TK = 298.15 #Temperature in Kelvin
@@ -306,7 +306,7 @@ Example 4 - CO2 degassing
 
 We can also study degassing for our system. Consider a very simple system
 
->>> from pyequion import EquilibriumSystem #Import the necessary module
+>>> from pyequion2 import EquilibriumSystem #Import the necessary module
 >>> eqsys = EquilibriumSystem(['CO2']) #We set up the feed components of our system
 >>> molal_balance = {'C':0.5} #Set up the balances
 >>> TK = 298.15

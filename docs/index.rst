@@ -1,4 +1,4 @@
-Welcome to PyEquion's documentation!
+Welcome to PyEquion2's documentation!
 ====================================
 
 .. automodule:: pyequion

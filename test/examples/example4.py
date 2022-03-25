@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from pyequion import EquilibriumSystem #Import the necessary module
+from pyequion2 import EquilibriumSystem #Import the necessary module
 eqsys = EquilibriumSystem(['CO2']) #We set up the feed components of our system
 molal_balance = {'C':0.5} #Set up the balances
 TK = 298.15

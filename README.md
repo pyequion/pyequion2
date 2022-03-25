@@ -1,8 +1,8 @@
-# PyEquIon
+# PyEquion2
 
 A pure python implementation for electrolytes chemical equilibrium.
 
-Repository at https://github.com/pyequion/pyequion
+Repository at https://github.com/pyequion/pyequion2
 
 A heavily update version of the previous package found in https://github.com/caiofcm/pyequion
 
@@ -19,6 +19,16 @@ A heavily update version of the previous package found in https://github.com/cai
 ## Installation
 
 The package can be installed with `pip install .` on this folder.
+
+## GUI
+
+To run a GUI version of PyEquion2, just run
+
+```
+import pyequion2
+pyequion2.rungui()
+```
+
 
 ## Contributors
 

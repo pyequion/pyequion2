@@ -18,7 +18,9 @@ A heavily update version of the previous package found in https://github.com/cai
 
 ## Installation
 
-The package can be installed with `pip install .` on this folder.
+The package can be installed with `pip install .` on this folder
+
+You can also use PyPI, `pip install pyequion2`.
 
 ## GUI
 

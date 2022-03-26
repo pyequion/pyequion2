@@ -1,7 +1,7 @@
 Main classes references
 ================================
 
-.. autoclass:: pyequion.EquilibriumSystem
+.. autoclass:: pyequion2.EquilibriumSystem
     :members:
-.. autoclass:: pyequion.InterfaceSystem
+.. autoclass:: pyequion2.InterfaceSystem
     :members:

@@ -17,9 +17,9 @@ sys.path.insert(0, os.path.abspath('..'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'PyEquion'
-copyright = '2021, NIDF-Scaling'
-author = 'NIDF-Scaling'
+project = 'PyEquion2'
+copyright = '2021, PyEquion'
+author = 'PyEquion'
 
 # The full version, including alpha/beta/rc tags
 release = '0.0.6.1'

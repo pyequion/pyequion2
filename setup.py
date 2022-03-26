@@ -3,6 +3,8 @@ import warnings
 from setuptools import setup, find_packages, Extension, dist
 import pathlib
 
+dist.Distribution().fetch_build_eggs(['Cython>=0.15.1', 'numpy>=1.10'])
+
 import numpy
 import numpy as np
 
@@ -51,4 +53,5 @@ except:
         ],
         url="https://github.com/pyequion/pyequion2/",
         python_requires=">=3.6",
+        include_dirs=[numpy.get_include()],
     )

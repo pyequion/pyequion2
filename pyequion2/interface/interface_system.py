@@ -32,6 +32,7 @@ class InterfaceSystem(equilibrium_system.EquilibriumSystem):
 
     def solve_interface_equilibrium(self, TK, molals_bulk,
                                     transport_params,
+                                    PATM=1.0,
                                     tol=1e-12, initial_guesses='default',
                                     transport_model="A"):
         """
@@ -43,10 +44,10 @@ class InterfaceSystem(equilibrium_system.EquilibriumSystem):
         activity_function = self.activity_function
         balance_matrix = self.reduced_formula_matrix
         stoich_matrix = self.stoich_matrix
-        log_equilibrium_constants = self.get_log_equilibrium_constants(TK)
+        log_equilibrium_constants = self.get_log_equilibrium_constants(TK, PATM)
         stoich_matrix_sol_exp = self.solid_stoich_matrix[self._explicit_interface_indexes, :]
         stoich_matrix_sol_imp = self.solid_stoich_matrix[self._implicit_interface_indexes, :]
-        log_solubility_constants = self.get_solid_log_equilibrium_constants(TK)
+        log_solubility_constants = self.get_solid_log_equilibrium_constants(TK, PATM)
         log_solubility_constants_exp = log_solubility_constants[self._explicit_interface_indexes]
         log_solubility_constants_imp = log_solubility_constants[self._implicit_interface_indexes]
         reaction_function_exp = self.explicit_reaction_function
@@ -117,15 +118,15 @@ class InterfaceSystem(equilibrium_system.EquilibriumSystem):
                                                               relative_diffusion_vector)
         return solution, (res, (x, reaction_imp, stability_imp))
 
-    def set_interface_phases(self, phases=None, TK=None, fill_defaults=False):
+    def set_interface_phases(self,
+                             phases=None,
+                             TK=298.15,
+                             PATM=1.0,
+                             fill_defaults=False):
         if phases is None:
-            if TK is None:
-                print("Getting all stable phases at 298.15 K")
-                TK = 298.15
-            else:
-                print("Getting all stable phases at %.2f K" % TK)
+            print("Getting all stable phases at %.2f K and %.2f ATM"%(TK, PATM))
             phases = builder.get_most_stable_phases(
-                self.solid_reactions, TK)
+                self.solid_reactions, TK, PATM)
         indexes = self.get_solid_indexes(phases)
         self.interface_phases = phases
         self.interface_indexes = indexes
@@ -147,7 +148,6 @@ class InterfaceSystem(equilibrium_system.EquilibriumSystem):
             for phase, (fname, args) in interface_functions.SPECIFIC_SOLIDS_MODEL.items():
                 if phase in self.solid_phase_names:
                     reaction_dict[phase] = (fname, args, None)
-        print(reaction_dict)
         self._split_implicit_explicit(reaction_dict)
         self._explicit_flist_reac = []
         self._explicit_dflist_reac = []

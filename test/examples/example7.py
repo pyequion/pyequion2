@@ -26,17 +26,19 @@ def shear_velocity(flow_velocity, pipe_diameter, TK=298.15):
     return np.sqrt(f/8.0)*flow_velocity
 
 
-elements = ['Ca', 'C', 'Na', 'Cl', 'Mg']
+elements = ['Ca', 'C', 'Mg']
 intsys = InterfaceSystem(elements, from_elements=True)
-intsys.set_interface_phases(fill_defaults=True)
-index_map = {el: i for i, el in enumerate(elements)}
-reverse_index_map = {i: el for i, el in enumerate(elements)}
+intsys.set_interface_phases(['Calcite', 'Dolomite'])
 
 TK = 298.15
-pipe_diameter = 0.05 #m
+pipe_diameter = 0.01 #m
 flow_velocity = 1.0
 pipe_length = 80.0 #m
 pipe_time = pipe_length/flow_velocity
+
+co2_flash_value = 0.001
+initial_ca_value = 0.02
+initial_mg_value = 0.01
 
 transport_params = {'type': 'pipe',
                     'shear_velocity': shear_velocity(flow_velocity, pipe_diameter, TK)}
@@ -46,9 +48,9 @@ solution_stats_int = {'res': None, 'x': 'default'}
 def f(t, y):
     global solution_stats
     global solution_stats_int
-    elements_balance = {el: y[index_map[el]] for el in elements}
+    molal_balance = {'Ca': y[0], 'Mg': y[1], 'CO2': co2_flash_value}
     solution, solution_stats = intsys.solve_equilibrium_mixed_balance(TK,
-                                                                      molal_balance=elements_balance,
+                                                                      molal_balance=molal_balance,
                                                                       tol=1e-6,
                                                                       initial_guess=solution_stats['x'])
     molals_bulk = solution.solute_molals
@@ -59,16 +61,12 @@ def f(t, y):
                                                                           initial_guess=solution_stats_int['x'])
     elements_reaction_fluxes = solution_int.elements_reaction_fluxes
     wall_scale = 4/(pipe_diameter*water_properties.water_density(TK))
-    dy = -wall_scale*np.hstack(
-        [elements_reaction_fluxes[reverse_index_map[i]]
-         for i in range(y.shape[0])])
+    dy = -wall_scale*np.array(
+        [elements_reaction_fluxes['Ca'], elements_reaction_fluxes['Mg']])
     return dy
 
 
-initial_elements_balance = {'Ca':0.028, 'C':0.065, 'Na':0.075, 'Cl':0.056, 'Mg':0.02}
-initial_elements_vector = np.hstack([initial_elements_balance[reverse_index_map[i]]
-                                     for i in range(len(initial_elements_balance))])
-
+initial_vector = np.array([initial_ca_value, initial_mg_value])
 start_time = time.time()
-sol = scipy.integrate.solve_ivp(f, (0.0, pipe_time), initial_elements_vector)
+sol = scipy.integrate.solve_ivp(f, (0.0, pipe_time), initial_vector)
 elapsed_time = time.time() - start_time

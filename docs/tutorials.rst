@@ -327,3 +327,212 @@ Of course, by increasing pressure, we can make all of the CO2 gas dissolved agai
 ...                                                                             PATM=PATM)
 >>> solution_high_pressure.gas_molals['CO2(g)']
 1e-200
+
+Example 5 - Transport equilibrium
+---------------------------------
+An important functionality of PyEquion2 is the ability to 
+calculate equilibria in coupled diffusion-reaction systems at 
+interfaces. We first demonstrate the basic syntax in this functionality, 
+and then in the next examples we show two applications. The 
+full explanation of the model used can be found in TEXT.
+
+First, we import the necessary module.
+
+>>> from pyequion2 import InterfaceSystem
+>>> intsys = InterfaceSystem(['Ca', 'C', 'Na', 'Cl', 'Mg'], from_elements=True)
+
+Here, InterfaceSystem inherits from EquilibriumSystem, thus having all the 
+functionalities of its parent class. We then solve a bulk equilibrium.
+
+>>> elements_balance = {'Ca':0.028, 'C':0.065, 'Na':0.075, 'Cl':0.056, 'Mg':0.02}
+>>> TK = 298.15
+>>> solution, solution_stats = intsys.solve_equilibrium_mixed_balance(TK, molal_balance=elements_balance)
+
+Now, from this equilibrium, we can calculate the equilibrium transport at some 
+diffusive/reactive surface. First, we set up our solid reactions
+
+>>> intsys.set_interface_phases()
+>>> molals_bulk = solution.solute_molals
+>>> transport_params = {'type': 'pipe',
+                        'shear_velocity': 0.05}
+
+In the first line, we set up our solid phases at the interface. In 
+not passing any argument, we assume that the most stable solid phase 
+for each compound will be the one precipitating at surface, if it is 
+supersaturated there. For instance, we can check which phases are 
+going to be considered by
+
+>>> intsys.interface_phases
+['Calcite', 'Dolomite', 'Halite']
+
+Next, we get the values of the solute molals at the bulk, so we 
+consider the transport to the surface. Finally, we define the kind of transport
+we are interested in (in this case, a pipe flow with shear velocity of 0.05 m/s)
+
+Finally, we can solve our interface equilibrium.
+
+>>> solution_int, res = intsys.solve_interface_equilibrium(TK,
+...                                                        molals_bulk,
+...                                                        transport_params)
+
+We can then inspect the flux of solid formation at the surface,
+
+>>> solution_int.reaction_fluxes
+{'Aragonite': 0.0,
+ 'Calcite': 0.0011847758387262064,
+ 'Dolomite': 0.002514465853801235,
+ 'Halite': 1e-200,
+ 'Vaterite': 0.0}
+ 
+the corresponding flux of elements (notice that some of them are reactive, 
+due to the increase of the corresponding element in maintaing local thermodynamic
+equilibrium),
+
+>>> solution_int.transport_fluxes
+{'CO2': -2.195876510859801e-06,
+ 'CO3--': 0.0017140194883697559,
+ 'Ca++': 0.0010649319732573606,
+ 'CaCO3': 0.002586944230083052,
+ 'CaHCO3+': 4.6679707750352626e-05,
+ 'CaOH+': 6.857814366765381e-07,
+ 'Cl-': 0.0,
+ 'H+': -3.963201178383444e-10,
+ 'HCO3-': -4.7309531127778806e-05,
+ 'Mg++': 0.0009919544743964446,
+ 'MgCO3': 0.0014404475305928642,
+ 'MgHCO3+': 6.879935653506196e-05,
+ 'MgOH+': 1.3264492276864372e-05,
+ 'Na+': -0.0004119691355775593,
+ 'Na2CO3': 5.351388380819752e-06,
+ 'NaCO3-': 0.00041290482611060334,
+ 'NaHCO3': -1.1933573855193434e-05,
+ 'NaOH': 2.951065605094775e-07,
+ 'OH-': 3.759842968655567e-05}
+ 
+and the flux of elements
+
+>>> solution_int.elements_reaction_fluxes
+{'H': 0.0,
+ 'O': 0.01864112263898603,
+ 'Cl': 1e-200,
+ 'C': 0.0062137075463286765,
+ 'Ca': 0.0036992416925274415,
+ 'Na': 1e-200,
+ 'Mg': 0.002514465853801235}
+
+Next, we use this module to solve a fluid transport problem 
+with reaction at the pipe wall.
+
+Example 6 - Pipe flow of supersaturated solution.
+-------------------------------------------------
+Consider the following setting: a supersatured electrolytical solution 
+enters flows through a pipe, and in the pipe wall, there is heterogeneous nucleation 
+of the corresponding solids. Assume that there is no homogeneous nucleation in our system, 
+so that we can only consider as "sinks" this reactions. It can be shown 
+that there is a corresponding differential equation for the amounts (in molals) 
+of elements along the pipe (letting :math:`t = x/v` be the time of 
+a fluid parcel at the pipe bulk).
+
+.. math::
+   \frac{\partial c_{el}}{\partial t} = -\frac{4}{d \rho} J_{{el}}
+
+Here, :math:`c_{el}` is the concentration of elements in the bulk (in molals), 
+:math:`J_{el}` is the element reaction flux at the pipe wall, 
+:math:`d` is the pipe diameter and :math:`rho` is the water density.
+
+We are ready then to use InterfaceSystem to solve our problem.
+
+First import the necessary modules.
+
+>>> import numpy as np
+>>> import scipy.integrate #For ODE solving
+
+>>> from pyequion2 import InterfaceSystem
+>>> from pyequion2 import water_properties #Collection of a bunch of water properties
+
+Now, we define some functions to calculate the shear velocity of the flow
+
+.. code-block::
+
+   def reynolds_number(flow_velocity, pipe_diameter, TK=298.15): #Dimensionless
+       kinematic_viscosity = water_properties.water_kinematic_viscosity(TK)
+       return flow_velocity*pipe_diameter/kinematic_viscosity
+   
+   
+   def darcy_friction_factor(flow_velocity, pipe_diameter, TK=298.15):
+       reynolds = reynolds_number(flow_velocity, pipe_diameter, TK)
+       if reynolds < 2300:
+           return 64/reynolds
+       else: #Blasius
+           return 0.316*reynolds**(-1./4)
+    
+   def shear_velocity(flow_velocity, pipe_diameter, TK=298.15):
+       f = darcy_friction_factor(flow_velocity, pipe_diameter, TK)
+       return np.sqrt(f/8.0)*flow_velocity
+
+We then define some parameters for our system
+
+.. code-block::
+
+    elements = ['Ca', 'C', 'Na', 'Cl', 'Mg']
+    intsys = InterfaceSystem(elements, from_elements=True)
+    intsys.set_interface_phases()
+    index_map = {el: i for i, el in enumerate(elements)} #For creating the solution vector
+    reverse_index_map = {i: el for i, el in enumerate(elements)} #For creating the solution vector
+    
+    TK = 298.15
+    pipe_diameter = 0.05 #m
+    flow_velocity = 1.0
+    pipe_length = 80.0 #m
+    pipe_time = pipe_length/flow_velocity
+    
+    transport_params = {'type': 'pipe',
+                        'shear_velocity': shear_velocity(flow_velocity, pipe_diameter, TK)}
+
+To increase efficiency of the solver, we will hold the solution of each step as the initial guess 
+of the next step
+
+>>> solution_stats = {'res': None, 'x': 'default'}
+>>> solution_stats_int = {'res': None, 'x': 'default'}
+
+Now we define our right-hand side of our differential equation to be solved.
+
+.. code-block::
+
+    def f(t, y):
+        global solution_stats
+        global solution_stats_int
+        elements_balance = {el: y[index_map[el]] for el in elements}
+        solution, solution_stats = intsys.solve_equilibrium_mixed_balance(TK,
+                                                                          molal_balance=elements_balance,
+                                                                          tol=1e-6,
+                                                                          initial_guess=solution_stats['x'])
+        molals_bulk = solution.solute_molals
+        solution_int, solution_stats_int = intsys.solve_interface_equilibrium(TK,
+                                                                              molals_bulk,
+                                                                              transport_params,
+                                                                              tol=1e-6,
+                                                                              initial_guess=solution_stats_int['x'])
+        elements_reaction_fluxes = solution_int.elements_reaction_fluxes
+        wall_scale = 4/(pipe_diameter*water_properties.water_density(TK))
+        dy = -wall_scale*np.hstack(
+            [elements_reaction_fluxes[reverse_index_map[i]]
+             for i in range(y.shape[0])])
+        return dy
+        
+Notice how most of our function is just a rehearsal of Example 5, 
+along with some diminishing of the solver tolerance for increasing speed, 
+the setting of initial guesses for the solver as the previous solution, 
+and some mapping from our solution vector to dictionaries of elements.
+
+Now, we are ready to set up our ODE solver and solve our system.
+
+.. code-block::
+
+    initial_elements_balance = {'Ca':0.028, 'C':0.065, 'Na':0.075, 'Cl':0.056, 'Mg':0.02}
+    initial_elements_vector = np.hstack([initial_elements_balance[reverse_index_map[i]]
+                                         for i in range(len(initial_elements_balance))])
+
+    start_time = time.time()
+    sol = scipy.integrate.solve_ivp(f, (0.0, pipe_time), initial_elements_vector)
+    elapsed_time = time.time() - start_time

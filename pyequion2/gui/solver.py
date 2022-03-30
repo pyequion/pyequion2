@@ -184,7 +184,7 @@ class SolverGUI(QWidget):
         try:
             if not is_sequence:
                 if self.type_eq == "aqueous":
-                    solution, (res, _) = self.eqsys.solve_equilibrium_mixed_balance(
+                    solution, stats = self.eqsys.solve_equilibrium_mixed_balance(
                                             temperature,
                                             molal_balance,
                                             activity_balance,
@@ -194,12 +194,12 @@ class SolverGUI(QWidget):
                                             closing_equation_value,
                                             pressure)
                 elif self.type_eq == "phase":
-                    solution, (res, _) = self.eqsys.solve_equilibrium_elements_balance_phases(
+                    solution, stats = self.eqsys.solve_equilibrium_elements_balance_phases(
                                             temperature, molal_balance,
                                             PATM=pressure)
             else:
                 if self.type_eq == "aqueous":
-                    solution, (res, _) = self.eqsys.solve_equilibrium_mixed_balance_sequential(
+                    solution, stats = self.eqsys.solve_equilibrium_mixed_balance_sequential(
                                               temperature,
                                               molal_balance,
                                               activity_balance,
@@ -210,7 +210,7 @@ class SolverGUI(QWidget):
                                               pressure,
                                               npoints=npoints)
                 elif self.type_eq == "phase":
-                    solution, (res, _) = self.eqsys.solve_equilibrium_elements_balance_phases_sequential(
+                    solution, stats = self.eqsys.solve_equilibrium_elements_balance_phases_sequential(
                                               temperature, molal_balance,
                                               PATM=pressure,
                                               npoints=npoints)
@@ -224,7 +224,7 @@ class SolverGUI(QWidget):
                                  QMessageBox.Close,
                                  QMessageBox.Close)
             return
-        res_num = np.max(np.abs(np.array(res))) #Valid for both cases
+        res_num = np.max(np.abs(np.array(stats['res']))) #Valid for both cases
         QMessageBox.information(self,
                                 "Calculation successful",
                                 "Calculation successful. "\

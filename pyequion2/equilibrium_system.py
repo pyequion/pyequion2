@@ -21,7 +21,6 @@ ACTIVITY_MODEL_MAP = {
     "PITZER": activity.setup_pitzer,
 }
 
-
 class EquilibriumSystem():
     """
     Class for setting and calculate equilibria
@@ -230,7 +229,8 @@ class EquilibriumSystem():
                                            maxiter=1000,
                                            initial_guess='default'):
         """
-        DEPECRATED: use solve_equilibrium_mixed_balance
+        PARTIALLY DEPRECATED: Use solve_equilibrium_mixed_balance 
+        except when explicitly calculating sequential balance equilibria
         
         Parameters
         ----------
@@ -245,7 +245,7 @@ class EquilibriumSystem():
 
         Returns
         -------
-        SolutionResult object of equilibrium solution and (residual, solution_values) pair
+        SolutionResult object of equilibrium solution and statistics of solver
         """
         assert len(element_balance) == self.nsolelements
         balance_vector = np.array([element_balance[el] for
@@ -281,7 +281,7 @@ class EquilibriumSystem():
                                                   solid_phases=None,
                                                   has_gas_phases=True,
                                                   tol=1e-12, maxiter=1000,
-                                                  initial_guesses='default'):
+                                                  initial_guess='default'):
         """
         Parameters
         ----------
@@ -304,7 +304,7 @@ class EquilibriumSystem():
 
         Returns
         -------
-        SolutionResult object of equilibrium solution and (residual, solution_values) pair
+        SolutionResult object of equilibrium solution and statistics of solver
         """
         balance_vector = np.array([element_balance[el] for
                                    el in self.solute_elements])
@@ -339,20 +339,20 @@ class EquilibriumSystem():
         stoich_matrix_solids = self.solid_stoich_matrix[solid_indexes, :]
         stoich_matrix_gases = self.gas_stoich_matrix[gas_indexes, :]
 
-        if initial_guesses == 'default':
+        if initial_guess == 'default':
             x_guess = np.ones(self.nsolutes)*0.1
             x_guess_solid = np.ones(len(solid_indexes))*0.1
             stability_solid_guess = np.zeros(len(solid_indexes))
             x_guess_gas = np.ones(len(gas_indexes))*0.1
             stability_gas_guess = np.zeros(len(gas_indexes))
-        elif isinstance(initial_guesses, float):
-            x_guess = np.ones(self.nsolutes)*initial_guesses
-            x_guess_solid = np.ones(len(solid_indexes))*initial_guesses
+        elif isinstance(initial_guess, float):
+            x_guess = np.ones(self.nsolutes)*initial_guess
+            x_guess_solid = np.ones(len(solid_indexes))*initial_guess
             stability_solid_guess = np.zeros(len(solid_indexes))
             x_guess_gas = np.ones(len(gas_indexes))*0.1
             stability_gas_guess = np.zeros(len(gas_indexes))
         else:
-            x_guess, x_guess_solid, x_guess_gas, stability_solid_guess, stability_gas_guess = initial_guesses
+            x_guess, x_guess_solid, x_guess_gas, stability_solid_guess, stability_gas_guess = initial_guess
 
         molals, molals_solids, molals_gases, stability_solids, stability_gases, res = \
             eqsolver.solve_equilibrium_xlma_2(
@@ -380,7 +380,10 @@ class EquilibriumSystem():
                                       molals_solids, solid_phases,
                                       molals_gases, gas_phases,
                                       PATM=PATM)
-        return sol, (res, (molals, molals_solids, molals_gases, stability_solids, stability_gases))
+        stats = dict()
+        stats['res'] = res
+        stats['x'] = (molals, molals_solids, molals_gases, stability_solids, stability_gases)
+        return sol, stats
 
     def solve_equilibrium_elements_balance_phases_sequential(self,
                                                              TK, element_balance,
@@ -388,7 +391,7 @@ class EquilibriumSystem():
                                                              solid_phases=None,
                                                              has_gas_phases=True,
                                                              tol=1e-12, maxiter=1000,
-                                                             initial_guesses='default',
+                                                             initial_guess='default',
                                                              npoints=20):
         """
         Parameters
@@ -420,16 +423,17 @@ class EquilibriumSystem():
         residuals = []
         iterator = zip(TK_list, PATM_list, element_balance_list)
         for (TK, PATM, element_balance) in iterator:
-            solution, (res, initial_guesses) = self.solve_equilibrium_elements_balance_phases(
+            solution, stats = self.solve_equilibrium_elements_balance_phases(
                                               TK, element_balance,
                                               PATM,
                                               solid_phases,
                                               has_gas_phases,
                                               tol, maxiter,
-                                              initial_guesses)
+                                              initial_guess)
+            initial_guess = stats['x']
             solutions.append(solution)
-            residuals.append(res)
-        return solutions, (res, initial_guesses)
+            residuals.append(stats['res'])
+        return solutions, residuals
 
     def solve_equilibrium_mixed_balance(self, TK, molal_balance=None,
                                         activities_balance=None,
@@ -470,7 +474,7 @@ class EquilibriumSystem():
 
         Returns
         -------
-        SolutionResult object of equilibrium solution and (residual, solution_values) pair
+        SolutionResult object of equilibrium solution and statistics of solver
 
         """
         
@@ -574,7 +578,7 @@ class EquilibriumSystem():
         for (TK, molal_balance, activities_balance, molal_balance_log, 
              activities_balance_log, closing_equation_value, PATM) in iterator:
             
-            solution, (res, initial_guess) = \
+            solution, stats = \
                 self.solve_equilibrium_mixed_balance(TK,
                                                      molal_balance,
                                                      activities_balance,
@@ -585,9 +589,10 @@ class EquilibriumSystem():
                                                      PATM,
                                                      tol, maxiter,
                                                      initial_guess)
+            initial_guess = stats['x']
             solutions.append(solution)
-            residuals.append(res)
-        return solutions, (res, initial_guess)
+            residuals.append(stats['res'])
+        return solutions, stats
     
     def solve_equilibrium_balance(self,
                                   balance_vector,
@@ -623,7 +628,7 @@ class EquilibriumSystem():
             Initial guess for solver. If 'default', is chosen as 0.1 for each specie
         Returns
         -------
-        SolutionResult object of equilibrium solution and (residual, solution_values) pair
+        SolutionResult object of equilibrium solution and statistics of solver
 
         """
         log_equilibrium_constants = \
@@ -649,7 +654,10 @@ class EquilibriumSystem():
             mask,
             mask_log,
             tol=tol)
-        return solution.SolutionResult(self, x, TK, PATM=PATM), (res, x)
+        stats = dict()
+        stats['res'] = res
+        stats['x'] = x
+        return solution.SolutionResult(self, x, TK, PATM=PATM), stats
 
     @property
     def elements(self):

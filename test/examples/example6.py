@@ -40,17 +40,23 @@ pipe_time = pipe_length/flow_velocity
 
 transport_params = {'type': 'pipe',
                     'shear_velocity': shear_velocity(flow_velocity, pipe_diameter, TK)}
+solution_stats = {'res': None, 'x': 'default'}
+solution_stats_int = {'res': None, 'x': 'default'}
 
 def f(t, y):
+    global solution_stats
+    global solution_stats_int
     elements_balance = {el: y[index_map[el]] for el in elements}
-    solution, solution_stats = intsys.solve_equilibrium_mixed_balance(TK,
-                                                                      molal_balance=elements_balance,
-                                                                      tol=1e-6)
+    solution, solution_stats = intsys.solve_equilibrium_elements_balance(TK,
+                                                                         elements_balance,
+                                                                         tol=1e-6,
+                                                                         initial_guess=solution_stats['x'])
     molals_bulk = solution.solute_molals
     solution_int, solution_stats_int = intsys.solve_interface_equilibrium(TK,
                                                                           molals_bulk,
                                                                           transport_params,
-                                                                          tol=1e-6)
+                                                                          tol=1e-6,
+                                                                          initial_guess=solution_stats_int['x'])
     elements_reaction_fluxes = solution_int.elements_reaction_fluxes
     dy = -4/pipe_diameter*np.hstack(
         [elements_reaction_fluxes[reverse_index_map[i]]

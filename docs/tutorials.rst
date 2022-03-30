@@ -78,12 +78,14 @@ We are then ready to calculate our electrolytical balance using the *solve_equil
 >>> solution, solution_stats = eqsys.solve_equilibrium_mixed_balance(TK, molal_balance=molal_balance, PATM=PATM)
 
 We also return *solution_stats* for inspection of the performance of the solver.
-Here, the first item is the solution_stats is residual of the solution, that 
-can be analyzed as an error metric
+Here, solution_stats is a dict with residual of the solution (solution_stats['res']),
+that can be analyzed as an error metric. Also, solution stats has the 'x' attribute,
+which is the numerical solution of molals (and other variables), that can be used as
+initial guess for repeated calculation.
 
 >>> import numpy as np
->>> residual = solution_stats[0]
->>> np.max(np.abs(solution_stats[0]))
+>>> residual = solution_stats['res']
+>>> np.max(np.abs(solution_stats['res']))
 7.513989430663059e-13
 
 As for the *solution* object, it is an instance of *SolutionClass*, that contains 
@@ -238,7 +240,7 @@ We are now ready to calculate the electrolytical balance
 Inspect the residual of our solution
 
 >>> import numpy as np
->>> np.max(np.abs(solution_stats[0]))
+>>> np.max(np.abs(solution_stats['res']))
 8.505418591653324e-13
 
 Check the pH of our solution is correct

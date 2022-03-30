@@ -33,7 +33,7 @@ class InterfaceSystem(equilibrium_system.EquilibriumSystem):
     def solve_interface_equilibrium(self, TK, molals_bulk,
                                     transport_params,
                                     PATM=1.0,
-                                    tol=1e-12, initial_guesses='default',
+                                    tol=1e-12, initial_guess='default',
                                     transport_model="A"):
         """
         TK: float
@@ -55,20 +55,20 @@ class InterfaceSystem(equilibrium_system.EquilibriumSystem):
         
         molals_bulk_ = np.array([molals_bulk[k] for k in self.solutes])
 
-        if initial_guesses == 'default':
+        if initial_guess == 'default':
             x_guess = np.ones(self.nsolutes)*0.1
             reaction_imp_guess = np.ones(len(self._implicit_interface_indexes))*0.1
             stability_imp_guess = np.zeros(len(self._implicit_interface_indexes))
-        elif initial_guesses == 'bulk':
+        elif initial_guess == 'bulk':
             x_guess = molals_bulk_.copy()
             reaction_imp_guess = np.ones(len(self._implicit_interface_indexes))*0.1
             stability_imp_guess = np.zeros(len(self._implicit_interface_indexes))
-        elif isinstance(initial_guesses, float):
-            x_guess = np.ones(self.nsolutes)*initial_guesses
-            reaction_imp_guess = np.ones(len(self._implicit_interface_indexes))*initial_guesses
+        elif isinstance(initial_guess, float):
+            x_guess = np.ones(self.nsolutes)*initial_guess
+            reaction_imp_guess = np.ones(len(self._implicit_interface_indexes))*initial_guess
             stability_imp_guess = np.zeros(len(self._implicit_interface_indexes))
         else:
-            x_guess, reaction_imp_guess, stability_imp_guess = initial_guesses
+            x_guess, reaction_imp_guess, stability_imp_guess = initial_guess
         
         if transport_model == "A":
             transport_constant = self._get_transport_vector_a(transport_params, TK)
@@ -108,7 +108,6 @@ class InterfaceSystem(equilibrium_system.EquilibriumSystem):
                                                              relative_diffusion_vector,
                                                              reaction_function_exp,
                                                              reaction_function_derivative_exp)
-
         solution = interface_solution.InterfaceSolutionResult(self,
                                                               x,
                                                               TK,
@@ -116,7 +115,10 @@ class InterfaceSystem(equilibrium_system.EquilibriumSystem):
                                                               transport_constant,
                                                               reaction_imp,
                                                               relative_diffusion_vector)
-        return solution, (res, (x, reaction_imp, stability_imp))
+        stats = dict()
+        stats['res'] = res
+        stats['x'] = (x, reaction_imp, stability_imp)
+        return solution, stats
 
     def set_interface_phases(self,
                              phases=None,

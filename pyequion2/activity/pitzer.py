@@ -11,6 +11,7 @@ try:
     from .pitzer_sanity_assertions import make_sanity_assertions
     make_sanity_assertions()
     from .coo_tensor_ops import coo_tensor_ops
+    from . import py_coo_tensor_ops
 except (ImportError, AssertionError): #Some import error. Use pythonized way
     warnings.warn("Problem with Cython import. Using pure python operation.")
     from . import py_coo_tensor_ops as coo_tensor_ops
@@ -41,8 +42,9 @@ def setup_pitzer(solutes, calculate_osmotic_coefficient=False):
                           PSI_=PSI, PSI_inds=PSI_inds,
                           LAMBDA_=LAMBDA, LAMBDA_inds=LAMBDA_inds)
 
-    def g(xarray, TK): return constants.LOG10E * \
-        f(xarray, TK)  # ln(gamma) to log10(gamma)
+    def g(xarray, TK):
+        # ln(gamma) to log10(gamma)
+        return constants.LOG10E * f(xarray, TK)
     return g
 
 
@@ -100,6 +102,8 @@ def loggamma_and_osmotic(carray, T, zarray,
     F_1 = A*f_debye(sqrtI)
     F_21 = 0.5*coo_tensor_ops.coo_matrix_vector_vector(
         B1*gprime(alpha1*sqrtI)/I, B1_inds, dim_matrices, carray, carray)
+    F_21_py = 0.5*py_coo_tensor_ops.coo_matrix_vector_vector(
+        B1*gprime(alpha1*sqrtI)/I, B1_inds, dim_matrices, carray, carray)
     F_22 = 0.5*coo_tensor_ops.coo_matrix_vector_vector(
         B2*gprime(alpha2*sqrtI)/I, B2_inds, dim_matrices, carray, carray)
     F_31 = 0.5*coo_tensor_ops.coo_matrix_vector_vector(
@@ -129,7 +133,6 @@ def loggamma_and_osmotic(carray, T, zarray,
         LAMBDA, LAMBDA_inds, dim_matrices, carray)
     res4 = sum_41
     logg = res1 + res2 + res3 + res4  # res1 + res2 + res3 + res4
-
     #B + I*Bprime
     #B = B0 + B1*g(alpha1*sqrtI) + B2*g(alpha*sqrtI)
     #Bprime = (B1*gprime(alpha1*sqrtI) + B2*gprime(alpha2*sqrtI))/I

@@ -26,7 +26,7 @@ def coo_matrix_vector_vector(double[:] A_data, int[:,:] A_inds, int[:] A_shape,
     assert A_shape[0] == b1.shape[0]
     assert A_shape[1] == b2.shape[0]
         
-    cdef double result
+    cdef double result = 0.0
     cdef Py_ssize_t i
     cdef Py_ssize_t imax = A_data.shape[0]
     
@@ -67,7 +67,7 @@ def coo_tensor_vector_vector_vector(double[:] A_data, int[:,:] A_inds, int[:] A_
     assert A_shape[1] == b2.shape[0]
     assert A_shape[2] == b3.shape[0]
         
-    cdef double result
+    cdef double result = 0.0
     cdef Py_ssize_t i
     cdef Py_ssize_t imax = A_data.shape[0]
     

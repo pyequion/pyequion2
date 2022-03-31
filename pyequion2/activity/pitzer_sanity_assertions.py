@@ -6,7 +6,7 @@ def make_sanity_assertions():
     from .coo_tensor_ops import coo_tensor_ops
     from . import py_coo_tensor_ops
     
-    for i in range(10):
+    for i in range(2):
         n = 50 + 20*i
         A_data = np.random.randn(n).astype(np.double)
         A_inds = np.random.randint(n, size=(n,2), dtype=np.intc)

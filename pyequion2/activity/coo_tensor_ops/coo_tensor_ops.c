@@ -2671,7 +2671,7 @@ static PyObject *__pyx_pf_9pyequion2_8activity_14coo_tensor_ops_14coo_tensor_ops
  *     assert A_shape[0] == b1.shape[0]
  *     assert A_shape[1] == b2.shape[0]             # <<<<<<<<<<<<<<
  * 
- *     cdef double result
+ *     cdef double result = 0.0
  */
   #ifndef CYTHON_WITHOUT_ASSERTIONS
   if (unlikely(!Py_OptimizeFlag)) {
@@ -2692,8 +2692,17 @@ static PyObject *__pyx_pf_9pyequion2_8activity_14coo_tensor_ops_14coo_tensor_ops
   }
   #endif
 
+  /* "pyequion2/activity/coo_tensor_ops/coo_tensor_ops.pyx":29
+ *     assert A_shape[1] == b2.shape[0]
+ * 
+ *     cdef double result = 0.0             # <<<<<<<<<<<<<<
+ *     cdef Py_ssize_t i
+ *     cdef Py_ssize_t imax = A_data.shape[0]
+ */
+  __pyx_v_result = 0.0;
+
   /* "pyequion2/activity/coo_tensor_ops/coo_tensor_ops.pyx":31
- *     cdef double result
+ *     cdef double result = 0.0
  *     cdef Py_ssize_t i
  *     cdef Py_ssize_t imax = A_data.shape[0]             # <<<<<<<<<<<<<<
  * 
@@ -3467,7 +3476,7 @@ static PyObject *__pyx_pf_9pyequion2_8activity_14coo_tensor_ops_14coo_tensor_ops
  *     assert A_shape[1] == b2.shape[0]
  *     assert A_shape[2] == b3.shape[0]             # <<<<<<<<<<<<<<
  * 
- *     cdef double result
+ *     cdef double result = 0.0
  */
   #ifndef CYTHON_WITHOUT_ASSERTIONS
   if (unlikely(!Py_OptimizeFlag)) {
@@ -3488,8 +3497,17 @@ static PyObject *__pyx_pf_9pyequion2_8activity_14coo_tensor_ops_14coo_tensor_ops
   }
   #endif
 
+  /* "pyequion2/activity/coo_tensor_ops/coo_tensor_ops.pyx":70
+ *     assert A_shape[2] == b3.shape[0]
+ * 
+ *     cdef double result = 0.0             # <<<<<<<<<<<<<<
+ *     cdef Py_ssize_t i
+ *     cdef Py_ssize_t imax = A_data.shape[0]
+ */
+  __pyx_v_result = 0.0;
+
   /* "pyequion2/activity/coo_tensor_ops/coo_tensor_ops.pyx":72
- *     cdef double result
+ *     cdef double result = 0.0
  *     cdef Py_ssize_t i
  *     cdef Py_ssize_t imax = A_data.shape[0]             # <<<<<<<<<<<<<<
  * 

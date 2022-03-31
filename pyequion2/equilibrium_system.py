@@ -478,7 +478,6 @@ class EquilibriumSystem():
 
         """
         
-        
         molal_balance = _none_to_dict(molal_balance)
         activities_balance = _none_to_dict(activities_balance)
         molal_balance_log = _none_to_dict(molal_balance_log)

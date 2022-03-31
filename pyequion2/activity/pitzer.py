@@ -8,15 +8,17 @@ import warnings
 import numpy as np
 
 try:
+    from .pitzer_sanity_assertions import make_sanity_assertions
+    make_sanity_assertions()
     from .coo_tensor_ops import coo_tensor_ops
-except: #Some import error. Use pythonized way
+except (ImportError, AssertionError): #Some import error. Use pythonized way
     warnings.warn("Problem with Cython import. Using pure python operation.")
     from . import py_coo_tensor_ops as coo_tensor_ops
 from .. import utils
 from .. import constants
 from .. import datamods
 
-
+    
 def setup_pitzer(solutes, calculate_osmotic_coefficient=False):
     property_dict = make_pitzer_dictionary()
     B0, B0_inds = make_parameter_matrix(solutes, 'B0', property_dict)
@@ -53,7 +55,6 @@ def loggamma_and_osmotic(carray, T, zarray,
                          THETA_, THETA_inds,
                          PSI_, PSI_inds,
                          LAMBDA_, LAMBDA_inds):
-
     temp_vector = temperature_vector(T)
     B0 = np.sum(temp_vector*B0_, axis=-1)
     B1 = np.sum(temp_vector*B1_, axis=-1)

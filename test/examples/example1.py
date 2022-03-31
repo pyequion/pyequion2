@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from pyequion2 import EquilibriumSystem #Import the necessary module
-eqsys = EquilibriumSystem(['CaCl2', 'NaHCO3']) #We set up the feed components of our system
+import pyequion2
+eqsys = pyequion2.EquilibriumSystem(['CaCl2', 'NaHCO3']) #We set up the feed components of our system
 molal_balance = {'Ca':0.028, 'C':0.065, 'Na':0.065, 'Cl':0.056} #Set up the balances
 TK = 298.15 #Temperature in Kelvin
 PATM = 1.0 #Pressure in atm

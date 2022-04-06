@@ -66,7 +66,7 @@ class SolutionResult():
         self.solid_stoich_matrix = equilibrium_system.solid_stoich_matrix
         self.gas_formula_matrix = equilibrium_system.gas_formula_matrix
         self.gas_stoich_matrix = equilibrium_system.gas_stoich_matrix
-        self._logsatur = \
+        self._logsatur, self._logks = \
             self._build_saturation_indexes()
     
     def getlog(self):
@@ -129,6 +129,11 @@ class SolutionResult():
     @property
     def saturations(self):
         return {k:10**v for k, v in self.saturation_indexes.items()}
+    
+    @property
+    def solubilities(self):
+        return {self.solid_phase_names[i]: 10**self._logks[i]
+                for i in range(len(self._logks))}
     
     @property
     def ionic_strength(self):
@@ -208,7 +213,7 @@ class SolutionResult():
         logiap = solid_stoich_matrix@logacts
         logks = builder.get_log_equilibrium_constants(solid_reactions, TK, PATM)
         logsatur = logiap - logks
-        return logsatur
+        return logsatur, logks
     
     @property
     def _extended_x_molal(self):

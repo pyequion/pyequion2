@@ -433,7 +433,8 @@ class EquilibriumSystem():
             initial_guess = stats['x']
             solutions.append(solution)
             residuals.append(stats['res'])
-        return solutions, residuals
+        stats = {'res': residuals}
+        return solutions, stats
 
     def solve_equilibrium_mixed_balance(self, TK, molal_balance=None,
                                         activities_balance=None,
@@ -591,6 +592,7 @@ class EquilibriumSystem():
             initial_guess = stats['x']
             solutions.append(solution)
             residuals.append(stats['res'])
+        stats = {'res': residuals}
         return solutions, stats
     
     def solve_equilibrium_balance(self,

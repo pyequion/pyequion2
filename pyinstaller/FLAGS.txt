@@ -2,5 +2,5 @@
 --onedir or --onefile
 --additional-hooks-dir .hook
 
-pyinstaller --noconfirm --onefile --additional-hooks-dir .hook pyequiongui.py
-pyinstaller --noconfirm --onedir --additional-hooks-dir .hook pyequiongui.py
+pyinstaller --noconfirm --onefile --additional-hooks-dir hook pyequiongui.py
+pyinstaller --noconfirm --onedir --additional-hooks-dir hook pyequiongui.py

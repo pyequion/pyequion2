@@ -430,6 +430,14 @@ class EquilibriumSystem():
                                               has_gas_phases,
                                               tol, maxiter,
                                               initial_guess)
+            if np.abs(np.max(stats['res'])) > 1e-3: #Try again
+                solution, stats = self.solve_equilibrium_elements_balance_phases(
+                                                  TK, element_balance,
+                                                  PATM,
+                                                  solid_phases,
+                                                  has_gas_phases,
+                                                  tol, maxiter,
+                                                  "default")
             initial_guess = stats['x']
             solutions.append(solution)
             residuals.append(stats['res'])

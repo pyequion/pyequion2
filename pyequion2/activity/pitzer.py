@@ -102,8 +102,6 @@ def loggamma_and_osmotic(carray, T, zarray,
     F_1 = A*f_debye(sqrtI)
     F_21 = 0.5*coo_tensor_ops.coo_matrix_vector_vector(
         B1*gprime(alpha1*sqrtI)/I, B1_inds, dim_matrices, carray, carray)
-    F_21_py = 0.5*py_coo_tensor_ops.coo_matrix_vector_vector(
-        B1*gprime(alpha1*sqrtI)/I, B1_inds, dim_matrices, carray, carray)
     F_22 = 0.5*coo_tensor_ops.coo_matrix_vector_vector(
         B2*gprime(alpha2*sqrtI)/I, B2_inds, dim_matrices, carray, carray)
     F_31 = 0.5*coo_tensor_ops.coo_matrix_vector_vector(

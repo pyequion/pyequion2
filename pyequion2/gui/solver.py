@@ -224,9 +224,6 @@ class SolverGUI(QWidget):
                                  QMessageBox.Close,
                                  QMessageBox.Close)
             return
-        print(stats)
-        print('ok')
-        print('--')
         res_num = np.max(np.abs(np.array(stats['res']))) #Valid for both cases
         QMessageBox.information(self,
                                 "Calculation successful",

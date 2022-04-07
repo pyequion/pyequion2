@@ -8,3 +8,5 @@ PATM = 1.0 #Pressure in atm
 #Returns the solution class (the second argument are solver statistics, no need for understanding now)
 solution, solution_stats = eqsys.solve_equilibrium_elements_balance_phases(TK,
                                                                            molal_balance)
+print(solution.solid_molals)
+print(solution_stats)

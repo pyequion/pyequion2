@@ -29,7 +29,7 @@ class PyEquionGUI(QMainWindow):
     
     def initializeUI(self):
         self.setGeometry(100, 100, 900, 600)
-        self.setWindowTitle('PyEquion GUI')
+        self.setWindowTitle('PyEquion2 GUI')
         self.setCentralWidget(WelcomeWidget(self))
         self.create_menu()
         self.tabWidget = None
@@ -73,7 +73,7 @@ class PyEquionGUI(QMainWindow):
         Display a QMessageBox when asking the user if they want to 
         quit the program. 
         """
-        answer = QMessageBox.question(self, "Quit PyEquion?",
+        answer = QMessageBox.question(self, "Quit PyEquion2?",
             "Are you sure you want to Quit?", QMessageBox.No | QMessageBox.Yes, 
             QMessageBox.Yes)
         if answer == QMessageBox.Yes:
@@ -156,7 +156,7 @@ class WelcomeWidget(QWidget):
     
     def initializeUI(self):
         self.main_layout = QVBoxLayout(self)
-        welcome_label = QLabel("Welcome to PyEquion GUI.")
+        welcome_label = QLabel("Welcome to PyEquion2 GUI.")
         welcome_label.setAlignment(Qt.AlignCenter)
         logo_label = QLabel()
         logo_label.setPixmap(QPixmap("./images/pyequion_logo.png"))
@@ -189,7 +189,7 @@ LICENSE_MESSAGE = \
 """\
 BSD 3-Clause License
 
-Copyright (c) 2021, PyEquIon.
+Copyright (c) 2021, PyEquion.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

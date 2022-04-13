@@ -133,13 +133,13 @@ class SolverGUI(QWidget):
         self.solid_phases_button.clicked.connect(self.set_solid_phases)
         
         sequencer_hbox = QHBoxLayout()
-        self.sequencer_checkbox = QCheckBox("Calculate sequence")
-        self.sequencer_checkbox.setLayoutDirection(Qt.RightToLeft)
-        sequencer_number_points_label = QLabel(" "*5 + "Number of points")
+        #self.sequencer_checkbox = QCheckBox("Calculate sequence")
+        #self.sequencer_checkbox.setLayoutDirection(Qt.RightToLeft)
+        sequencer_number_points_label = QLabel("Number of points")
         self.sequencer_number_points_spinbox = QSpinBox()
-        self.sequencer_number_points_spinbox.setMinimum(1)
-        self.sequencer_number_points_spinbox.setValue(10)
-        sequencer_hbox.addWidget(self.sequencer_checkbox)
+        self.sequencer_number_points_spinbox.setMinimum(2)
+        self.sequencer_number_points_spinbox.setValue(11)
+        #sequencer_hbox.addWidget(self.sequencer_checkbox)
         sequencer_hbox.addWidget(sequencer_number_points_label)
         sequencer_hbox.addWidget(self.sequencer_number_points_spinbox)        
         
@@ -169,8 +169,8 @@ class SolverGUI(QWidget):
         self.eqsys.set_activity_functions(activity_function, water_activity)
         
     def calculate_equilibrium(self):
-        is_sequence = self.sequencer_checkbox.isChecked()
-        npoints = self.sequencer_number_points_spinbox.value() if is_sequence else None
+        #is_sequence = self.sequencer_checkbox.isChecked()
+        #npoints = self.sequencer_number_points_spinbox.value() if is_sequence else None
         try:
             molal_balance, activity_balance, \
             molal_balance_log, activity_balance_log = self.get_balances()
@@ -179,6 +179,8 @@ class SolverGUI(QWidget):
             closing_equation, closing_equation_value = self.get_closing_conditions()
             pairs = self.get_pairs(molal_balance, activity_balance, molal_balance_log, activity_balance_log,
                                    temperature, pressure, closing_equation, closing_equation_value)
+            is_sequence = len(pairs) > 0
+            npoints = self.sequencer_number_points_spinbox.value() if is_sequence else None
         except EquilibriumCreationError:
             return
         solver_log = logmaker.make_solver_log(

@@ -46,7 +46,8 @@ class InitializerGUI(QWidget):
         self.create_button.clicked.connect(self.create_equilibrium)
         equilibrium_type_label = QLabel("Equilibrium type:")
         self.equilibrium_type_cb = QComboBox()
-        self.equilibrium_type_cb.addItems(["Aqueous equilibrium", "Phase equilibrium"])
+        self.equilibrium_type_cb.addItems(["Aqueous equilibrium"])
+        #self.equilibrium_type_cb.addItems(["Aqueous equilibrium", "Phase equilibrium"])
         
         main_grid.addWidget(elements_label, 0, 0, 1, 2)
         main_grid.addWidget(self.elements_inserter, 1, 0, 1, 2)

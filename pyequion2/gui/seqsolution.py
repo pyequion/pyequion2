@@ -322,12 +322,11 @@ class PlotWidget(FigureCanvasQTAgg):
             n = len(x)
             xbase = np.linspace(base_pair.bounds[0], base_pair.bounds[1], n)
             self.axes.cla()
-            self.axes.plot(xbase, x)
+            self.axes.plot(xbase, x, 'o')
             self.axes.set_xlabel("{0} [{1}]".format(base_pair.name, base_pair.unit))
             for i, pair in enumerate(other_pairs, start=2):
                 name = "{0} [{1}]".format(pair.name, pair.unit)
                 bounds = pair.bounds
-                print(bounds, name, i)
                 self.add_secondary_axis(bounds, name, i)
     
     def add_secondary_axis(self, bounds, name=None, n=2):

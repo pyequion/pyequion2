@@ -173,6 +173,8 @@ class WelcomeWidget(QWidget):
         self.main_layout.addWidget(self.start_button)
         self.main_layout.addWidget(self.load_button)
         self.main_layout.addWidget(self.license_button)
+
+        self.show_license()
         
     def initialize(self):
         self.parent().initialize()

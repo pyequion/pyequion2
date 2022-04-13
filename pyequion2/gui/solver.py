@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import (QApplication, QWidget, QLabel,
                              QPushButton, QCheckBox,
                              QGridLayout, QVBoxLayout,
                              QHBoxLayout, QMessageBox,
-                             QComboBox, QSpinBox)
+                             QComboBox, QSpinBox, QTextEdit)
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt
 
@@ -28,6 +28,7 @@ class SolverGUI(QWidget):
         self.parent_ = parent #TODO: There must be some PyQt actual solution
         self.eqsys = eqsys
         self.type_eq = type_eq
+        self.solid_phases = None
         self.initializeUI()
     
     def initializeUI(self):
@@ -127,6 +128,9 @@ class SolverGUI(QWidget):
         self.closing_equation_cbox.addItems(["Electroneutrality"]) #TODO: Add others
         closing_equation_hbox.addWidget(closing_equation_label)
         closing_equation_hbox.addWidget(self.closing_equation_cbox)
+
+        self.solid_phases_button = QPushButton("Set solid phases")
+        self.solid_phases_button.clicked.connect(self.set_solid_phases)
         
         sequencer_hbox = QHBoxLayout()
         self.sequencer_checkbox = QCheckBox("Calculate sequence")
@@ -143,6 +147,8 @@ class SolverGUI(QWidget):
         self.calculate_button.clicked.connect(self.calculate_equilibrium)
         components_layout.addLayout(comps_vbox)
         components_layout.addLayout(closing_equation_hbox)
+        if self.type_eq == "phase":
+            components_layout.addWidget(self.solid_phases_button)
         components_layout.addLayout(sequencer_hbox)
         components_layout.addStretch()
         components_layout.setContentsMargins(25, 5, 5, 5)
@@ -196,6 +202,7 @@ class SolverGUI(QWidget):
                 elif self.type_eq == "phase":
                     solution, stats = self.eqsys.solve_equilibrium_elements_balance_phases(
                                             temperature, molal_balance,
+                                            solid_phases=self.solid_phases,
                                             PATM=pressure)
             else:
                 if self.type_eq == "aqueous":
@@ -213,6 +220,7 @@ class SolverGUI(QWidget):
                     solution, stats = self.eqsys.solve_equilibrium_elements_balance_phases_sequential(
                                               temperature, molal_balance,
                                               PATM=pressure,
+                                              solid_phases=self.solid_phases,
                                               npoints=npoints)
 
         except: #Generic something happened
@@ -236,7 +244,11 @@ class SolverGUI(QWidget):
         else:
             solution_gui = SeqSolutionGUI(solution, solver_log, self.type_eq, pairs, self.parent_)
         self.create_new_gui(solution_gui)
-        
+
+    def set_solid_phases(self):
+        self.solid_gui = SolidPhasesGUI(self)
+        #self.solid_gui.show()
+    
     #FIXME: in get_balances, get_temperature and get_pressure there is severe boilerplating
     def get_balances(self):
         molal_balance = dict()
@@ -387,3 +399,55 @@ class SolverGUI(QWidget):
     @property
     def has_parent(self):
         return self.parent_ is not None
+
+
+class SolidPhasesGUI(QWidget):
+    def __init__(self, parent=None):
+        super().__init__()
+        self.parent_ = parent #TODO: There must be some PyQt actual solution
+        self.initializeUI()
+    
+    def initializeUI(self):
+        self.setGeometry(100, 100, 300, 300)
+        self.setWindowTitle('Solid phases')
+        self.setupWidgets()
+        self.show()
+
+    def setupWidgets(self):
+        main_layout = QVBoxLayout()
+        elements_label = QLabel("Solid phases")
+        self.inserter = QTextEdit()
+        placeholder_text = "Set every solid phase in a row. Possible solids : \n"
+        placeholder_text += "\n".join(self.parent_.eqsys.solid_phase_names)
+        self.inserter.setPlaceholderText(placeholder_text)
+        self.ok_button = QPushButton("Ok")
+        self.ok_button.clicked.connect(self.accept)
+        main_layout.addWidget(elements_label)
+        main_layout.addWidget(self.inserter)
+        main_layout.addWidget(self.ok_button)
+        self.setLayout(main_layout)
+        
+    def accept(self):
+        solid_phases = [s.strip() for s in self.inserter.toPlainText().strip('\n').split('\n')]
+        for s in solid_phases:
+            if s not in self.parent_.eqsys.solid_phase_names:
+                QMessageBox.critical(self, 
+                                     "Non valid solid",
+                                     "%s is not a possible solid. "%s + \
+                                     "Setting solid phases automatically",
+                                     QMessageBox.Close,
+                                     QMessageBox.Close)
+                solid_phases = []
+                break
+        QMessageBox.information(self,
+                                "Solid phases setted.",
+                                "Solid phases setted.",
+                                QMessageBox.Ok,
+                                QMessageBox.Ok)
+
+        if len(solid_phases) == 0:
+            self.parent_.solid_phases = None
+        else:
+            self.parent_.solid_phases = solid_phases
+        print(self.parent_.solid_phases)
+    

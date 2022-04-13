@@ -5,7 +5,7 @@
     "distutils": {
         "name": "pyequion2.activity.coo_tensor_ops.coo_tensor_ops",
         "sources": [
-            "/home/dfnaiff/Danilo/NIDF/Projects/PyEquion2/pyequion/pyequion2/activity/coo_tensor_ops/coo_tensor_ops.pyx"
+            "C:\\Users\\danil\\Programs\\pyequion2\\pyequion2\\activity\\coo_tensor_ops\\coo_tensor_ops.pyx"
         ]
     },
     "module_name": "pyequion2.activity.coo_tensor_ops.coo_tensor_ops"
@@ -908,7 +908,7 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "pyequion2/activity/coo_tensor_ops/coo_tensor_ops.pyx",
+  "pyequion2\\activity\\coo_tensor_ops\\coo_tensor_ops.pyx",
   "stringsource",
 };
 /* MemviewSliceStruct.proto */
@@ -1953,7 +1953,7 @@ static const char __pyx_k_Out_of_bounds_on_buffer_access_a[] = "Out of bounds on
 static const char __pyx_k_Unable_to_convert_item_to_object[] = "Unable to convert item to object";
 static const char __pyx_k_got_differing_extents_in_dimensi[] = "got differing extents in dimension %d (got %d and %d)";
 static const char __pyx_k_no_default___reduce___due_to_non[] = "no default __reduce__ due to non-trivial __cinit__";
-static const char __pyx_k_pyequion2_activity_coo_tensor_op[] = "pyequion2/activity/coo_tensor_ops/coo_tensor_ops.pyx";
+static const char __pyx_k_pyequion2_activity_coo_tensor_op[] = "pyequion2\\activity\\coo_tensor_ops\\coo_tensor_ops.pyx";
 static const char __pyx_k_unable_to_allocate_shape_and_str[] = "unable to allocate shape and strides.";
 static const char __pyx_k_pyequion2_activity_coo_tensor_op_2[] = "pyequion2.activity.coo_tensor_ops.coo_tensor_ops";
 static PyObject *__pyx_n_s_ASCII;

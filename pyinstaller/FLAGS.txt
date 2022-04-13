@@ -1,6 +1,6 @@
---noconfirm
---onedir or --onefile
---additional-hooks-dir .hook
+COMPILATION INSTRUCTIONS
 
-pyinstaller --noconfirm --onefile --additional-hooks-dir hook pyequiongui.py
-pyinstaller --noconfirm --onedir --additional-hooks-dir hook pyequiongui.py
+1 - Install pyinstaller from pip
+2 - Make sure you can run (possibly in an environment) "python pyequiongui.py" on this folder
+3 - Run on this folder:
+	pyinstaller --noconfirm --onefile --additional-hooks-dir hook pyequiongui.py

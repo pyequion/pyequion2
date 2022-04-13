@@ -3,6 +3,7 @@ import time
 
 import numpy as np
 import scipy.integrate
+import matplotlib.pyplot as plt
 
 from pyequion2 import InterfaceSystem
 from pyequion2 import water_properties
@@ -68,5 +69,13 @@ def f(t, y):
 
 initial_vector = np.array([initial_ca_value, initial_mg_value])
 start_time = time.time()
-sol = scipy.integrate.solve_ivp(f, (0.0, pipe_time), initial_vector)
+sol = scipy.integrate.solve_ivp(f, (0.0, pipe_time), initial_vector,
+                                t_eval = np.linspace(0.0, pipe_time, 101))
 elapsed_time = time.time() - start_time
+
+plt.plot(sol.t, sol.y[0], label='Ca')
+plt.plot(sol.t, sol.y[1], label='Mg')
+plt.xlabel('t')
+plt.ylabel('c')
+plt.legend()
+plt.show()

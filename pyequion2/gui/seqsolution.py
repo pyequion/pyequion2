@@ -33,6 +33,7 @@ class SeqSolutionGUI(QWidget):
         self.base_solution = solutions[0]
         self.solver_log = solver_log
         self.type_eq = type_eq
+        self.plot_windows = []
         self.initializeUI()
     
     def initializeUI(self):
@@ -45,7 +46,7 @@ class SeqSolutionGUI(QWidget):
     def setupWidgets(self):
         self.main_layout = QGridLayout()
 
-        save_log_button = QPushButton("Save log")
+        save_log_button = QPushButton("Save log (header)")
         save_log_button.clicked.connect(self.save_log_to_file)
 
         properties_vbox = self.make_properties_vbox()
@@ -224,25 +225,29 @@ class SeqSolutionGUI(QWidget):
     def plot_dict_property(self, val, property_name, unit="mol/kg H2O"):
         properties = np.array([getattr(solution, property_name)[val]
                                for solution in self.solutions])
-        plot_widget = PlotWidget(self)
-        plot_widget.plot_pairs(properties, self.pairs)
-        plot_widget.axes.set_ylabel("{0}:{1} [{2}]".format(property_name, val, unit))
-        plot_widget.show()
+        plot_window = PlotWindow()
+        plot_window.plot_widget.plot_pairs(properties, self.pairs)
+        plot_window.plot_widget.axes.set_ylabel("{0}:{1} [{2}]".format(property_name, val, unit))
+        plot_window.show()
+        self.plot_windows.append(plot_window)
     
     def plot_single_property(self, property_name, unit=" "):
         properties = np.array([getattr(solution, property_name)
                                for solution in self.solutions])
-        plot_widget = PlotWidget(self)
+        plot_window = PlotWindow(self)
+        plot_widget = plot_window.plot_widget
         plot_widget.plot_pairs(properties, self.pairs)
         plot_widget.axes.set_ylabel("{0} [{1}]".format(property_name, unit))
-        plot_widget.show()
-    
+        plot_window.show()
+        self.plot_windows.append(plot_window)
+        
     def save_log_to_file(self):
         #else
         file_name, _ = QFileDialog.getSaveFileName(self, 'Save File',
             "","Text File (*.txt)")
         try:
-            self.base_solution.savelog(file_name)
+            with open(file_name, 'w') as f:
+                f.write(self.solver_log)
         except:
             QMessageBox.information(self, "Error", 
                 "Unable to save file.", QMessageBox.Ok)
@@ -251,13 +256,55 @@ class SeqSolutionGUI(QWidget):
     def has_parent(self):
         return self.parent_ is not None
     
-    
+
+class PlotWindow(QWidget):
+    def __init__(self, width=8, height=8, dpi=100):
+        super().__init__()
+        self.plot_widget = PlotWidget(width, height, dpi)
+        self.initializeUI()
+
+    def initializeUI(self):
+        self.setGeometry(100, 100, 600, 600)
+        self.setWindowTitle("Plot")
+        self.setupWidgets()
+
+    def setupWidgets(self):
+        layout = QVBoxLayout()
+        self.save_button = QPushButton("Save figure")
+        self.save_button.clicked.connect(self.savefig)
+        self.export_button = QPushButton("Export")
+        self.export_button.clicked.connect(self.export)
+        layout.addWidget(self.plot_widget)
+        layout.addWidget(self.save_button)
+        layout.addWidget(self.export_button)
+        self.setLayout(layout)
+
+    def savefig(self):
+        file_name, _ = QFileDialog.getSaveFileName(self, 'Save File',
+            "","PNG file (*.png)")
+        try:
+            self.plot_widget.fig.savefig(file_name)
+        except:
+            QMessageBox.information(self, "Error", 
+                "Unable to save file.", QMessageBox.Ok)
+        
+    def export(self):
+        file_name, _ = QFileDialog.getSaveFileName(self, 'Save File',
+            "","Text file (*.txt)")
+        try:
+            xy = self.plot_widget.axes.lines[0].get_xydata()
+            header = "{%s} {%s}"%(self.plot_widget.axes.get_xlabel(), self.plot_widget.axes.get_ylabel())
+            np.savetxt(file_name, xy, header=header)
+        except:
+            QMessageBox.information(self, "Error", 
+                "Unable to save file.", QMessageBox.Ok)
+
 class PlotWidget(FigureCanvasQTAgg):
-    def __init__(self, parent=None, width=8, height=8, dpi=100):
+    def __init__(self, parent, width=8, height=8, dpi=100):
         self.parent = parent
-        fig = Figure(figsize=(width, height), dpi=dpi)
-        self.axes = fig.add_subplot(111)
-        super().__init__(fig)
+        self.fig = Figure(figsize=(width, height), dpi=dpi)
+        self.axes = self.fig.add_subplot(111)
+        super().__init__(self.fig)
         
     def plot(self, x, y):
         self.axes.cla()

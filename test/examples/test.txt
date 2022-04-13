@@ -1,5 +1,0 @@
-T - 298.15 K
-P - 1.00 atm
-[C]=2.00e-02 mol/kg H2O
-[Ca]=(2.00e-02, 4.00e-02) mol/kg H2O
-NPOINTS - 10

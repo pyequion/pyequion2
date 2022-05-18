@@ -16,6 +16,7 @@ import numpy as np
 from .solution import SolutionGUI
 from .seqsolution import SeqSolutionGUI
 from .. import logmaker
+from .. import converters
 
 
 class EquilibriumCreationError(Exception):
@@ -109,6 +110,7 @@ class SolverGUI(QWidget):
             comps_line_edit.setFixedWidth(50)
             comps_unit_cbox = QComboBox()
             comps_unit_cbox.addItems(["Molal"])
+            comps_unit_cbox.addItems(["mg/L"])
             comps_log_checkbox = QCheckBox("log")
             comps_log_checkbox.setChecked(False)
             act_checkbox = QCheckBox("act")
@@ -266,14 +268,15 @@ class SolverGUI(QWidget):
             is_log = log_checkbox.isChecked()
             is_activity = act_checkbox.isChecked()
             comp = comp_cbox.currentText()
-            comp = self.convert_comp(comp, unit_cbox.currentText())
+            conv_factor = self.convert_comp(comp, unit_cbox.currentText())
             try:
                 text = line_edit.text()
                 text = ''.join(text.split()) #HACK
                 if "," in text:
-                    val = tuple(map(float, text.split(",")))
+                    val = tuple(map(lambda x : conv_factor*float(x),
+                                    text.split(",")))
                 else:
-                    val = float(text)
+                    val = conv_factor*float(text)
             except ValueError:
                 self.show_creation_error("Some component was set to non-numerical value "\
                                          "or is not positive")
@@ -378,7 +381,11 @@ class SolverGUI(QWidget):
     
     def convert_comp(self, comp_val, comp_unit):
         if comp_unit == "Molal":
-            return comp_val
+            return 1.0
+        elif comp_unit == "mM":
+            return converters.mmolar_to_molal(1.0, 298.15) #FIXME
+        elif comp_unit == "mg/L":
+            return converters.mgl_to_molal(1.0, comp_val)
         
     def get_closing_conditions(self):
         return "electroneutrality", 0.0 #TODO: put more

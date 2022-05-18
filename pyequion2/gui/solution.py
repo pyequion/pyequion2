@@ -68,11 +68,13 @@ class SolutionGUI(QWidget):
         title_molals_label = QLabel("Molal")
         title_act_label = QLabel("Activity")
         title_fraction_label = QLabel("Mole fraction")
+        title_mgl_label = QLabel("mg/L")
         
         species_grid.addWidget(title_species_label, 0, 0)
         species_grid.addWidget(title_molals_label, 0, 1)
         species_grid.addWidget(title_act_label, 0, 2)
         species_grid.addWidget(title_fraction_label, 0, 3)
+        species_grid.addWidget(title_mgl_label, 0, 4)
         
         for i, specie in enumerate(sorted_species, 1):
             # specie_hbox = QHBoxLayout()
@@ -81,11 +83,13 @@ class SolutionGUI(QWidget):
             # conc_label = self.show_value_label(specie, self.solution.concentrations)
             act_label = self.show_value_label(specie, self.solution.activities)
             fraction_label = self.show_value_label(specie, self.solution.mole_fractions)
+            mgl_label = self.show_value_label(specie, self.solution.concentrations_mgl)
             species_grid.addWidget(specie_label, i, 0)
             species_grid.addWidget(molals_label, i, 1)
             species_grid.addWidget(act_label, i, 2)
             species_grid.addWidget(fraction_label, i, 3)
-
+            species_grid.addWidget(mgl_label, i, 4)
+            
         sorted_elements = sorted(self.solution.elements_molals,
                                    key=lambda k : self.solution.elements_molals[k],
                                    reverse=True)
@@ -94,11 +98,13 @@ class SolutionGUI(QWidget):
             molals_label = self.show_value_label(element, self.solution.elements_molals)
             act_label = QLabel("")
             fraction_label = QLabel("")
+            mgl_label = self.show_value_label(element, self.solution.elements_mgl)
             species_grid.addWidget(specie_label, j, 0)
             species_grid.addWidget(molals_label, j, 1)
             species_grid.addWidget(act_label, j, 2)
             species_grid.addWidget(fraction_label, j, 3)
-
+            species_grid.addWidget(mgl_label, j, 4)
+            
         species_grid.setSpacing(0)
         items = (species_grid.itemAt(i) for i in range(species_grid.count())) 
         for item in items:

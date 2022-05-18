@@ -110,8 +110,24 @@ class SolutionResult():
     def concentrations(self):  # mM or mol/m^3
         """Equilibrium concentrations. Assumes water volue much greater than ionic volumes. 
            At high ionic concentration one should give preference to molals"""
-        return {self.solutes[i]: converters.molal_to_mmolar(self._x_molal[i])
-                for i in range(len(self._x_molal))}
+        return {sp: converters.molal_to_mmolar(val,
+                                               sp,
+                                               self.TK)
+                for sp, val in self.molals.items()}
+
+    @property
+    def concentrations_mgl(self):
+        return {sp: converters.molal_to_mgl(val,
+                                            sp,
+                                            self.TK)
+                for sp, val in self.molals.items()}
+    
+    @property
+    def elements_mgl(self):
+        return {el: converters.molal_to_mgl(val,
+                                            el,
+                                            self.TK)
+                for el, val in self.elements_molals.items()}
 
     @property
     def activities(self):

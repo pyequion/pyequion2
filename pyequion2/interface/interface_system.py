@@ -34,39 +34,52 @@ class InterfaceSystem(equilibrium_system.EquilibriumSystem):
                                     transport_params,
                                     PATM=1.0,
                                     tol=1e-12, initial_guess='default',
-                                    transport_model="A"):
+                                    transport_model="A",
+                                    fully_diffusive=False):
         """
         TK: float
         xbulk: numpy.ndarray
         tranpost_params: Dict[str]
         """
-        assert(self.explicit_interface_phases or self.implicit_interface_phases)
+        if not fully_diffusive:
+            explicit_interface_phases = self.explicit_interface_phases
+            implicit_interface_phases = self.implicit_interface_phases
+            explicit_interface_indexes = self._explicit_interface_indexes
+            implicit_interface_indexes = self._implicit_interface_indexes
+            reaction_function_exp = self.explicit_reaction_function
+            reaction_function_derivative_exp = self.explicit_reaction_function_derivative
+        else:
+            explicit_interface_phases = []
+            implicit_interface_phases = self.implicit_interface_phases
+            explicit_interface_indexes = []
+            implicit_interface_indexes = self.interface_indexes
+            reaction_function_exp = lambda logsatur, logksp, TK : np.zeros((0,))
+            reaction_function_derivative_exp = lambda logsatur, logksp, TK : np.zeros((0,))
+        assert(explicit_interface_phases or implicit_interface_phases)
         activity_function = self.activity_function
         balance_matrix = self.reduced_formula_matrix
         stoich_matrix = self.stoich_matrix
         log_equilibrium_constants = self.get_log_equilibrium_constants(TK, PATM)
-        stoich_matrix_sol_exp = self.solid_stoich_matrix[self._explicit_interface_indexes, :]
-        stoich_matrix_sol_imp = self.solid_stoich_matrix[self._implicit_interface_indexes, :]
+        stoich_matrix_sol_exp = self.solid_stoich_matrix[explicit_interface_indexes, :]
+        stoich_matrix_sol_imp = self.solid_stoich_matrix[implicit_interface_indexes, :]
         log_solubility_constants = self.get_solid_log_equilibrium_constants(TK, PATM)
-        log_solubility_constants_exp = log_solubility_constants[self._explicit_interface_indexes]
-        log_solubility_constants_imp = log_solubility_constants[self._implicit_interface_indexes]
-        reaction_function_exp = self.explicit_reaction_function
-        reaction_function_derivative_exp = self.explicit_reaction_function_derivative
+        log_solubility_constants_exp = log_solubility_constants[explicit_interface_indexes]
+        log_solubility_constants_imp = log_solubility_constants[implicit_interface_indexes]
         
         molals_bulk_ = np.array([molals_bulk[k] for k in self.solutes])
 
         if initial_guess == 'default':
             x_guess = np.ones(self.nsolutes)*0.1
-            reaction_imp_guess = np.ones(len(self._implicit_interface_indexes))*0.1
-            stability_imp_guess = np.zeros(len(self._implicit_interface_indexes))
+            reaction_imp_guess = np.ones(len(implicit_interface_indexes))*0.1
+            stability_imp_guess = np.zeros(len(implicit_interface_indexes))
         elif initial_guess == 'bulk':
             x_guess = molals_bulk_.copy()
-            reaction_imp_guess = np.ones(len(self._implicit_interface_indexes))*0.1
-            stability_imp_guess = np.zeros(len(self._implicit_interface_indexes))
+            reaction_imp_guess = np.ones(len(implicit_interface_indexes))*0.1
+            stability_imp_guess = np.zeros(len(implicit_interface_indexes))
         elif isinstance(initial_guess, float):
             x_guess = np.ones(self.nsolutes)*initial_guess
-            reaction_imp_guess = np.ones(len(self._implicit_interface_indexes))*initial_guess
-            stability_imp_guess = np.zeros(len(self._implicit_interface_indexes))
+            reaction_imp_guess = np.ones(len(implicit_interface_indexes))*initial_guess
+            stability_imp_guess = np.zeros(len(implicit_interface_indexes))
         else:
             x_guess, reaction_imp_guess, stability_imp_guess = initial_guess
         

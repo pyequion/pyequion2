@@ -12,8 +12,9 @@ solution, res = intsys.solve_equilibrium_mixed_balance(TK, molal_balance=element
 intsys.set_interface_phases()
 molals_bulk = solution.solute_molals
 
-transport_params = {'type': 'pipe',
-                    'shear_velocity': 0.05}
+transport_params = {'type': 'sphere',
+                    'radius': 1e-6}
 solution_int, res = intsys.solve_interface_equilibrium(TK,
                                                        molals_bulk,
-                                                       transport_params)
+                                                       transport_params,
+                                                       fully_diffusive=True)

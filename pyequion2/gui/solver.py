@@ -111,6 +111,8 @@ class SolverGUI(QWidget):
             comps_unit_cbox = QComboBox()
             comps_unit_cbox.addItems(["Molal"])
             comps_unit_cbox.addItems(["mg/L"])
+            comps_unit_cbox.addItems(["mM"])
+            comps_unit_cbox.addItems(["pp"])
             comps_log_checkbox = QCheckBox("log")
             comps_log_checkbox.setChecked(False)
             act_checkbox = QCheckBox("act")
@@ -174,10 +176,10 @@ class SolverGUI(QWidget):
         #is_sequence = self.sequencer_checkbox.isChecked()
         #npoints = self.sequencer_number_points_spinbox.value() if is_sequence else None
         try:
-            molal_balance, activity_balance, \
-            molal_balance_log, activity_balance_log = self.get_balances()
             temperature = self.get_temperature()
             pressure = self.get_pressure()
+            molal_balance, activity_balance, \
+            molal_balance_log, activity_balance_log = self.get_balances(temperature, pressure)
             closing_equation, closing_equation_value = self.get_closing_conditions()
             pairs = self.get_pairs(molal_balance, activity_balance, molal_balance_log, activity_balance_log,
                                    temperature, pressure, closing_equation, closing_equation_value)
@@ -254,7 +256,7 @@ class SolverGUI(QWidget):
         #self.solid_gui.show()
     
     #FIXME: in get_balances, get_temperature and get_pressure there is severe boilerplating
-    def get_balances(self):
+    def get_balances(self, temperature, pressure):
         molal_balance = dict()
         activity_balance = dict()
         molal_balance_log = dict()
@@ -268,7 +270,7 @@ class SolverGUI(QWidget):
             is_log = log_checkbox.isChecked()
             is_activity = act_checkbox.isChecked()
             comp = comp_cbox.currentText()
-            conv_factor = self.convert_comp(comp, unit_cbox.currentText())
+            conv_factor = self.convert_comp(comp, unit_cbox.currentText(), temperature)
             try:
                 text = line_edit.text()
                 text = ''.join(text.split()) #HACK
@@ -379,14 +381,15 @@ class SolverGUI(QWidget):
                 pairs.append(pair_tuple("log{{{0}}}".format(key), value, "mol/kg H2O"))
         return pairs
     
-    def convert_comp(self, comp_val, comp_unit):
+    def convert_comp(self, comp_val, comp_unit, temperature):
         if comp_unit == "Molal":
             return 1.0
         elif comp_unit == "mM":
-            return converters.mmolar_to_molal(1.0, 298.15) #FIXME
+            return converters.mmolar_to_molal(1.0, temperature) #FIXME
         elif comp_unit == "mg/L":
-            return converters.mgl_to_molal(1.0, comp_val)
-        
+            return converters.mgl_to_molal(1.0, comp_val, temperature)
+        elif comp_unit == "PP":
+            raise converters.get_activity_from_partial_pressure(1.0, comp_val, temperature)
     def get_closing_conditions(self):
         return "electroneutrality", 0.0 #TODO: put more
     

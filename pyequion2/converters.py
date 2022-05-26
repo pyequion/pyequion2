@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 import periodictable
+import numpy as np
+
 from . import water_properties
 from . import builder
-
+from .datamods import reactions_solids
 
 ELEMENTS_MOLAR_WEIGHTS = {
     el.symbol: el.mass for el in periodictable.elements if el.symbol != 'n'}
@@ -41,3 +43,36 @@ def molal_to_mgl(x, specie, TK=298.15):
     y = x*molar_mass #mol/(kg H2O) to g/(kg H2O)
     mgl = y*water_properties.water_density(TK) #g/(kg H2O) to g/m^3 = mg/L
     return mgl
+
+
+def get_activity_from_partial_pressure(pp, spec, TK=298.15):
+    gases =  builder.DEFAULT_DB_FILES["gases"]
+    possible = [g for g in gases if spec in g and spec + '(g)' in g]
+    if possible == []:
+        return None
+    else:
+        logK = builder.get_log_equilibrium_constants(possible, TK, 1.0)[0]
+        logact = logK + np.log10(pp)
+        return 10**logact
+    
+
+def phase_to_molar_weight(phase_name):
+    possible_reactions = list(filter(lambda r : r['phase_name'] == phase_name,
+                                  reactions_solids))
+    if len(possible_reactions) == 0:
+        return None
+    else:
+        reaction = possible_reactions[0]
+        specs_and_coefs = [(s, k) for s, k in reaction.items() if k == 1.0]
+        specs, coefs = zip(*specs_and_coefs)
+        els_and_coefs = builder.get_elements_and_their_coefs(specs)
+        spec_masses = [sum([ELEMENTS_MOLAR_WEIGHTS[el]*coef
+                          for el, coef in el_and_coefs])
+                       for el_and_coefs in els_and_coefs]
+        print(spec_masses)
+        print(coefs)
+        molar_mass = sum([sp_mass*coef for sp_mass, coef in zip(spec_masses, coefs)])
+        return molar_mass*1e-3 #g/mol to kg/mol
+        
+        
+        

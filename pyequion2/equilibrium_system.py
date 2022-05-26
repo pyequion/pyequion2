@@ -55,7 +55,7 @@ class EquilibriumSystem():
         The type of last solver
     """
 
-    def __init__(self, components, from_elements=False, activity_model="PITZER",
+    def __init__(self, components, from_elements=False, activity_model="EXTENDED_DEBYE",
                  calculate_water_activity=False):
         """
         Parameters
@@ -95,7 +95,7 @@ class EquilibriumSystem():
         self._x_molal = None
         self._x_act = None
 
-    def set_activity_functions(self, activity_model="DEBYE",
+    def set_activity_functions(self, activity_model="EXTENDED_DEBYE",
                                calculate_water_activity=False):
         """
         Set activity model and function
@@ -161,7 +161,7 @@ class EquilibriumSystem():
         molal_fractions = molals_gases/np.sum(molals_gases)
         fugacity_coefficient_term = self._fugacity_coefficient_function(
             molal_fractions, TK, P)
-        partial_pressure_term = np.log(P) + np.log(molal_fractions)
+        partial_pressure_term = np.log10(P) + np.log10(molal_fractions)
         logact = fugacity_coefficient_term + partial_pressure_term
         return logact
 

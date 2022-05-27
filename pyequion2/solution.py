@@ -111,7 +111,6 @@ class SolutionResult():
         """Equilibrium concentrations. Assumes water volue much greater than ionic volumes. 
            At high ionic concentration one should give preference to molals"""
         return {sp: converters.molal_to_mmolar(val,
-                                               sp,
                                                self.TK)
                 for sp, val in self.molals.items()}
 

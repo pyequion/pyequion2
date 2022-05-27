@@ -5,6 +5,8 @@ import numpy as np
 from . import water_properties
 from . import builder
 from .datamods import reactions_solids
+from .datamods import density_solids
+
 
 ELEMENTS_MOLAR_WEIGHTS = {
     el.symbol: el.mass for el in periodictable.elements if el.symbol != 'n'}
@@ -69,10 +71,11 @@ def phase_to_molar_weight(phase_name):
         spec_masses = [sum([ELEMENTS_MOLAR_WEIGHTS[el]*coef
                           for el, coef in el_and_coefs])
                        for el_and_coefs in els_and_coefs]
-        print(spec_masses)
-        print(coefs)
         molar_mass = sum([sp_mass*coef for sp_mass, coef in zip(spec_masses, coefs)])
         return molar_mass*1e-3 #g/mol to kg/mol
-        
+
+
+def phase_density(phase_name):
+    return density_solids.densities.get(phase_name, 3000.0)
         
         

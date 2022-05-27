@@ -117,6 +117,7 @@ densities = \
  'Diopside': 3400.0,
  'Dioptase': 3310.0,
  'Dolmite': 2840.0,
+ 'Dolomite': 2840.0,
  'Dumortierite': 3340.0,
  'Edenite': 3020.0,
  'Embolite': 5600.0,
@@ -357,6 +358,7 @@ densities = \
  'Uvarovite': 3400.0,
  'Vanadinite': 6800.0,
  'Varicite': 2500.0,
+ 'Vaterite': 2710.0, #Assume now same as calcite
  'Vermiculite': 2300.0,
  'Violarite': 4500.0,
  'Vivianite': 2650.0,

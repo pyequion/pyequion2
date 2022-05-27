@@ -163,6 +163,7 @@ class InterfaceSystem(equilibrium_system.EquilibriumSystem):
             for phase, (fname, args) in interface_functions.SPECIFIC_SOLIDS_MODEL.items():
                 if phase in self.solid_phase_names:
                     reaction_dict[phase] = (fname, args, None)
+        print(reaction_dict)
         self._split_implicit_explicit(reaction_dict)
         self._explicit_flist_reac = []
         self._explicit_dflist_reac = []

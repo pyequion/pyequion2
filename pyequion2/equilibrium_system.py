@@ -339,7 +339,7 @@ class EquilibriumSystem():
         stoich_matrix_solids = self.solid_stoich_matrix[solid_indexes, :]
         stoich_matrix_gases = self.gas_stoich_matrix[gas_indexes, :]
 
-        if initial_guess == 'default':
+        if isinstance(initial_guess, str) and initial_guess == 'default':
             x_guess = np.ones(self.nsolutes)*0.1
             x_guess_solid = np.ones(len(solid_indexes))*0.1
             stability_solid_guess = np.zeros(len(solid_indexes))
@@ -644,7 +644,7 @@ class EquilibriumSystem():
             self.get_log_equilibrium_constants(TK, PATM)
         stoich_matrix = self.stoich_matrix
         activity_function = self.activity_function
-        if initial_guess == 'default':
+        if isinstance(initial_guess, str) and initial_guess == 'default':
             x_guess = np.ones(self.nsolutes)*0.1
         elif isinstance(initial_guess, float):
             x_guess = np.ones(self.nsolutes)*initial_guess

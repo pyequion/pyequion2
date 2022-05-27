@@ -26,7 +26,7 @@ def shear_velocity(flow_velocity, pipe_diameter, TK=298.15):
     return np.sqrt(f/8.0)*flow_velocity
 
 
-elements = ['Ca', 'C', 'Na', 'Cl', 'Mg']
+elements = ['Ca', 'C', 'Na', 'Cl']
 intsys = InterfaceSystem(elements, from_elements=True)
 intsys.set_interface_phases(fill_defaults=True)
 index_map = {el: i for i, el in enumerate(elements)}
@@ -65,7 +65,7 @@ def f(t, y):
     return dy
 
 
-initial_elements_balance = {'Ca':0.028, 'C':0.065, 'Na':0.075, 'Cl':0.056, 'Mg':0.02}
+initial_elements_balance = {'Ca':0.028, 'C':0.065, 'Na':0.075, 'Cl':0.056}
 initial_elements_vector = np.hstack([initial_elements_balance[reverse_index_map[i]]
                                      for i in range(len(initial_elements_balance))])
 

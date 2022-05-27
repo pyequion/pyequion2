@@ -68,7 +68,7 @@ class InterfaceSystem(equilibrium_system.EquilibriumSystem):
         
         molals_bulk_ = np.array([molals_bulk[k] for k in self.solutes])
 
-        if initial_guess == 'default':
+        if isinstance(initial_guess, str) and initial_guess == 'default':
             x_guess = np.ones(self.nsolutes)*0.1
             reaction_imp_guess = np.ones(len(implicit_interface_indexes))*0.1
             stability_imp_guess = np.zeros(len(implicit_interface_indexes))

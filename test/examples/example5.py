@@ -18,4 +18,5 @@ transport_params = {'type': 'pipe',
 solution_int, res = intsys.solve_interface_equilibrium(TK,
                                                        molals_bulk,
                                                        transport_params,
-                                                       fully_diffusive=False)
+                                                       fully_diffusive=False,
+                                                       transport_model="B")

@@ -23,24 +23,36 @@ class InterfaceSystem(equilibrium_system.EquilibriumSystem):
         self.interface_phases = []
         self.explicit_interface_phases = []
         self.implicit_interface_phases = []
+        self.global_transport_model = "A"
         self.ninterface = 0
         self._interface_indexes = []
         self._explicit_interface_indexes = []
         self._implicit_interface_indexes = []
         self._explicit_flist_reac = []
         self._explicit_dflist_reac = []
-
+        
+    def set_global_transport_model(self, transport_model):
+        assert transport_model in ["A", "B"]
+        self.global_transport_model = transport_model
+        
     def solve_interface_equilibrium(self, TK, molals_bulk,
                                     transport_params,
                                     PATM=1.0,
                                     tol=1e-12, initial_guess='default',
-                                    transport_model="A",
+                                    transport_model=None,
                                     fully_diffusive=False):
         """
         TK: float
         xbulk: numpy.ndarray
         tranpost_params: Dict[str]
+        PATM: float
+        tol: float
+        initial_guess: Union[string, np.ndarray]
+        transport_model: Optional[str]
+        fully_diffusive: bool
         """
+        if transport_model is None:
+            transport_model = self.global_transport_model
         if not fully_diffusive:
             explicit_interface_phases = self.explicit_interface_phases
             implicit_interface_phases = self.implicit_interface_phases
@@ -163,7 +175,6 @@ class InterfaceSystem(equilibrium_system.EquilibriumSystem):
             for phase, (fname, args) in interface_functions.SPECIFIC_SOLIDS_MODEL.items():
                 if phase in self.solid_phase_names:
                     reaction_dict[phase] = (fname, args, None)
-        print(reaction_dict)
         self._split_implicit_explicit(reaction_dict)
         self._explicit_flist_reac = []
         self._explicit_dflist_reac = []

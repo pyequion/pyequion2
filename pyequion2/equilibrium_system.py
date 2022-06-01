@@ -95,6 +95,28 @@ class EquilibriumSystem():
         self._x_molal = None
         self._x_act = None
 
+    def update_system(self,
+                      possible_reactions=None,
+                      possible_solid_reactions=None,
+                      possible_gas_reactions=None):
+        self.species, self.reactions, self.solid_reactions, self.gas_reactions = \
+            self._initialize_species_reactions(possible_reactions,
+                                               possible_solid_reactions,
+                                               possible_gas_reactions)
+        self.formula_matrix, self.stoich_matrix = \
+            self._make_formula_and_stoich_matrices()
+        self.solid_formula_matrix, self.solid_stoich_matrix = \
+            self._make_solid_formula_and_stoich_matrices()
+        self.gas_formula_matrix, self.gas_stoich_matrix = \
+            self._make_gas_formula_and_stoich_matrices()
+        self.solverlog = None
+        self.solvertype = None
+        self._activity_model_func = ACTIVITY_MODEL_MAP[self.activity_model](
+            self.solutes, self.calculate_water_activity)
+        self._fugacity_coefficient_function = lambda x, TK, P: 0.0
+        self._x_molal = None
+        self._x_act = None
+    
     def set_activity_functions(self, activity_model="EXTENDED_DEBYE",
                                calculate_water_activity=False):
         """
@@ -759,9 +781,13 @@ class EquilibriumSystem():
         """Names of gas phases"""
         return [gas_reac["phase_name"] for gas_reac in self.gas_reactions]
 
-    def _initialize_species_reactions(self):
+    def _initialize_species_reactions(self,
+                                      possible_reactions=None,
+                                      possible_solid_reactions=None,
+                                      possible_gas_reactions=None):
         return builder.get_species_reaction_from_initial_species(
-            self.base_species)
+            self.base_species, possible_reactions,
+            possible_solid_reactions, possible_gas_reactions)
 
     def _make_formula_and_stoich_matrices(self):
         formula_matrix = builder.make_formula_matrix(

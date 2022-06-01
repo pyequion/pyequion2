@@ -58,7 +58,7 @@ def f(t, y):
                                                                           tol=1e-6,
                                                                           initial_guess=solution_stats_int['x'])
     elements_reaction_fluxes = solution_int.elements_reaction_fluxes
-    wall_scale = 4/(pipe_diameter*water_properties.water_density(TK))
+    wall_scale = 4/(pipe_diameter*water_properties.water_density(TK)) #(4/m*m^3/kg) -> #4*m^2/kg 
     dy = -wall_scale*np.hstack(
         [elements_reaction_fluxes[reverse_index_map[i]]
          for i in range(y.shape[0])])

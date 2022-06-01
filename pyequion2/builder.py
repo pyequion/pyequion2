@@ -7,6 +7,7 @@ import ordered_set
 import commentjson
 
 from . import datamods
+from . import water_properties
 
 
 ELEMENT_SPECIES_MAP = {
@@ -122,6 +123,11 @@ def get_all_possible_gas_reactions(database_files=DEFAULT_DB_FILES):
 
 def get_log_equilibrium_constants(reactions, TK, PATM):
     return np.array([_get_logk(reaction, TK, PATM) for reaction in reactions])
+
+
+def get_product_power_coefficient(reac):
+    prods, reag = _get_tags_of_prods_reactions(reac)
+    return sum(reac[s] for s in prods) + sum(reac[s] for s in reag)
 
 
 def make_formula_matrix(species, elements):
@@ -253,8 +259,18 @@ def _get_logk(reaction, TK, PATM):
         else:
             log_K_patm = 0.0  # Can't do nothing beyond this
     log_K = log_K_patm + _adjust_pressure(reaction, TK, PATM)
+    log_K = log_K + _molar_to_molal_constant_correction(reaction, TK)
     return log_K
 
+def _molar_to_molal_constant_correction(reac, TK): #
+    prods, reag = _get_tags_of_prods_reactions(reac)
+    if "phase_name" in reac: #Ksp. Only products
+        coef = sum(reac[s] for s in prods)
+    else:
+        coef = sum(reac[s] for s in prods) + sum(reac[s] for s in reag)
+    density_liter = water_properties.water_density(25 + 273.15)/1000
+    correction = -coef*np.log10(density_liter) #(mol/L)**n to #(mol/kg)**n -> #Ksp/(rho**n) -> log Ksp - n*rho
+    return correction
 
 def _calculate_logk_1(log_K_coefs, TK):
     log_K_coefs = np.hstack([log_K_coefs, np.zeros(6-len(log_K_coefs))])

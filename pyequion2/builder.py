@@ -258,7 +258,7 @@ def _get_logk(reaction, TK, PATM):
             log_K_patm = _calculate_logk_2(log_K25, deltah, TK)
         else:
             log_K_patm = 0.0  # Can't do nothing beyond this
-    log_K = log_K_patm + _adjust_pressure(reaction, TK, PATM)
+    log_K = log_K_patm# + _adjust_pressure(reaction, TK, PATM)
     log_K = log_K + _molar_to_molal_constant_correction(reaction, TK)
     return log_K
 

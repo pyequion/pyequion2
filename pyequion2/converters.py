@@ -47,17 +47,20 @@ def molal_to_mgl(x, specie, TK=298.15):
     return mgl
 
 
-def get_activity_from_partial_pressure(pp, spec, TK=298.15):
+def get_activity_from_fugacity(fugacity, spec, TK=298.15):
     gases =  builder.DEFAULT_DB_FILES["gases"]
     possible = [g for g in gases if spec in g and spec + '(g)' in g]
     if possible == []:
         return None
     else:
         logK = builder.get_log_equilibrium_constants(possible, TK, 1.0)[0]
-        logact = logK + np.log10(pp)
+        logact = logK + np.log10(fugacity)
         return 10**logact
     
-
+def get_activity_from_partial_pressure(pp, spec, TK=298.15):
+    #For now, alias for get_activity_from_fugacity
+    return get_activity_from_fugacity(pp, spec, TK)
+    
 def phase_to_molar_weight(phase_name):
     possible_reactions = list(filter(lambda r : r['phase_name'] == phase_name,
                                   reactions_solids))

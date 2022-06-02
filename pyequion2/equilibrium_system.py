@@ -16,7 +16,8 @@ from . import sequencer
 
 ACTIVITY_MODEL_MAP = {
     "IDEAL": activity.setup_ideal,
-    "DEBYE": activity.setup_debye,
+    "DEBYE_LIMITING": activity.setup_debye,
+    "DEBYE": activity.setup_extended_debye,
     "EXTENDED_DEBYE": activity.setup_extended_debye,
     "PITZER": activity.setup_pitzer,
 }
@@ -689,6 +690,73 @@ class EquilibriumSystem():
         stats['res'] = res
         stats['x'] = x
         return solution.SolutionResult(self, x, TK, PATM=PATM), stats
+
+    def solve_equilibrium_balance_phases(self,
+                                         balance_vector,
+                                         balance_vector_log,
+                                         balance_matrix,
+                                         balance_matrix_log,
+                                         mask,
+                                         mask_log,
+                                         solid_phases,
+                                         gas_phases,
+                                         TK,
+                                         PATM=1.0,
+                                         tol=1e-12, maxiter=1000,
+                                         initial_guess='default'):
+        solid_indexes = self.get_solid_indexes(solid_phases)
+        gas_indexes = self.get_gas_indexes(gas_phases)
+        self.set_fugacity_coefficient_function(gas_indexes)
+
+        activity_function = self.activity_function
+        activity_function_gas = self.gas_activity_function
+
+        balance_matrix_solids = self.reduced_solid_formula_matrix[:, solid_indexes]
+        balance_matrix_gases = self.reduced_gas_formula_matrix[:, gas_indexes]
+        log_equilibrium_constants = \
+            self.get_log_equilibrium_constants(TK, PATM)
+        log_solubility_constants = self.get_solid_log_equilibrium_constants(TK, PATM)
+        log_solubility_constants = log_solubility_constants[solid_indexes]
+        log_gases_constants = self.get_gases_log_equilibrium_constants(TK, PATM)
+        log_gases_constants = log_gases_constants[gas_indexes]
+        stoich_matrix = self.stoich_matrix
+        stoich_matrix_solids = self.solid_stoich_matrix[solid_indexes, :]
+        stoich_matrix_gases = self.gas_stoich_matrix[gas_indexes, :]
+
+        if isinstance(initial_guess, str) and initial_guess == 'default':
+            x_guess = np.ones(self.nsolutes)*0.1
+            x_guess_solid = np.ones(len(solid_indexes))*0.1
+            stability_solid_guess = np.zeros(len(solid_indexes))
+            x_guess_gas = np.ones(len(gas_indexes))*0.1
+            stability_gas_guess = np.zeros(len(gas_indexes))
+        elif isinstance(initial_guess, float):
+            x_guess = np.ones(self.nsolutes)*initial_guess
+            x_guess_solid = np.ones(len(solid_indexes))*initial_guess
+            stability_solid_guess = np.zeros(len(solid_indexes))
+            x_guess_gas = np.ones(len(gas_indexes))*0.1
+            stability_gas_guess = np.zeros(len(gas_indexes))
+        else:
+            x_guess, x_guess_solid, x_guess_gas, stability_solid_guess, stability_gas_guess = initial_guess
+
+        molals, molals_solids, molals_gases, stability_solids, stability_gases, res = \
+            eqsolver.solve_equilibrium_xlma_2(
+                x_guess, x_guess_solid, x_guess_gas,
+                stability_solid_guess, stability_gas_guess,
+                TK, PATM, activity_function, activity_function_gas,
+                balance_vector,
+                log_equilibrium_constants, log_solubility_constants, log_gases_constants,
+                balance_matrix, balance_matrix_solids, balance_matrix_gases,
+                stoich_matrix, stoich_matrix_solids, stoich_matrix_gases,
+                solver_function=None, tol=tol)
+        sol = solution.SolutionResult(self, molals, TK,
+                                      molals_solids, solid_phases,
+                                      molals_gases, gas_phases,
+                                      PATM=PATM)
+        stats = dict()
+        stats['res'] = res
+        stats['x'] = (molals, molals_solids, molals_gases, stability_solids, stability_gases)
+        return sol, stats
+
 
     @property
     def elements(self):

@@ -259,7 +259,7 @@ def _get_logk(reaction, TK, PATM):
         else:
             log_K_patm = 0.0  # Can't do nothing beyond this
     log_K = log_K_patm# + _adjust_pressure(reaction, TK, PATM)
-    log_K = log_K + _molar_to_molal_constant_correction(reaction, TK)
+    log_K = log_K# + _molar_to_molal_constant_correction(reaction, TK)
     return log_K
 
 def _molar_to_molal_constant_correction(reac, TK): #
@@ -269,6 +269,7 @@ def _molar_to_molal_constant_correction(reac, TK): #
     else:
         coef = sum(reac[s] for s in prods) + sum(reac[s] for s in reag)
     density_liter = water_properties.water_density(25 + 273.15)/1000
+    print('here')
     correction = -coef*np.log10(density_liter) #(mol/L)**n to #(mol/kg)**n -> #Ksp/(rho**n) -> log Ksp - n*rho
     return correction
 

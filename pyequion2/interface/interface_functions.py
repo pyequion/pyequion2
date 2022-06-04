@@ -63,4 +63,6 @@ INTERFACE_MAP = \
     
     
 SPECIFIC_SOLIDS_MODEL = \
-    {'Calcite': ('linear_ksp_temp', (8.673367178929761e+19, 86881.05))}
+    {'Calcite': ('linear_ksp_temp', (8.673367178929761e+19, 86881.05)),
+     'Vaterite': ('linear_ksp_temp', (8.673367178929761e+19, 86881.05)),
+     'Aragonite': ('linear_ksp_temp', (8.673367178929761e+19, 86881.05))}

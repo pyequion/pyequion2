@@ -28,7 +28,7 @@ def shear_velocity(flow_velocity, pipe_diameter, TK=298.15):
 
 elements = ['Ca', 'C', 'Na', 'Cl']
 intsys = InterfaceSystem(elements, from_elements=True)
-intsys.set_interface_phases(fill_defaults=True)
+intsys.set_interface_phases(['Vaterite'], fill_defaults=True)
 index_map = {el: i for i, el in enumerate(elements)}
 reverse_index_map = {i: el for i, el in enumerate(elements)}
 

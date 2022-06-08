@@ -6,6 +6,8 @@ Repository at https://github.com/pyequion/pyequion2
 
 A heavily update version of the previous package found in https://github.com/caiofcm/pyequion
 
+Tests of the accuracy of its parameters and equations are underway, so results may change. Its API may change, and modules and functions may be added, removed and renamed. Use at your own peril!
+
 ## Features
 
 - Pure python package: hence it is easy to install in any platform

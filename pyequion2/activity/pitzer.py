@@ -41,7 +41,6 @@ def setup_pitzer(solutes, calculate_osmotic_coefficient=False):
                           THETA_=THETA, THETA_inds=THETA_inds,
                           PSI_=PSI, PSI_inds=PSI_inds,
                           LAMBDA_=LAMBDA, LAMBDA_inds=LAMBDA_inds)
-
     def g(xarray, TK):
         # ln(gamma) to log10(gamma)
         return constants.LOG10E * f(xarray, TK)
@@ -57,6 +56,7 @@ def loggamma_and_osmotic(carray, T, zarray,
                          THETA_, THETA_inds,
                          PSI_, PSI_inds,
                          LAMBDA_, LAMBDA_inds):
+    #print(B0_inds, B1_inds, B2_inds, C0_inds, THETA_inds)
     temp_vector = temperature_vector(T)
     B0 = np.sum(temp_vector*B0_, axis=-1)
     B1 = np.sum(temp_vector*B1_, axis=-1)
@@ -77,56 +77,72 @@ def loggamma_and_osmotic(carray, T, zarray,
     I = 0.5*np.sum(carray*zarray**2)
     sqrtI = np.sqrt(I)
     Z = np.sum(carray*np.abs(zarray))
-    A = A_debye(T)
+    A = A_debye_plummer(T)
 
     # (1,1),(2,1) < 4, (2,2) = 4, (3,2),(4,2) > 4
     valence_prod_1 = -1*zarray[B1_inds[:, 0]]*zarray[B1_inds[:, 1]]
     valence_prod_2 = -1*zarray[B2_inds[:, 0]]*zarray[B2_inds[:, 1]]
     alpha1 = 2.0*(valence_prod_1 != 4) + 1.4*(valence_prod_1 == 4)
     alpha2 = 12.0*(valence_prod_2 <= 4) + 50.0*(valence_prod_2 > 4)
+    monovalence = ((np.abs(zarray[B2_inds[:, 0]]) <= 1) | \
+                   (np.abs(zarray[B2_inds[:, 1]]) <= 1))   
 
-    x_mn = 6*A*zarray[THETA_inds[:, 0]]*zarray[THETA_inds[:, 1]]*sqrtI
-    x_mm = 6*A*zarray[THETA_inds[:, 0]]*zarray[THETA_inds[:, 0]]*sqrtI
-    x_nn = 6*A*zarray[THETA_inds[:, 1]]*zarray[THETA_inds[:, 1]]*sqrtI
-    J = jtheta(x_mn) - 0.5*jtheta(x_mm) - 0.5*jtheta(x_nn)
-    J_prime = (x_mn*jprime(x_mn) - 0.5*x_mm *
-               jprime(x_mm) - 0.5*x_nn*jprime(x_nn))/(2*I)
-    K1_theta = zarray[THETA_inds[:, 0]]*zarray[THETA_inds[:, 1]]/(4*I)
-    K2_theta = K1_theta/I
-    THETA_e = K1_theta*J
-    PHI = THETA + THETA_e
-    PHI_prime = K1_theta*J_prime - K2_theta*J  # THETA_e_prime
-
+    excess_index_matrix = (zarray*zarray.reshape(-1, 1) > 1) & \
+                          (np.abs(zarray - zarray.reshape(-1, 1)) > 1e-6)
+    THETA_e_inds = np.transpose(np.nonzero(excess_index_matrix)).astype(int)
+    #THETA_e_inds = THETA_inds #REMOVE
+    z_mn = zarray[THETA_e_inds[:, 0]]*zarray[THETA_e_inds[:, 1]]
+    z_nn = zarray[THETA_e_inds[:, 0]]*zarray[THETA_e_inds[:, 0]]
+    z_mm = zarray[THETA_e_inds[:, 1]]*zarray[THETA_e_inds[:, 1]]    
+    x_mn = 6*A*sqrtI*z_mn
+    x_mm = 6*A*sqrtI*z_mm
+    x_nn = 6*A*sqrtI*z_nn
+    J = jtheta(x_mn) - 0.5*(jtheta(x_mm) + jtheta(x_nn))
+    THETA_e = z_mn/(4*I)*J
+    J_prime = (x_mn*jprime(x_mn) - \
+               0.5*x_mm*jprime(x_mm) - \
+               0.5*x_nn*jprime(x_nn))
+    THETA_e_prime = z_mn/(8*I*I)*J_prime - THETA_e/I
     C = C0/(2*np.sqrt(-1*zarray[C0_inds[:, 0]]*zarray[C0_inds[:, 1]]))
-
+    
     F_1 = A*f_debye(sqrtI)
     F_21 = 0.5*coo_tensor_ops.coo_matrix_vector_vector(
-        B1*gprime(alpha1*sqrtI)/I, B1_inds, dim_matrices, carray, carray)
+        B1*gprime(alpha1*sqrtI)/I,
+        B1_inds, dim_matrices, carray, carray)
     F_22 = 0.5*coo_tensor_ops.coo_matrix_vector_vector(
-        B2*gprime(alpha2*sqrtI)/I, B2_inds, dim_matrices, carray, carray)
+        (~monovalence)*B2*gprime(alpha2*sqrtI)/I,
+        B2_inds, dim_matrices, carray, carray)
     F_31 = 0.5*coo_tensor_ops.coo_matrix_vector_vector(
-        PHI_prime, THETA_inds, dim_matrices, carray, carray)
+        THETA_e_prime, THETA_e_inds, dim_matrices, carray, carray)
     F = F_1 + F_21 + F_22 + F_31
     res1 = zarray**2*F
 
     sum_11 = 2*coo_tensor_ops.coo_matrix_vector(
         B0, B0_inds, dim_matrices, carray)
     sum_12 = 2*coo_tensor_ops.coo_matrix_vector(
-        B1*gb(alpha1*sqrtI), B1_inds, dim_matrices, carray)
+        B1*gb(alpha1*sqrtI),
+        B1_inds,
+        dim_matrices,
+        carray)
     sum_13 = 2*coo_tensor_ops.coo_matrix_vector(
-        B2*gb(alpha2*sqrtI), B2_inds, dim_matrices, carray)
+        (~monovalence)*B2*gb(alpha2*sqrtI),
+        B2_inds, dim_matrices, carray)
     sum_21 = Z*coo_tensor_ops.coo_matrix_vector(
         C, C0_inds, dim_matrices, carray)
     sum_22 = 0.5*np.abs(zarray) *\
         coo_tensor_ops.coo_matrix_vector_vector(
         C, C0_inds, dim_matrices, carray, carray)
     res2 = sum_11 + sum_12 + sum_13 + sum_21 + sum_22
-
+    
     sum_31 = 2*coo_tensor_ops.coo_matrix_vector(
-        PHI, THETA_inds, dim_matrices, carray)
-    sum_32 = 0.5*coo_tensor_ops.coo_tensor_vector_vector(
+        THETA, THETA_inds, dim_matrices, carray)
+    sum_32 = 2*coo_tensor_ops.coo_matrix_vector(
+        THETA_e, THETA_e_inds, dim_matrices, carray)
+    sum_33 = 0.5*coo_tensor_ops.coo_tensor_vector_vector(
         PSI, PSI_inds, dim_tensors, carray, carray)
-    res3 = sum_31 + sum_32
+    #print(sum_31)
+    #print(sum_32)
+    res3 = sum_31 + sum_32 + sum_33
     sum_41 = 2*coo_tensor_ops.coo_matrix_vector(
         LAMBDA, LAMBDA_inds, dim_matrices, carray)
     res4 = sum_41
@@ -140,6 +156,7 @@ def loggamma_and_osmotic(carray, T, zarray,
     if not calculate_osmotic_coefficient:
         osmotic_coefficient = 1.0
     else:
+        raise NotImplementedError
         res1w = -A*sqrtI**3/(1 + constants.B_DEBYE*sqrtI)
 
         sum_11w = 0.5*coo_tensor_ops.coo_matrix_vector_vector(
@@ -177,6 +194,10 @@ def A_debye(T):
         (ee / (eer * k * T) ** 0.5) ** 3.0
     return Aphi
 
+def A_debye_plummer(T):
+    ds = -0.0004 * T + 1.1188
+    eer = 305.7 * np.exp(-np.exp(-12.741 + 0.01875 * T) - T / 219.0)
+    return 1400684*(ds/(eer*T))**(3.0/2)
 
 def gprime(x):
     return -2*(1-(1+x+x**2/2)*np.exp(-x))/(x**2)

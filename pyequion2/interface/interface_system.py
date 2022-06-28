@@ -115,7 +115,9 @@ class InterfaceSystem(equilibrium_system.EquilibriumSystem):
                                                              reaction_function_exp,
                                                              reaction_function_derivative_exp)
         elif transport_model == "B":
-            transport_constant, relative_diffusion_vector = self._get_transport_vector_b(transport_params, TK)
+            transport_constant, relative_diffusion_vector = \
+                self._get_transport_vector_b(transport_params, TK,
+                                             molals_bulk, balance_matrix)
             x, reaction_imp, stability_imp, res = \
                 eqsolver.solve_equilibrium_interface_slack_b(x_guess,
                                                              reaction_imp_guess,
@@ -270,7 +272,7 @@ class InterfaceSystem(equilibrium_system.EquilibriumSystem):
                 raise ValueError("Not valid transport_type")
         return transport_vector
 
-    def _get_transport_vector_b(self, transport_params, TK):
+    def _get_transport_vector_b(self, transport_params, TK, molals_bulk, balance_matrix):
         """
         transport_params: Dict[str]
         """
@@ -285,7 +287,12 @@ class InterfaceSystem(equilibrium_system.EquilibriumSystem):
                             if k in diffusion_coefficients.COEFFICIENTS.keys()}
         diffusion_coefs = diffusion_coefficients.diffusion_temp(
             diffusion_coefs_, TK)
+        #molals_bulk_diff = {k:m for k, m in molals_bulk if k in diffusion_coefficients.COEFFICIENTS.keys()}
         diffusion_median = np.median(list(diffusion_coefs.values()))
+        # diffusion_median = self._make_diffusion_median_b(balance_matrix,
+        #                                                   diffusion_coefs,
+        #                                                   molals_bulk)
+        
         diffusion_vector = np.array([diffusion_coefs.get(k, diffusion_median)
                                      for k in self.solutes])
         relative_diffusion_vector = diffusion_vector/diffusion_median
@@ -324,6 +331,21 @@ class InterfaceSystem(equilibrium_system.EquilibriumSystem):
             else:
                 raise ValueError("Not valid transport_type")
         return transport_constant, relative_diffusion_vector
+
+    def _make_diffusion_median_b(self,
+                                 balance_matrix,
+                                 diffusion_coefs,
+                                 molals_bulk):
+        diffusion_specs = diffusion_coefs.keys()
+        species_indexes = {c: i for i, c in enumerate(self.species)}
+        diffusion_indexes = np.array([species_indexes[k] for k in diffusion_specs])
+        diffusion_balance_matrix = balance_matrix[:, diffusion_indexes]
+        molals_vector = np.array([molals_bulk[k] for k in diffusion_specs])
+        diffusion_vector = np.array([diffusion_coefs[k] for k in diffusion_specs])
+        An = diffusion_balance_matrix@molals_vector
+        Adn = diffusion_balance_matrix@(diffusion_vector*molals_vector)
+        D = (Adn*An).sum()/(An*An).sum()
+        return D
     
     @property
     def interface_indexes_dict(self):

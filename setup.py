@@ -19,7 +19,7 @@ REQUIREMENTS = [i.strip() for i in open("requirements.txt").readlines()]
 
 try:
     setup(
-        name="pyequion2-tjg",
+        name="pyequion2",
         version="0.0.6.4",
         description="Chemical equilibrium for electrolytes in pure python",
         packages=packages,

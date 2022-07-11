@@ -175,7 +175,7 @@ class InterfaceSystem(equilibrium_system.EquilibriumSystem):
             reaction_dict = dict()
         if fill_defaults:
             for phase, (fname, args) in interface_functions.SPECIFIC_SOLIDS_MODEL.items():
-                if phase in self.solid_phase_names:
+                if phase in self.solid_phase_names and phase not in reaction_dict:
                     reaction_dict[phase] = (fname, args, None)
         self._split_implicit_explicit(reaction_dict)
         self._explicit_flist_reac = []

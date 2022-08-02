@@ -4,6 +4,8 @@ import numpy as np
 
 LOGE10 = 2.302585092994046
 GAS_CONSTANT = 8.314462618
+DEFAULT_TEMPERATURE = 298.15
+
 
 def log_decorator(f):
     def g(logsatur, logksp, TK, *args):
@@ -23,7 +25,8 @@ def log_decorator_deriv(df):
 
 def arrhenize(f):
     def f_(satur, ksp, TK, preexp, energy):
-        reaction_constant = preexp*np.exp(-energy/(GAS_CONSTANT*TK))
+        log_reaction_constant = np.log(preexp) - energy/GAS_CONSTANT*(1/TK - 1/DEFAULT_TEMPERATURE)
+        reaction_constant = np.exp(log_reaction_constant)
         return f(satur, ksp, TK, reaction_constant)
     return f_
 
@@ -62,7 +65,9 @@ INTERFACE_MAP = \
      'spinoidal_temp': (log_decorator(arrhenize(spinoidal)), log_decorator_deriv(arrhenize(spinoidal_deriv)))}
     
     
+    #first_value = 841445.7529876726
+    #second_value = 487778.6467375476
 SPECIFIC_SOLIDS_MODEL = \
-    {'Calcite': ('linear_ksp_temp', (8.673367178929761e+19, 86881.05)),
-     'Vaterite': ('linear_ksp_temp', (8.673367178929761e+19, 86881.05)),
-     'Aragonite': ('linear_ksp_temp', (8.673367178929761e+19, 86881.05))}
+    {'Calcite': ('linear_ksp_temp', (52153.84138874875, 86881.05)),
+     'Vaterite': ('linear_ksp_temp', (841445.7529876726, 487778.6467375476)), #Fitted from our data
+     'Aragonite': ('linear_ksp_temp', (52153.84138874875, 86881.05))}

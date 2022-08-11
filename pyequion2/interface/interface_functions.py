@@ -69,5 +69,7 @@ INTERFACE_MAP = \
     #second_value = 487778.6467375476
 SPECIFIC_SOLIDS_MODEL = \
     {'Calcite': ('linear_ksp_temp', (52153.84138874875, 86881.05)),
-     'Vaterite': ('linear_ksp_temp', (841445.7529876726, 487778.6467375476)), #Fitted from our data
+     'Vaterite': ('linear_ksp_temp', (52153.84138874875, 86881.05)), #Fitted from our data
      'Aragonite': ('linear_ksp_temp', (52153.84138874875, 86881.05))}
+
+#(841445.7529876726, 487778.6467375476)

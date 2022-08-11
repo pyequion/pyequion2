@@ -1,7 +1,13 @@
 # -*- coding: utf-8 -*-
 import functools
+import warnings
 
 import numpy as np
+try:
+    import jax
+    import jax.numpy as jnp
+except (ImportError, AssertionError):
+    warnings.warn("JAX not installed. Only numpy can be chosen as backend")
 
 from .. import datamods
 from .. import utils
@@ -11,13 +17,17 @@ from .. import constants
 DB_SPECIES = datamods.species['debye']
 
 
-def setup_extended_debye(solutes, calculate_osmotic_coefficient=False):
+def setup_extended_debye(solutes, calculate_osmotic_coefficient=False, backend='numpy'):
+    if backend == 'jax':
+        np = jnp #Hack
+    else:
+        pass
     db_species = DB_SPECIES
     I_factor = []
     dh_a = []
     dh_b = []
     for sp in solutes:
-        I_factor_, dh_a_, dh_b_ = _species_definition_dh_model(sp, db_species)
+        I_factor_, dh_a_, dh_b_ = _species_definition_dh_model(sp, db_species, np=np)
         I_factor.append(I_factor_)
         dh_a.append(dh_a_)
         dh_b.append(dh_b_)
@@ -29,13 +39,17 @@ def setup_extended_debye(solutes, calculate_osmotic_coefficient=False):
                           zarray=zarray,
                           calculate_osmotic_coefficient=calculate_osmotic_coefficient,
                           dh_a=dh_a, dh_b=dh_b,
-                          I_factor=I_factor)
+                          I_factor=I_factor,
+                          np=np)
+    if backend == 'jax':
+        g = jax.jit(g)
     return g
 
 
 def _loggamma_and_osmotic(xarray, TK, zarray, calculate_osmotic_coefficient,
-                          dh_a, dh_b, I_factor):
-    A, B = _debye_huckel_constant(TK)
+                          dh_a, dh_b, I_factor,
+                          np=np):
+    A, B = _debye_huckel_constant(TK, np=np)
     I = 0.5*np.sum(zarray**2*xarray)
     logg1 = -A * zarray ** 2 * \
         np.sqrt(I) / (1 + B * dh_a * np.sqrt(I)) + dh_b * I
@@ -54,7 +68,7 @@ def _loggamma_and_osmotic(xarray, TK, zarray, calculate_osmotic_coefficient,
     return logg
 
 
-def _debye_huckel_constant(TK):
+def _debye_huckel_constant(TK, np=np):
     epsilon = _dieletricconstant_water(TK)
     rho = _density_water(TK)
     A = 1.82483e6 * np.sqrt(rho) / (epsilon * TK) ** 1.5  # (L/mol)^1/2
@@ -62,7 +76,7 @@ def _debye_huckel_constant(TK):
     return A, B
 
 
-def _species_definition_dh_model(tag, species_activity_db):
+def _species_definition_dh_model(tag, species_activity_db, np=np):
     z = utils.charge_number(tag)
     if tag not in species_activity_db:
         if z == 0:

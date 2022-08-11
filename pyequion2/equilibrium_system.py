@@ -57,7 +57,7 @@ class EquilibriumSystem():
     """
 
     def __init__(self, components, from_elements=False, activity_model="EXTENDED_DEBYE",
-                 calculate_water_activity=False):
+                 calculate_water_activity=False, backend='numpy'):
         """
         Parameters
         ----------
@@ -76,6 +76,7 @@ class EquilibriumSystem():
         calculate_water_activity: bool
             Whether to calculate water activity or assume it to be unit
         """
+        self.backend = 'numpy'
         self.base_species, self.base_elements = \
             _prepare_base(components, from_elements)
         self.species, self.reactions, self.solid_reactions, self.gas_reactions = \
@@ -90,8 +91,8 @@ class EquilibriumSystem():
         self.calculate_water_activity = calculate_water_activity
         self.solverlog = None
         self.solvertype = None
-        self._activity_model_func = ACTIVITY_MODEL_MAP[activity_model](
-            self.solutes, calculate_water_activity)
+        self.activity_model_func = ACTIVITY_MODEL_MAP[activity_model](
+            self.solutes, calculate_water_activity, self.backend)
         self._fugacity_coefficient_function = lambda x, TK, P: 0.0
         self._x_molal = None
         self._x_act = None
@@ -112,7 +113,7 @@ class EquilibriumSystem():
             self._make_gas_formula_and_stoich_matrices()
         self.solverlog = None
         self.solvertype = None
-        self._activity_model_func = ACTIVITY_MODEL_MAP[self.activity_model](
+        self.activity_model_func = ACTIVITY_MODEL_MAP[self.activity_model](
             self.solutes, self.calculate_water_activity)
         self._fugacity_coefficient_function = lambda x, TK, P: 0.0
         self._x_molal = None
@@ -131,8 +132,9 @@ class EquilibriumSystem():
         self.activity_model = activity_model
         self.calculate_water_activity = calculate_water_activity
         activity_setup = ACTIVITY_MODEL_MAP[activity_model]
-        self._activity_model_func = activity_setup(self.solutes,
-                                                   calculate_water_activity)
+        self.activity_model_func = activity_setup(self.solutes,
+                                                   calculate_water_activity,
+                                                   self.backend)
 
     def activity_function(self, molals, TK):
         """
@@ -150,7 +152,7 @@ class EquilibriumSystem():
         ndarray of activities (water is the first one, other solutes in molals order)
         """
         # molal to activities (including water)
-        activity_model_res = self._activity_model_func(molals, TK)
+        activity_model_res = self.activity_model_func(molals, TK)
         osmotic_coefficient, loggamma = \
             activity_model_res[0], activity_model_res[1:]
         if not self.calculate_water_activity:

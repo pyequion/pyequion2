@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from pyequion2 import EquilibriumSystem #Import the necessary module
+
 eqsys = EquilibriumSystem(['Na', 'C'], from_elements=True) #We set up the feed components of our system
 molal_balance = {'Na': 0.150} #Set up the balances
 activities_balance_log = {'H+': -9.0}

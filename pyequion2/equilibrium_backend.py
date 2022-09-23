@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import math
+
 import collections
 import itertools
 import warnings
@@ -9,6 +11,10 @@ try:
     import jax.numpy as jnp
 except (ImportError, AssertionError):
     warnings.warn("JAX not installed. Only numpy can be chosen as backend")
+try:
+    import torch
+except (ImportError, AssertionError):
+    warnings.warn("PyTorch not installed, so can't be used as backend")
 
 from . import builder
 from . import activity
@@ -61,7 +67,8 @@ class EquilibriumBackend():
     """
 
     def __init__(self, components, from_elements=False, activity_model="EXTENDED_DEBYE",
-                 calculate_water_activity=False, backend='numpy'):
+                 calculate_water_activity=False, backend='numpy', 
+                 logbase="10"):
         """
         Parameters
         ----------
@@ -80,7 +87,9 @@ class EquilibriumBackend():
         calculate_water_activity: bool
             Whether to calculate water activity or assume it to be unit
         """
+        assert backend in ["numpy", "jax", "torch"]
         self.backend = backend
+        self.logbase = logbase
         self.base_species, self.base_elements = \
             _prepare_base(components, from_elements)
         self.species, self.reactions, self.solid_reactions, self.gas_reactions = \
@@ -95,7 +104,7 @@ class EquilibriumBackend():
         self.calculate_water_activity = calculate_water_activity
         self.solverlog = None
         self.solvertype = None
-        self.activity_model_func = ACTIVITY_MODEL_MAP[activity_model](
+        self._activity_model_func = ACTIVITY_MODEL_MAP[activity_model](
             self.solutes, calculate_water_activity, self.backend)
         self._fugacity_coefficient_function = lambda x, TK, P: 0.0
         self._x_molal = None
@@ -117,7 +126,7 @@ class EquilibriumBackend():
             self._make_gas_formula_and_stoich_matrices()
         self.solverlog = None
         self.solvertype = None
-        self.activity_model_func = ACTIVITY_MODEL_MAP[self.activity_model](
+        self._activity_model_func = ACTIVITY_MODEL_MAP[self.activity_model](
             self.solutes, self.calculate_water_activity)
         self._fugacity_coefficient_function = lambda x, TK, P: 0.0
         self._x_molal = None
@@ -136,10 +145,19 @@ class EquilibriumBackend():
         self.activity_model = activity_model
         self.calculate_water_activity = calculate_water_activity
         activity_setup = ACTIVITY_MODEL_MAP[activity_model]
-        self.activity_model_func = activity_setup(self.solutes,
+        self._activity_model_func = activity_setup(self.solutes,
                                                    calculate_water_activity,
                                                    self.backend)
-
+        
+    def activity_model_func(self, molals, TK):
+        res = self._activity_model_func(molals, TK)
+        if self.logbase == "e":
+            res = res/constants.LOG10E
+        return res
+    
+    def solute_activity_model_func(self, molals, TK):
+        return self.activity_model_func(molals, TK)[..., 1:]
+    
     def activity_function(self, molals, TK):
         """
         Activity function for aqueous species
@@ -156,6 +174,8 @@ class EquilibriumBackend():
         ndarray of activities (water is the first one, other solutes in molals order)
         """
         # molal to activities (including water)
+        if self.backend != "numpy":
+            raise NotImplementedError("Function only implemented for numpy")
         activity_model_res = self.activity_model_func(molals, TK)
         osmotic_coefficient, loggamma = \
             activity_model_res[0], activity_model_res[1:]
@@ -163,18 +183,21 @@ class EquilibriumBackend():
             logact_water = 0.0
         else:
             logact_water = osmotic_coefficient * \
-                constants.MOLAR_WEIGHT_WATER*self._np.sum(molals)
-        logact_solutes = loggamma + self._np.log10(molals)
-        logact = self._np.insert(logact_solutes, 0, logact_water)
+                constants.MOLAR_WEIGHT_WATER*np.sum(molals)
+        if self.logbase == "e":
+            logact_solutes = loggamma + np.log(molals)    
+        else:
+            logact_solutes = loggamma + np.log10(molals)
+        logact = np.insert(logact_solutes, 0, logact_water)
         return logact
 
-    def gas_activity_function(self, molals_gases, TK, P):
+    def gas_activity_function(self, molals_gases, TK, P=1.0):
         """
         Activity function for gaseous species
 
         Parameters
         ----------
-        molals_gases: self._np.ndarray
+        molals_gases: np.ndarray
             Array of molals of gases
         TK: float
             Temperature in Kelvin
@@ -186,11 +209,12 @@ class EquilibriumBackend():
         ndarray
             Log-activity of gases
         """
-        # FIXME: Toy model. Just to make things work
-        molal_fractions = molals_gases/self._np.sum(molals_gases)
+        if self.backend != "numpy":
+            raise NotImplementedError("Function only implemented for numpy")
+        molal_fractions = molals_gases/np.sum(molals_gases)
         fugacity_coefficient_term = self._fugacity_coefficient_function(
             molal_fractions, TK, P)
-        partial_pressure_term = self._np.log10(P) + self._np.log10(molal_fractions)
+        partial_pressure_term = np.log10(P) + np.log10(molal_fractions)
         logact = fugacity_coefficient_term + partial_pressure_term
         return logact
 
@@ -203,7 +227,7 @@ class EquilibriumBackend():
 
         Returns
         -------
-        Callable[self._np.ndarray, float, float] -> float
+        Callable[np.ndarray, float, float] -> float
             Log-fugacity function, accepting molal_fractions, temperature (TK), and pressure (ATM)
         """
         reactions_gases = [self.gas_reactions[i] for i in gas_indexes]
@@ -213,7 +237,7 @@ class EquilibriumBackend():
             self._fugacity_coefficient_function = \
                 fugacity.make_peng_robinson_fugacity_function(reactions_gases)
 
-    def get_log_equilibrium_constants(self, TK, PATM):
+    def get_log_equilibrium_constants(self, TK, PATM=1.0):
         """
         Parameters
         ----------
@@ -225,11 +249,15 @@ class EquilibriumBackend():
         List[float] of log equilibria constants of aqueous reactions
         """
         res = builder.get_log_equilibrium_constants(self.reactions, TK, PATM)
+        if self.logbase == "e":
+            res = res/constants.LOG10E
         if self.backend == 'jax':
             res = jnp.array(res)
+        elif self.backend == "torch":
+            res = torch.tensor(res, dtype=torch.float)
         return res
     
-    def get_solid_log_equilibrium_constants(self, TK, PATM):
+    def get_solid_log_equilibrium_constants(self, TK, PATM=1.0):
         """
         Parameters
         ----------
@@ -241,11 +269,15 @@ class EquilibriumBackend():
         List[float] of log equilibria constants of solid reactions
         """
         res = builder.get_log_equilibrium_constants(self.solid_reactions, TK, PATM)
+        if self.logbase == "e":
+            res = res/constants.LOG10E
         if self.backend == 'jax':
             res = jnp.array(res)
+        elif self.backend == "torch":
+            res = torch.tensor(res, dtype=torch.float)
         return res
 
-    def get_gases_log_equilibrium_constants(self, TK, PATM):
+    def get_gases_log_equilibrium_constants(self, TK, PATM=1.0):
         """
         Parameters
         ----------
@@ -257,16 +289,64 @@ class EquilibriumBackend():
         List[float] of log equilibria constants of gas reactions
         """
         res = builder.get_log_equilibrium_constants(self.gas_reactions, TK, PATM)
+        if self.logbase == "e":
+            res = res/constants.LOG10E
         if self.backend == 'jax':
             res = jnp.array(res)
+        elif self.backend == "torch":
+            res = torch.tensor(res, dtype=torch.float)
         return res
 
     def get_diffusion_coefficients(self, TK):
-        res = diffusion_coefficients.get_diffusion_coefficients(self.solutes, TK)
+        res = diffusion_coefficients.get_diffusion_coefficients(self.solutes, TK) #m2/s
+        #mol/m3 J/mol
         if self.backend == 'jax':
             res = jnp.array(res)
+        elif self.backend == "torch":
+            res = torch.tensor(res, dtype=torch.float)
         return res
 
+    def get_base_standard_chemical_potentials(self, TK, PATM=1.0):
+        base_species = [builder.ELEMENT_SPECIES_MAP[el] for el in self.elements]
+        base_potential_dict = {k: v
+                               for k, v in builder.datamods.chemical_potentials.items()
+                               if k in base_species}
+        base_potentials = {sp: (base_potential_dict[sp]['mu0'] + 
+                              base_potential_dict[sp]['coef0']*(TK-298.15))
+                           for sp in base_species}
+        return base_potentials
+    
+    def get_standard_chemical_potentials(self, TK, PATM=1.0):
+        base_species = [builder.ELEMENT_SPECIES_MAP[el] for el in self.elements]
+        base_inds = [self.species.index(sp) for sp in base_species]
+        base_potential_dict = {k: v
+                               for k, v in builder.datamods.chemical_potentials.items()
+                               if k in base_species}
+        base_potentials = [(base_potential_dict[sp]['mu0']*1000 + 
+                            base_potential_dict[sp]['coef0']*(TK-298.15))
+                           for sp in base_species] #J/mol
+        base_potentials = np.array(base_potentials)
+        logk = self.get_log_equilibrium_constants(TK)
+        if self.logbase != "e":
+            logk = logk/constants.LOG10E #Base here must be e
+        nu = self.stoich_matrix
+        ext = []
+        for ind in base_inds:
+            line = np.zeros(self.nspecies)
+            line[ind] = 1.0
+            ext.append(line)
+        ext = np.vstack(ext)
+        RT = constants.GAS_CONSTANT*TK
+        full_matrix = np.vstack([nu, ext])
+        full_vector = np.hstack([-logk, base_potentials/RT])
+        standard_potentials = np.linalg.solve(full_matrix, full_vector)
+        standard_potentials *= RT
+        if self.backend == 'jax':
+            standard_potentials = jnp.array(standard_potentials)
+        elif self.backend == "torch":
+            standard_potentials = torch.tensor(standard_potentials, dtype=torch.float)
+        return standard_potentials
+        
     @property
     def elements(self):
         """Alias for base elements"""
@@ -340,7 +420,7 @@ class EquilibriumBackend():
     @property
     def alkalinity_vector(self):
         """Vector of alkalinity coefficients"""
-        return self._np.array([constants.ALKALINE_COEFFICIENTS.get(specie, 0.0)
+        return np.array([constants.ALKALINE_COEFFICIENTS.get(specie, 0.0)
                          for specie in self.species])
 
     @property
@@ -358,12 +438,6 @@ class EquilibriumBackend():
         """Names of gas phases"""
         return [gas_reac["phase_name"] for gas_reac in self.gas_reactions]
 
-    @property
-    def _np(self):
-        if self.backend == 'numpy':
-            return np
-        elif self.backend == 'jax':
-            return jnp
         
     def _initialize_species_reactions(self,
                                       possible_reactions=None,
@@ -381,12 +455,15 @@ class EquilibriumBackend():
         if self.backend == 'jax':
             formula_matrix = jnp.array(formula_matrix)
             stoich_matrix = jnp.array(stoich_matrix)
+        elif self.backend == 'torch':
+            formula_matrix = torch.tensor(formula_matrix, dtype=torch.float)
+            stoich_matrix = torch.tensor(stoich_matrix, dtype=torch.float)
         return formula_matrix, stoich_matrix
 
     def _make_solid_formula_and_stoich_matrices(self):
         if not self.solid_reactions:  # No precipitating solid phases
-            solid_formula_matrix = self._np.zeros((self.nelements+1, 0))
-            solid_stoich_matrix = self._np.zeros((0, self.nspecies))
+            solid_formula_matrix = np.zeros((self.nelements+1, 0))
+            solid_stoich_matrix = np.zeros((0, self.nspecies))
         else:
             solid_formula_matrix = builder.make_solid_formula_matrix(
                 self.solid_reactions, self.elements)
@@ -395,12 +472,15 @@ class EquilibriumBackend():
         if self.backend == 'jax':
             solid_formula_matrix = jnp.array(solid_formula_matrix)
             solid_stoich_matrix = jnp.array(solid_stoich_matrix)
+        elif self.backend == "torch":
+            solid_formula_matrix = torch.tensor(solid_formula_matrix, dtype=torch.float)
+            solid_stoich_matrix = torch.tensor(solid_stoich_matrix, dtype=torch.float)
         return solid_formula_matrix, solid_stoich_matrix
 
     def _make_gas_formula_and_stoich_matrices(self):
         if not self.gas_reactions:
-            gas_formula_matrix = self._np.zeros((self.nelements+1, 0))
-            gas_stoich_matrix = self._np.zeros((0, self.nspecies))
+            gas_formula_matrix = np.zeros((self.nelements+1, 0))
+            gas_stoich_matrix = np.zeros((0, self.nspecies))
         else:
             gas_formula_matrix = builder.make_gas_formula_matrix(
                 self.gas_reactions, self.elements)
@@ -409,6 +489,9 @@ class EquilibriumBackend():
         if self.backend == 'jax':
             gas_formula_matrix = jnp.array(gas_formula_matrix)
             gas_stoich_matrix = jnp.array(gas_stoich_matrix)
+        elif self.backend == "torch":
+            gas_formula_matrix = torch.tensor(gas_formula_matrix, dtype=torch.float)
+            gas_stoich_matrix = torch.tensor(gas_stoich_matrix, dtype=torch.float)
         return gas_formula_matrix, gas_stoich_matrix
 
     def get_solid_indexes(self, solid_phases):

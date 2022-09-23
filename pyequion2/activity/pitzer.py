@@ -21,8 +21,7 @@ from .. import datamods
 
     
 def setup_pitzer(solutes, calculate_osmotic_coefficient=False, backend='numpy'):
-    if backend == 'jax':
-        raise NotImplementedError("Currently, there is no backend implementation for JAX")
+    assert backend in ['numpy']
     property_dict = make_pitzer_dictionary()
     B0, B0_inds = make_parameter_matrix(solutes, 'B0', property_dict)
     B1, B1_inds = make_parameter_matrix(solutes, 'B1', property_dict)

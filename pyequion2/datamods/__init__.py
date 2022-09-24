@@ -4,3 +4,4 @@ from .reactions_irreversible import reactions_irreversible
 from .reactions_gases import reactions_gases
 from .species import species
 from .pitzer_data import pitzer_data
+from .chemical_potentials import chemical_potentials

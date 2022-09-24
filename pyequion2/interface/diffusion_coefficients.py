@@ -1,6 +1,17 @@
 # -*- coding: utf-8 -*-
 import numpy as np
-from ..water_properties import water_dynamic_viscosity
+from ..water_properties import water_dynamic_viscosity, water_density
+
+
+def get_diffusion_coefficients(solutes, TK):
+    diffusion_coefs_ = {k: COEFFICIENTS[k]
+                        for k in solutes
+                        if k in COEFFICIENTS.keys()}
+    diffusion_coefs = diffusion_temp(diffusion_coefs_, TK)
+    diffusion_median = np.median(list(diffusion_coefs.values()))
+    diffusion_vector = np.array([diffusion_coefs.get(k, diffusion_median)
+                                 for k in solutes])
+    return diffusion_vector
 
 
 def diff_temp_formula(TK, dw0, dw1):

@@ -11,14 +11,14 @@ from . import water_properties
 
 
 ELEMENT_SPECIES_MAP = {
-    "C": "HCO3-",
+    "C": "CO3--",
     "Ca": "Ca++",
     "Cl": "Cl-",
     "Na": "Na+",
     "S": "SO4--",
     "Ba": "Ba++",
     "Mg": "Mg++",
-    'Fe': 'Fe++',
+    'Fe': 'Fe+++',
     'K': 'K+',
     'Sr': 'Sr++',
     'N': 'NH3',
@@ -31,8 +31,11 @@ ELEMENT_SPECIES_MAP = {
     'Mn': 'Mn++',
     'P': 'PO4---',
     'Pb': 'Pb++',
-    'Zn': 'Zn++'
+    'Zn': 'Zn++',
+    'H': 'H+',
+    'O': 'OH-'
 }
+
 DEFAULT_DB_FILES = {
     "solutions": datamods.reactions_solutions,
     "phases": datamods.reactions_solids,

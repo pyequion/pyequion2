@@ -25,8 +25,8 @@ from .interface import diffusion_coefficients
 
 ACTIVITY_MODEL_MAP = {
     "IDEAL": activity.setup_ideal,
-    "DEBYE_LIMITING": activity.setup_debye,
-    "DEBYE": activity.setup_extended_debye,
+    "DEBYE_LIMITING": activity.setup_debye_limiting,
+    "DEBYE": activity.setup_debye,
     "EXTENDED_DEBYE": activity.setup_extended_debye,
     "PITZER": activity.setup_pitzer,
 }

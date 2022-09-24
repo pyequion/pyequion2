@@ -81,12 +81,25 @@ def _loggamma_and_osmotic(xarray, TK, zarray, calculate_osmotic_coefficient,
             osmotic_coefficient = constants.LOG10E*(2*resw/np_.sum(xarray, axis=-1, keepdims=True)+1)
         else:
             osmotic_coefficient = constants.LOG10E
-        osmotic_coefficient = np_.ones(logg.shape[:-1])*constants.LOG10E
+        osmotic_coefficient = np_.ones(logg.shape[:-1])*osmotic_coefficient
         # Insertion of osmotic coefficient
         logg = np_.hstack([osmotic_coefficient, logg])
     else:
         A, B = _debye_huckel_constant(TK, backend=backend)
-        
+        I = 0.5*torch.sum(zarray**2*xarray, dim=-1, keepdim=True)
+        logg1 = -A*zarray**2*torch.sqrt(I)/(1 + B*dh_a*torch.sqrt(I)) + dh_b*I
+        logg2 = I_factor*I
+        logg3 = -A*zarray**2*(torch.sqrt(I)/(1.0 + torch.sqrt(I)) - 0.3*I)
+        logg = torch.nan_to_num(logg1)*(~torch.isnan(dh_a)) + \
+            torch.nan_to_num(logg2)*(torch.isnan(dh_a) & (~torch.isnan(I_factor))) + \
+            torch.nan_to_num(logg3)*(torch.isnan(dh_a) & (torch.isnan(I_factor)))
+        resw = -A*I**(3/2)/(1 + constants.B_DEBYE*I**(1/2))
+        if calculate_osmotic_coefficient:
+            osmotic_coefficient = constants.LOG10E*(2*resw/torch.sum(xarray, dim=-1, keepdim=True)+1)
+        else:
+            osmotic_coefficient = constants.LOG10E
+        osmotic_coefficient = torch.ones_like(logg[..., :1])*osmotic_coefficient
+        logg = torch.cat([osmotic_coefficient, logg], dim=-1)
     return logg
 
 def _debye_huckel_constant(TK, backend="numpy"):

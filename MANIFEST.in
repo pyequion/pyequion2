@@ -1,0 +1,2 @@
+include requirements.txt
+include pyequion2/activity/coo_tensor_ops/coo_tensor_ops.pyx

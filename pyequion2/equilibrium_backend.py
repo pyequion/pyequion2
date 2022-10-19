@@ -529,6 +529,8 @@ def _prepare_base(components, from_elements):
     base_elements = builder.set_h_and_o_as_first_elements(
         list(base_elements))
     base_species = builder.set_h2o_as_first_specie(list(base_species))
+    base_elements = base_elements[:2] + sorted(base_elements[2:])
+    base_species = base_species[:1] + sorted(base_species[1:])
     return base_species, base_elements
 
 

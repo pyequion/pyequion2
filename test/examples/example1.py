@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import pyequion2
+
+
 eqsys = pyequion2.EquilibriumSystem(['Ca', 'Na', 'Cl', 'C'], from_elements=True) #We set up the feed components of our system
 molal_balance = {'Ca':0.028, 'C':0.065, 'Na':0.065, 'Cl':0.056} #Set up the balances
 TK = 298.15 #Temperature in Kelvin

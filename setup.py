@@ -34,7 +34,10 @@ try:
         ],
         url="https://github.com/pyequion/pyequion2/",
         python_requires=">=3.6",
-        install_requires=REQUIREMENTS
+        install_requires=REQUIREMENTS,
+        extras_require={
+            "gui": ["PyQt5>=5.15.6"]
+        },
     )
 except:
         warnings.warn("Could not install with cython module. Installing pure python")

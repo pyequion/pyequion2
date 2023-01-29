@@ -24,6 +24,13 @@ The package can be installed with `pip install .` on this folder
 
 You can also use PyPI, `pip install pyequion2`.
 
+By default, package installed without GUI to omit PyQT dependency.
+To install GUI, use commands with extra argument:
+```
+pip install .[gui]
+pip install pyequion2[gui]
+```
+
 ## GUI
 
 To run a GUI version of PyEquion2, just run

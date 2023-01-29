@@ -1,3 +1,14 @@
 [build-system]
-requires = ["setuptools>=42", "Cython>=0.15.1", "numpy>=1.10"]
+requires = [
+    "setuptools>=42",
+    "Cython>=0.15.1",
+    "numpy>=1.10"
+]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyequion2"
+version = "0.0.6.4"
+
+[project.optional-dependencies]
+gui = ["PyQt5>=5.15.6"]

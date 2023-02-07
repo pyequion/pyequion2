@@ -20,9 +20,15 @@ Tests of the accuracy of its parameters and equations are underway, so results m
 
 ## Installation
 
-The package can be installed with `pip install .` on this folder
+The package can be installed either running downloading the 
+source code and `pip install .` on this folder, or directly by
 
-You can also use PyPI, `pip install pyequion2`.
+```
+pip install git+https://github.com/pyequion/pyequion2
+```
+
+There is an older PyPI version, but is not supported anymore
+
 
 ## GUI
 

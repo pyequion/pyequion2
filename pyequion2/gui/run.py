@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 import sys
 
-from PyQt5.QtWidgets import QApplication
-
+try:
+    from PyQt5.QtWidgets import QApplication
+except ModuleNotFoundError:
+    raise ModuleNotFoundError("PyEquion2 GUI requires PyQt5")
 from .main import PyEquionGUI
 
 

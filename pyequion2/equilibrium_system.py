@@ -706,6 +706,25 @@ class EquilibriumSystem():
                                          initial_guess='default'):
         pass
 
+    def get_reactions_as_string(self):
+        return '\n'.join([self._get_reaction_as_string(reaction) for reaction in self.reactions])
+    
+    def _get_reaction_as_string(self, reaction):
+        prods, reacs = builder._get_tags_of_prods_reactions(reaction)
+        prods_strs = []
+        reacs_strs = []
+        for reac in reacs:
+            coef = -reaction[reac]
+            reac_str = f'{coef:.1f}*{reac}'
+            reacs_strs.append(reac_str)
+        for prod in prods:
+            coef = reaction[prod]
+            prod_str = f'{coef:.1f}*{prod}'
+            prods_strs.append(prod_str)
+        lhs = ' + '.join(reacs_strs)
+        rhs = ' + '.join(prods_strs)
+        res = f'{lhs} <---> {rhs}'
+        return res
 
     @property
     def elements(self):

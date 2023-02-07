@@ -7,14 +7,7 @@ import warnings
 
 import numpy as np
 
-try:
-    from .pitzer_sanity_assertions import make_sanity_assertions
-    make_sanity_assertions()
-    from .coo_tensor_ops import coo_tensor_ops
-    from . import py_coo_tensor_ops
-except (ImportError, AssertionError): #Some import error. Use pythonized way
-    warnings.warn("Problem with Cython import. Using pure python operation.")
-    from . import py_coo_tensor_ops as coo_tensor_ops
+from . import py_coo_tensor_ops as coo_tensor_ops
 from .. import utils
 from .. import constants
 from .. import datamods

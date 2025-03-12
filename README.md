@@ -30,6 +30,13 @@ pip install git+https://github.com/pyequion/pyequion2
 There is an older PyPI version, but is not supported anymore
 
 
+By default, package installed without GUI to omit PyQT dependency.
+To install GUI, use commands with extra argument:
+```
+pip install .[gui]
+pip install pyequion2[gui]
+```
+
 ## GUI
 
 To run a GUI version of PyEquion2, just run

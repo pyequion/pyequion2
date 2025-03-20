@@ -29,7 +29,7 @@ from .equilibrium_system import EquilibriumSystem
 from .equilibrium_backend import EquilibriumBackend
 from .interface import InterfaceSystem
 from .gaseous_system import InertGaseousSystem
-from .gui import run as rungui
+# from .gui import run as rungui
 from . import converters
 from . import water_properties
 
